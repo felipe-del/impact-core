@@ -31,20 +31,33 @@
         <java.version>22</java.version>
     </properties>
     <dependencies>
+        <!-- Dependencia para crear aplicaciones web con Spring Boot,
+		incluye Tomcat como servidor web predeterminado. -->
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-web</artifactId>
         </dependency>
-
+        <!-- Dependencia para utilizar Tomcat como servidor web en tiempo de desarrollo,
+                pero no en producción. -->
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-tomcat</artifactId>
             <scope>provided</scope>
         </dependency>
+        <!-- Dependencia para pruebas unitarias y de integración con Spring Boot,
+		incluye JUnit, Hamcrest, y Mockito. -->
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-test</artifactId>
             <scope>test</scope>
+        </dependency>
+        <!-- Dependencia para herramientas de desarrollo,
+		permite recarga automática de cambios en la aplicación durante el desarrollo. -->
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-devtools</artifactId>
+            <scope>runtime</scope>
+            <optional>true</optional>
         </dependency>
     </dependencies>
 
