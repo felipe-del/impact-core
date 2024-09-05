@@ -1,4 +1,4 @@
-package com.impact.brain.configuration.emailConfig;
+package com.impact.brain.configuration.corsConfig;
 
 import io.micrometer.common.lang.NonNull;
 import jakarta.servlet.http.HttpServletRequest;

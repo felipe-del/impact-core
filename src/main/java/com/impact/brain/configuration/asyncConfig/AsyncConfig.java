@@ -1,4 +1,4 @@
-package com.impact.brain.configuration.emailConfig;
+package com.impact.brain.configuration.asyncConfig;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.scheduling.annotation.EnableAsync;
 
