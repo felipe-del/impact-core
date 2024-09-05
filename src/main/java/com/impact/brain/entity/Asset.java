@@ -1,5 +1,6 @@
 package com.impact.brain.entity;
 
+import com.impact.brain.user.intity.User;
 import jakarta.persistence.*;
 import org.hibernate.annotations.ColumnDefault;
 
