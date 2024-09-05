@@ -1,4 +1,4 @@
-package com.impact.brain.entity;
+package com.impact.brain.user.intity;
 
 import jakarta.persistence.*;
 
@@ -74,4 +74,23 @@ public class User {
         this.state = state;
     }
 
+    // ---
+
+    public User(Integer id, String name, String email, String password, UserRole role, UserState state) {
+        this.id = id;
+        this.name = name;
+        this.email = email;
+        this.password = password;
+        this.role = role;
+        this.state = state;
+    }
+
+    // Nuevo constructor que omite el campo 'password'
+    public User(Integer id, String name, String email, UserRole role, UserState state) {
+        this.id = id;
+        this.name = name;
+        this.email = email;
+        this.role = role;
+        this.state = state;
+    }
 }
