@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Bienvenido a IMPACT</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f4f4f4;
+        }
+        .email-container {
+            max-width: 600px;
+            margin: auto;
+            background-color: #ffffff;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+        .header {
+            background-color: #007bff;
+            color: #ffffff;
+            padding: 10px 20px;
+            border-radius: 8px 8px 0 0;
+        }
+        .header h1 {
+            margin: 0;
+            font-size: 24px;
+        }
+        .content {
+            padding: 20px;
+        }
+        .content p {
+            font-size: 16px;
+            color: #333333;
+        }
+        .footer {
+            text-align: center;
+            padding: 10px 20px;
+            color: #777777;
+            font-size: 14px;
+            border-top: 1px solid #dddddd;
+        }
+        .button {
+            display: inline-block;
+            padding: 10px 20px;
+            margin-top: 20px;
+            background-color: #28a745;
+            color: #ffffff;
+            text-decoration: none;
+            border-radius: 4px;
+        }
+        .button:hover {
+            background-color: #218838;
+        }
+    </style>
+</head>
+<body>
+<div class="email-container">
+    <div class="header">
+        <h1>Bienvenido a IMPACT</h1>
+    </div>
+    <div class="content">
+        <p>Hola <span th:text="${name}"></span>,</p>
+        <p>¡Estamos muy emocionados de darte la bienvenida a IMPACT! Nos alegra que te hayas unido a nuestra comunidad.</p>
+        <p>Si tienes alguna pregunta o necesitas ayuda, no dudes en contactarnos.</p>
+        <a href="#" class="button">Explora IMPACT</a>
+    </div>
+    <div class="footer">
+        <p>&copy; 2024 IMPACT. Todos los derechos reservados.</p>
+    </div>
+</div>
+</body>
+</html>
