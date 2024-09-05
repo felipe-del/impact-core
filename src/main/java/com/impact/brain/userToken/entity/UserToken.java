@@ -1,5 +1,6 @@
-package com.impact.brain.user.intity;
+package com.impact.brain.userToken.entity;
 
+import com.impact.brain.user.intity.User;
 import jakarta.persistence.*;
 import org.hibernate.annotations.ColumnDefault;
 
@@ -66,4 +67,13 @@ public class UserToken {
         this.createdAt = createdAt;
     }
 
+    // -----
+
+
+    public UserToken(User user, String token, Instant expiryDate, Instant createdAt) {
+        this.user = user;
+        this.token = token;
+        this.expiryDate = expiryDate;
+        this.createdAt = createdAt;
+    }
 }
