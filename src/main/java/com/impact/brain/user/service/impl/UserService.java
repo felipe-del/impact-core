@@ -1,5 +1,8 @@
 package com.impact.brain.user.service.impl;
 
+import com.impact.brain.email.dto.SendRequest;
+import com.impact.brain.email.service.impl.EmailSendService;
+import com.impact.brain.email.util.EmailServiceUtil;
 import com.impact.brain.user.intity.User;
 import com.impact.brain.user.repository.UserRepository;
 import com.impact.brain.user.service.IUserService;
@@ -20,11 +23,13 @@ import java.util.Optional;
 public class UserService implements IUserService {
 
     private final UserRepository userRepository;
+    private final EmailSendService emailService;
     private final BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
 
     @Autowired
-    public UserService(UserRepository userRepository) {
+    public UserService(UserRepository userRepository, EmailSendService emailService) {
         this.userRepository = userRepository;
+        this.emailService = emailService;
     }
 
     @Override
@@ -44,7 +49,10 @@ public class UserService implements IUserService {
         User savedUser = this.userRepository.save(user);
         savedUser.setPassword(null);
 
-        // Enviar correo...
+        // Preparar y enviar correo de bienvenida
+        SendRequest sendRequest = EmailServiceUtil.prepareWelcomeEmail(savedUser);
+        emailService.sendMessage(sendRequest, true);
+
 
         return savedUser;
     }
