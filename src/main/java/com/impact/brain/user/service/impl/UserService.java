@@ -44,7 +44,10 @@ public class UserService implements IUserService {
         User savedUser = this.userRepository.save(user);
         savedUser.setPassword(null);
 
-        // Enviar correo...
+        // Preparar y enviar correo de bienvenida
+        SendRequest sendRequest = EmailServiceUtil.prepareWelcomeEmail(savedUser);
+        emailService.sendMessage(sendRequest, true);
+
 
         return savedUser;
     }
