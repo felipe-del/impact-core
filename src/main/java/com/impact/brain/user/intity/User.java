@@ -26,6 +26,10 @@ public class User {
     @JoinColumn(name = "state_id")
     private UserState state;
 
+    public User() {
+
+    }
+
     public Integer getId() {
         return id;
     }
@@ -92,5 +96,21 @@ public class User {
         this.email = email;
         this.role = role;
         this.state = state;
+    }
+    public User(String email, String password) {
+        this.email = email;
+        this.password = password;
+    }
+
+    @Override
+    public String toString() {
+        return "User{" +
+                "id=" + id +
+                ", name='" + name + '\'' +
+                ", email='" + email + '\'' +
+                ", password=' NULL" + '\'' +
+                ", role=" + role.getName() +
+                ", state=" + state.getName() +
+                '}';
     }
 }

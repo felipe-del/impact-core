@@ -1,5 +1,6 @@
 package com.impact.brain.user.service;
 
+import com.impact.brain.user.dto.UserDTO;
 import com.impact.brain.user.intity.User;
 
 import java.util.List;
@@ -18,4 +19,5 @@ public interface IUserService {
 
     Optional<User> findById(int id);
     User changePassword(int userId, String newPassword);
+    UserDTO mapToUserDTO(User user);
 }

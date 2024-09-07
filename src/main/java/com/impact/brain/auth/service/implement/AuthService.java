@@ -7,12 +7,14 @@ import com.impact.brain.email.dto.SendRequest;
 import com.impact.brain.email.service.impl.EmailSendService;
 import com.impact.brain.email.util.EmailServiceUtil;
 import com.impact.brain.security.UserDetailsImp;
+import com.impact.brain.user.dto.UserDTO;
 import com.impact.brain.user.intity.User;
 import com.impact.brain.userToken.entity.UserToken;
 import com.impact.brain.user.service.impl.UserService;
 import com.impact.brain.userToken.service.impl.TokenService;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
+import org.hibernate.Hibernate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -42,20 +44,27 @@ public class AuthService implements IAuthService {
         this.tokenService = tokenService;
     }
     @Override
-    public User authenticate(String email, String password, HttpServletRequest request) {
+    public UserDTO authenticate(String email, String password, HttpServletRequest request) {
         try {
             request.login(email, password);
             Authentication auth = SecurityContextHolder.getContext().getAuthentication();
             UserDetailsImp userDetails = (UserDetailsImp) auth.getPrincipal();
             User authenticatedUser = userDetails.getUser();
-            authenticatedUser.setPassword(null); // Opcional: no devolver la contraseña
-            return authenticatedUser;
+            System.out.println(authenticatedUser);
+            // Si hay relaciones en User, asegúrate de que están inicializadas
+            if (authenticatedUser.getRole() != null) {
+                Hibernate.initialize(authenticatedUser.getRole()); // Inicializa el proxy si es necesario
+            }
+
+            authenticatedUser.setPassword(null); // No devolver la contraseña
+            return userService.mapToUserDTO(authenticatedUser);
         } catch (ServletException e) {
             throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, "Authentication failed: " + e.getMessage(), e);
         }
     }
+
     @Override
-    public User getCurrentUserSession() {
+    public UserDTO getCurrentUserSession() {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         if (authentication == null || !authentication.isAuthenticated() || !(authentication.getPrincipal() instanceof UserDetailsImp)) {
             throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, "User not authenticated");
@@ -65,7 +74,7 @@ public class AuthService implements IAuthService {
         User userSession = userDetails.getUser();
         userSession.setPassword(null); // Optionally clear the password before returning
 
-        return userSession;
+        return userService.mapToUserDTO(userSession);
     }
     @Override
     public void forgotPassword(String email) {
