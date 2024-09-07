@@ -3,6 +3,7 @@ package com.impact.brain.user.service.impl;
 import com.impact.brain.email.dto.SendRequest;
 import com.impact.brain.email.service.impl.EmailSendService;
 import com.impact.brain.email.util.EmailServiceUtil;
+import com.impact.brain.user.dto.UserDTO;
 import com.impact.brain.user.intity.User;
 import com.impact.brain.user.repository.UserRepository;
 import com.impact.brain.user.service.IUserService;
@@ -79,4 +80,14 @@ public class UserService implements IUserService {
         return userRepository.findById(id);
     }
 
+    @Override
+    public UserDTO mapToUserDTO(User user) {
+        return new UserDTO(
+                user.getId(),
+                user.getName(),
+                user.getEmail(),
+                user.getRole().getName(),
+                user.getState().getName()
+        );
+    }
 }

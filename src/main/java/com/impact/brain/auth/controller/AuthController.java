@@ -5,6 +5,7 @@ import com.impact.brain.auth.dto.VerifyRequest;
 import com.impact.brain.auth.service.implement.AuthService;
 import com.impact.brain.exception.dto.SuccessResponseDTO;
 import com.impact.brain.security.UserDetailsImp;
+import com.impact.brain.user.dto.UserDTO;
 import com.impact.brain.user.intity.User;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
@@ -12,6 +13,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ResponseStatusException;
 
@@ -41,9 +43,10 @@ public class AuthController {
      * @throws ResponseStatusException if login fails, returning an HTTP 401 (UNAUTHORIZED) error
      */
     @PostMapping("/login")
-    public ResponseEntity<User> login(@RequestBody User user, HttpServletRequest request) {
-        User authenticatedUser = authService.authenticate(user.getEmail(), user.getPassword(), request);
-        return ResponseEntity.ok().body(authenticatedUser);
+    public ResponseEntity<UserDTO> login(@RequestBody User user, HttpServletRequest request) {
+        System.out.println(user.getEmail()+" "+user.getPassword());
+        UserDTO authenticatedUser = authService.authenticate(user.getEmail(), user.getPassword(), request);
+        return ResponseEntity.ok(authenticatedUser);
     }
     /**
      * Handles the logout request for a user.
@@ -70,8 +73,8 @@ public class AuthController {
      * @throws ResponseStatusException if the user is not authenticated, returning an HTTP 401 (UNAUTHORIZED) error
      */
     @GetMapping("/current-user")
-    public ResponseEntity<User> getCurrentUserSession(@AuthenticationPrincipal UserDetailsImp user) {
-        User userSession = authService.getCurrentUserSession();
+    public ResponseEntity<UserDTO> getCurrentUserSession(@AuthenticationPrincipal UserDetailsImp user) {
+        UserDTO userSession = authService.getCurrentUserSession();
         return ResponseEntity.ok(userSession);
     }
     /**

@@ -44,11 +44,11 @@ public class WebSecurityConfig {
         httpSecurity
                 // Configure authorization rules for different URL patterns.
                 .authorizeHttpRequests(authorize -> authorize
-                        .requestMatchers("/api/email/**").permitAll() // Allow access to email API endpoints for all users.
-                        .requestMatchers("/api/auth/**").permitAll() // Allow access to authentication API endpoints for all users.
-                        .requestMatchers("/api/user/register").permitAll() // Allow access to user registration endpoint for all users.
-                        .requestMatchers("/api/user/**").hasAnyAuthority("ADMINISTRATOR", "MANAGER") // Restrict access to user endpoints to ADMINISTRATOR and MANAGER roles.
-                        .requestMatchers("/api/product/**").hasAnyAuthority("ADMINISTRATOR", "MANAGER") // Restrict access to product endpoints to ADMINISTRATOR and MANAGER roles.
+                        .requestMatchers("/email/**").permitAll() // Allow access to email API endpoints for all users.
+                        .requestMatchers("/auth/**").permitAll() // Allow access to authentication API endpoints for all users.
+                        .requestMatchers("/user/register").permitAll() // Allow access to user registration endpoint for all users.
+                        .requestMatchers("/user/**").hasAnyAuthority("Administrator") // Restrict access to user endpoints to ADMINISTRATOR and MANAGER roles.
+                        .requestMatchers("/product/**").hasAnyAuthority("Administrator") // Restrict access to product endpoints to ADMINISTRATOR and MANAGER roles.
                 )
                 // Configure exception handling for unauthorized access.
                 .exceptionHandling(exception -> exception
