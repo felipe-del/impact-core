@@ -8,7 +8,7 @@ import com.impact.brain.email.service.impl.EmailSendService;
 import com.impact.brain.email.util.EmailServiceUtil;
 import com.impact.brain.security.UserDetailsImp;
 import com.impact.brain.user.dto.UserDTO;
-import com.impact.brain.user.intity.User;
+import com.impact.brain.user.entity.User;
 import com.impact.brain.userToken.entity.UserToken;
 import com.impact.brain.user.service.impl.UserService;
 import com.impact.brain.userToken.service.impl.TokenService;

@@ -1,10 +1,10 @@
-package com.impact.brain.user.intity;
+package com.impact.brain.user.entity;
 
 import jakarta.persistence.*;
 
 @Entity
-@Table(name = "user_state")
-public class UserState {
+@Table(name = "user_role")
+public class UserRole {
     @Id
     @Column(name = "id", nullable = false)
     private Integer id;

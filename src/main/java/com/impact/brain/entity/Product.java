@@ -31,7 +31,7 @@ public class Product {
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "categorie_id")
-    private ProductCategorie categorie;
+    private ProductCategory categorie;
 
     @ColumnDefault("0")
     @Column(name = "isDeleted")
@@ -85,11 +85,11 @@ public class Product {
         this.supplier = supplier;
     }
 
-    public ProductCategorie getCategorie() {
+    public ProductCategory getCategorie() {
         return categorie;
     }
 
-    public void setCategorie(ProductCategorie categorie) {
+    public void setCategorie(ProductCategory categorie) {
         this.categorie = categorie;
     }
 

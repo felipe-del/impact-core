@@ -2,7 +2,7 @@ package com.impact.brain.email.util;
 
 import com.impact.brain.email.dto.MetaData;
 import com.impact.brain.email.dto.SendRequest;
-import com.impact.brain.user.intity.User;
+import com.impact.brain.user.entity.User;
 
 import java.util.ArrayList;
 import java.util.List;

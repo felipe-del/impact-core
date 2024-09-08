@@ -1,7 +1,7 @@
 package com.impact.brain.user.service;
 
 import com.impact.brain.user.dto.UserDTO;
-import com.impact.brain.user.intity.User;
+import com.impact.brain.user.entity.User;
 
 import java.util.List;
 import java.util.Optional;

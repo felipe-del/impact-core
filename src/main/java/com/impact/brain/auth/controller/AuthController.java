@@ -6,14 +6,13 @@ import com.impact.brain.auth.service.implement.AuthService;
 import com.impact.brain.exception.dto.SuccessResponseDTO;
 import com.impact.brain.security.UserDetailsImp;
 import com.impact.brain.user.dto.UserDTO;
-import com.impact.brain.user.intity.User;
+import com.impact.brain.user.entity.User;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ResponseStatusException;
 

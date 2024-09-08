@@ -1,6 +1,6 @@
 package com.impact.brain.user.repository;
 
-import com.impact.brain.user.intity.User;
+import com.impact.brain.user.entity.User;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;

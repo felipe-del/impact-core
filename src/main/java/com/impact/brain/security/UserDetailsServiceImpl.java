@@ -1,6 +1,6 @@
 package com.impact.brain.security;
 
-import com.impact.brain.user.intity.User;
+import com.impact.brain.user.entity.User;
 import com.impact.brain.user.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.UserDetails;

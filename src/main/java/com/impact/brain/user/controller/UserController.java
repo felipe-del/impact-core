@@ -1,6 +1,6 @@
 package com.impact.brain.user.controller;
 
-import com.impact.brain.user.intity.User;
+import com.impact.brain.user.entity.User;
 import com.impact.brain.user.service.impl.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;

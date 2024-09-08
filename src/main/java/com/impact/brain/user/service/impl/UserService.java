@@ -4,7 +4,7 @@ import com.impact.brain.email.dto.SendRequest;
 import com.impact.brain.email.service.impl.EmailSendService;
 import com.impact.brain.email.util.EmailServiceUtil;
 import com.impact.brain.user.dto.UserDTO;
-import com.impact.brain.user.intity.User;
+import com.impact.brain.user.entity.User;
 import com.impact.brain.user.repository.UserRepository;
 import com.impact.brain.user.service.IUserService;
 import org.springframework.beans.factory.annotation.Autowired;

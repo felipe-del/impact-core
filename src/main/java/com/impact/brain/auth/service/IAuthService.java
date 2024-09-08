@@ -3,7 +3,7 @@ package com.impact.brain.auth.service;
 import com.impact.brain.auth.dto.ChangePasswordRequest;
 import com.impact.brain.auth.dto.VerifyRequest;
 import com.impact.brain.user.dto.UserDTO;
-import com.impact.brain.user.intity.User;
+import com.impact.brain.user.entity.User;
 import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.http.ResponseEntity;
 

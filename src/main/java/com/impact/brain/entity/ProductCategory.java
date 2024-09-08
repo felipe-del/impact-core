@@ -3,8 +3,8 @@ package com.impact.brain.entity;
 import jakarta.persistence.*;
 
 @Entity
-@Table(name = "product_categorie")
-public class ProductCategorie {
+@Table(name = "product_category")
+public class ProductCategory {
     @Id
     @Column(name = "id", nullable = false)
     private Integer id;

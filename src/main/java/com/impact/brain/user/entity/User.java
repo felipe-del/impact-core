@@ -1,4 +1,4 @@
-package com.impact.brain.user.intity;
+package com.impact.brain.user.entity;
 
 import jakarta.persistence.*;
 

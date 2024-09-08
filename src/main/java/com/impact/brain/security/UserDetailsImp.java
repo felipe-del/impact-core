@@ -1,6 +1,6 @@
 package com.impact.brain.security;
 
-import com.impact.brain.user.intity.User;
+import com.impact.brain.user.entity.User;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
