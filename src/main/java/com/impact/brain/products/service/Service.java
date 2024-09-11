@@ -1,12 +1,8 @@
 package com.impact.brain.products.service;
 
-import com.impact.brain.products.entity.CategorieType;
-import com.impact.brain.products.entity.ProductCategory;
-import com.impact.brain.products.repository.ProductCategoryRepository;
-import com.impact.brain.products.repository.UnitMeasurementRepository;
+import com.impact.brain.products.entity.*;
+import com.impact.brain.products.repository.*;
 import org.springframework.beans.factory.annotation.Autowired;
-import com.impact.brain.products.repository.CategoryRepository;
-import com.impact.brain.products.entity.UnitOfMeasurement;
 
 import java.util.Optional;
 
@@ -20,6 +16,10 @@ public class Service {
     private UnitMeasurementRepository unitMeasurementRepository;
     @Autowired
     private ProductCategoryRepository productCategoryRepository;
+    @Autowired
+    private ProductRepository productRepository;
+    @Autowired
+    private ProductStatusRepository productStatusRepository;
 
     public Iterable<UnitOfMeasurement> units(){ return unitMeasurementRepository.findAll(); }
     public Iterable<CategorieType> types(){ return categoryRepository.findAll();}
@@ -35,4 +35,11 @@ public class Service {
 
     public Optional<UnitOfMeasurement> findByIdU(int id){ return unitMeasurementRepository.findById(id); }
 
+    public ProductStatus findByNamePS(String name){ return productStatusRepository.findByName(name); }
+    public Optional<ProductCategory> findByIdPC(int id){return productCategoryRepository.findById(id);}
+
+    public void saveP(Product product){
+        productRepository.save(product);
+        System.out.println("Saving product: " + product);
+    }
 }
