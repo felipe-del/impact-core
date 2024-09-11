@@ -13,7 +13,7 @@ import java.util.Optional;
 
 
 @RestController
-@RequestMapping("/api/productCategory")
+@RequestMapping("/product")
 public class ProductController {
     @Autowired
     Service service;
