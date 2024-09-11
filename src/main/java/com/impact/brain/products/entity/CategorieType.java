@@ -1,4 +1,4 @@
-package com.impact.brain.entity;
+package com.impact.brain.products.entity;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -6,8 +6,8 @@ import jakarta.persistence.Id;
 import jakarta.persistence.Table;
 
 @Entity
-@Table(name = "unit_of_measurement")
-public class UnitOfMeasurement {
+@Table(name = "categorie_type")
+public class CategorieType {
     @Id
     @Column(name = "id", nullable = false)
     private Integer id;
@@ -15,8 +15,8 @@ public class UnitOfMeasurement {
     @Column(name = "name", nullable = false, length = 50)
     private String name;
 
-    @Column(name = "abbreviation", length = 10)
-    private String abbreviation;
+    @Column(name = "description", nullable = false, length = 100)
+    private String description;
 
     public Integer getId() {
         return id;
@@ -34,12 +34,12 @@ public class UnitOfMeasurement {
         this.name = name;
     }
 
-    public String getAbbreviation() {
-        return abbreviation;
+    public String getDescription() {
+        return description;
     }
 
-    public void setAbbreviation(String abbreviation) {
-        this.abbreviation = abbreviation;
+    public void setDescription(String description) {
+        this.description = description;
     }
 
 }
