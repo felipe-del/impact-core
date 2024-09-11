@@ -10,6 +10,7 @@ public class UserDTO {
     private String email;
     private String role;
     private String state;
+    private boolean isAuthenticated;
 
     public UserDTO(int id, String name, String email, String role, String state) {
         this.id = id;
@@ -57,5 +58,13 @@ public class UserDTO {
 
     public void setState(String state) {
         this.state = state;
+    }
+
+    public boolean isAuthenticated() {
+        return isAuthenticated;
+    }
+
+    public void setAuthenticated(boolean authenticated) {
+        isAuthenticated = authenticated;
     }
 }
