@@ -1,9 +1,13 @@
 package com.impact.brain.entity;
 
 import jakarta.persistence.*;
+import lombok.Getter;
+import lombok.Setter;
 
 import java.time.LocalDate;
 
+@Getter
+@Setter
 @Entity
 @Table(name = "space_movements")
 public class SpaceMovement {
@@ -21,37 +25,5 @@ public class SpaceMovement {
 
     @Column(name = "date")
     private LocalDate date;
-
-    public Integer getId() {
-        return id;
-    }
-
-    public void setId(Integer id) {
-        this.id = id;
-    }
-
-    public SpaceReservation getReservedSpace() {
-        return reservedSpace;
-    }
-
-    public void setReservedSpace(SpaceReservation reservedSpace) {
-        this.reservedSpace = reservedSpace;
-    }
-
-    public TransactionType getTransaction() {
-        return transaction;
-    }
-
-    public void setTransaction(TransactionType transaction) {
-        this.transaction = transaction;
-    }
-
-    public LocalDate getDate() {
-        return date;
-    }
-
-    public void setDate(LocalDate date) {
-        this.date = date;
-    }
 
 }

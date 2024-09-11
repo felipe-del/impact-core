@@ -1,7 +1,11 @@
 package com.impact.brain.entity;
 
 import jakarta.persistence.*;
+import lombok.Getter;
+import lombok.Setter;
 
+@Getter
+@Setter
 @Entity
 @Table(name = "product_request")
 public class ProductRequest {
@@ -20,37 +24,5 @@ public class ProductRequest {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "status_id")
     private ResourceRequestStatus status;
-
-    public Integer getId() {
-        return id;
-    }
-
-    public void setId(Integer id) {
-        this.id = id;
-    }
-
-    public Request getRequest() {
-        return request;
-    }
-
-    public void setRequest(Request request) {
-        this.request = request;
-    }
-
-    public Product getProduct() {
-        return product;
-    }
-
-    public void setProduct(Product product) {
-        this.product = product;
-    }
-
-    public ResourceRequestStatus getStatus() {
-        return status;
-    }
-
-    public void setStatus(ResourceRequestStatus status) {
-        this.status = status;
-    }
 
 }

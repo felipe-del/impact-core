@@ -1,7 +1,11 @@
 package com.impact.brain.entity;
 
 import jakarta.persistence.*;
+import lombok.Getter;
+import lombok.Setter;
 
+@Getter
+@Setter
 @Entity
 @Table(name = "space_request")
 public class SpaceRequest {
@@ -26,53 +30,5 @@ public class SpaceRequest {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "status_id")
     private ResourceRequestStatus status;
-
-    public Integer getId() {
-        return id;
-    }
-
-    public void setId(Integer id) {
-        this.id = id;
-    }
-
-    public Request getRequest() {
-        return request;
-    }
-
-    public void setRequest(Request request) {
-        this.request = request;
-    }
-
-    public Space getSpace() {
-        return space;
-    }
-
-    public void setSpace(Space space) {
-        this.space = space;
-    }
-
-    public Integer getNumPeople() {
-        return numPeople;
-    }
-
-    public void setNumPeople(Integer numPeople) {
-        this.numPeople = numPeople;
-    }
-
-    public Integer getEventDesc() {
-        return eventDesc;
-    }
-
-    public void setEventDesc(Integer eventDesc) {
-        this.eventDesc = eventDesc;
-    }
-
-    public ResourceRequestStatus getStatus() {
-        return status;
-    }
-
-    public void setStatus(ResourceRequestStatus status) {
-        this.status = status;
-    }
 
 }

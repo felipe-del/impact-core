@@ -1,9 +1,13 @@
 package com.impact.brain.entity;
 
 import jakarta.persistence.*;
+import lombok.Getter;
+import lombok.Setter;
 
 import java.time.LocalDate;
 
+@Getter
+@Setter
 @Entity
 @Table(name = "asset_movements")
 public class AssetMovement {
@@ -21,37 +25,5 @@ public class AssetMovement {
 
     @Column(name = "date")
     private LocalDate date;
-
-    public Integer getId() {
-        return id;
-    }
-
-    public void setId(Integer id) {
-        this.id = id;
-    }
-
-    public Asset getAsset() {
-        return asset;
-    }
-
-    public void setAsset(Asset asset) {
-        this.asset = asset;
-    }
-
-    public TransactionType getTransaction() {
-        return transaction;
-    }
-
-    public void setTransaction(TransactionType transaction) {
-        this.transaction = transaction;
-    }
-
-    public LocalDate getDate() {
-        return date;
-    }
-
-    public void setDate(LocalDate date) {
-        this.date = date;
-    }
 
 }

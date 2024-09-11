@@ -1,7 +1,13 @@
 package com.impact.brain.entity;
 
 import jakarta.persistence.*;
+import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.Size;
+import lombok.Getter;
+import lombok.Setter;
 
+@Getter
+@Setter
 @Entity
 @Table(name = "product_category")
 public class ProductCategory {
@@ -9,12 +15,16 @@ public class ProductCategory {
     @Column(name = "id", nullable = false)
     private Integer id;
 
+    @Size(max = 100)
     @Column(name = "name", length = 100)
     private String name;
 
+    @NotNull
     @Column(name = "cantidad_minima", nullable = false)
     private Integer cantidadMinima;
 
+    @Size(max = 50)
+    @NotNull
     @Column(name = "product_type", nullable = false, length = 50)
     private String productType;
 
@@ -25,53 +35,5 @@ public class ProductCategory {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "unit_of_measurement")
     private UnitOfMeasurement unitOfMeasurement;
-
-    public Integer getId() {
-        return id;
-    }
-
-    public void setId(Integer id) {
-        this.id = id;
-    }
-
-    public String getName() {
-        return name;
-    }
-
-    public void setName(String name) {
-        this.name = name;
-    }
-
-    public Integer getCantidadMinima() {
-        return cantidadMinima;
-    }
-
-    public void setCantidadMinima(Integer cantidadMinima) {
-        this.cantidadMinima = cantidadMinima;
-    }
-
-    public String getProductType() {
-        return productType;
-    }
-
-    public void setProductType(String productType) {
-        this.productType = productType;
-    }
-
-    public CategorieType getCategorieType() {
-        return categorieType;
-    }
-
-    public void setCategorieType(CategorieType categorieType) {
-        this.categorieType = categorieType;
-    }
-
-    public UnitOfMeasurement getUnitOfMeasurement() {
-        return unitOfMeasurement;
-    }
-
-    public void setUnitOfMeasurement(UnitOfMeasurement unitOfMeasurement) {
-        this.unitOfMeasurement = unitOfMeasurement;
-    }
 
 }

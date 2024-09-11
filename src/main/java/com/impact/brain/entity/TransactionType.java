@@ -1,7 +1,13 @@
 package com.impact.brain.entity;
 
 import jakarta.persistence.*;
+import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.Size;
+import lombok.Getter;
+import lombok.Setter;
 
+@Getter
+@Setter
 @Entity
 @Table(name = "transaction_type")
 public class TransactionType {
@@ -9,35 +15,13 @@ public class TransactionType {
     @Column(name = "id", nullable = false)
     private Integer id;
 
+    @Size(max = 50)
+    @NotNull
     @Column(name = "type_name", nullable = false, length = 50)
     private String typeName;
 
     @Lob
     @Column(name = "description")
     private String description;
-
-    public Integer getId() {
-        return id;
-    }
-
-    public void setId(Integer id) {
-        this.id = id;
-    }
-
-    public String getTypeName() {
-        return typeName;
-    }
-
-    public void setTypeName(String typeName) {
-        this.typeName = typeName;
-    }
-
-    public String getDescription() {
-        return description;
-    }
-
-    public void setDescription(String description) {
-        this.description = description;
-    }
 
 }
