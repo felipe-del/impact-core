@@ -1,9 +1,8 @@
 package com.impact.brain.products.controller;
 
 import com.impact.brain.products.dto.ProductCategoryDTO;
-import com.impact.brain.products.entity.CategorieType;
-import com.impact.brain.products.entity.ProductCategory;
-import com.impact.brain.products.entity.UnitOfMeasurement;
+import com.impact.brain.products.dto.ProductDTO;
+import com.impact.brain.products.entity.*;
 import com.impact.brain.products.service.Service;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -32,7 +31,7 @@ public class ProductController {
         return service.categories();
     }
 
-    @PostMapping
+    @PostMapping()
     public void create(@RequestBody ProductCategoryDTO category){
         try{
             ProductCategory categoryA= new ProductCategory();
@@ -51,6 +50,27 @@ public class ProductController {
 //            Optional<UnitOfMeasurement> u= service.findByIdU(category.getUnitOfMeasurement());
 //            if(u.isPresent() && c.isPresent())
             service.saveC(categoryA);
+        }catch(Exception e){
+            System.out.println(e.getMessage());
+            throw new ResponseStatusException(HttpStatus.CONFLICT);
+        }
+    }
+    @PostMapping("/product")
+    public void createP(@RequestBody ProductDTO product){
+        try{
+            for(int i=1; i<product.getQuantity();i++) {
+                Product productA=new Product();
+                productA.setPurchaseDate(product.getPurchaseDate());
+                productA.setExpiryDate(product.getExpiryDate());
+                Optional<ProductCategory> c= service.findByIdPC(product.getCategory());
+                c.ifPresent(productA::setCategorie);
+                ProductStatus s= service.findByNamePS("Available");
+                if(s!=null) productA.setStatus(s);
+
+                System.out.println(productA);
+
+                service.saveP(productA);
+            }
         }catch(Exception e){
             System.out.println(e.getMessage());
             throw new ResponseStatusException(HttpStatus.CONFLICT);
