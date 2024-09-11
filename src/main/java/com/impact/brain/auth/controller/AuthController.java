@@ -45,6 +45,9 @@ public class AuthController {
     public ResponseEntity<UserDTO> login(@RequestBody User user, HttpServletRequest request) {
         System.out.println(user.getEmail()+" "+user.getPassword());
         UserDTO authenticatedUser = authService.authenticate(user.getEmail(), user.getPassword(), request);
+        if (authenticatedUser != null) {
+            authenticatedUser.setAuthenticated(true);
+        }else{authenticatedUser.setAuthenticated(false); }
         return ResponseEntity.ok(authenticatedUser);
     }
     /**
