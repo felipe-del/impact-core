@@ -12,8 +12,8 @@ import lombok.Setter;
 @Getter
 @Setter
 @Entity
-@Table(name = "categorie_type")
-public class CategorieType {
+@Table(name = "category_type")
+public class CategoryType {
     @Id
     @Column(name = "id", nullable = false)
     private Integer id;
