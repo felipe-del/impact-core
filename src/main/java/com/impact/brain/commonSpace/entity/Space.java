@@ -1,5 +1,6 @@
-package com.impact.brain.entity;
+package com.impact.brain.commonSpace.entity;
 
+import com.impact.brain.entity.BuildingLocation;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
@@ -42,7 +43,7 @@ public class Space {
     private SpaceStatus status;
 
     @ColumnDefault("0")
-    @Column(name = "isDeleted")
+    @Column(name = "is_deleted")
     private Boolean isDeleted;
 
 }
