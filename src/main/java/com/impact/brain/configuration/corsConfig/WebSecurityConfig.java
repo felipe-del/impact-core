@@ -50,6 +50,7 @@ public class WebSecurityConfig {
                         .requestMatchers("/user/register").permitAll() // Allow access to user registration endpoint for all users.
                         .requestMatchers("/user/**").hasAnyAuthority("Administrator") // Restrict access to user endpoints to ADMINISTRATOR and MANAGER roles.
                         .requestMatchers("/product/**").permitAll()// Restrict access to product endpoints to ADMINISTRATOR and MANAGER roles.
+                        .requestMatchers("/common-space/**").permitAll()// Restrict access to product endpoints to ADMINISTRATOR and MANAGER roles.
                 )
                 // Configure exception handling for unauthorized access.
                 .exceptionHandling(exception -> exception
