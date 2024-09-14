@@ -17,7 +17,6 @@ import java.util.Optional;
 public class ProductController {
     @Autowired
     ProductService productService;
-
     @GetMapping("/types")
     public Iterable<CategoryType> read(){
         return productService.types();

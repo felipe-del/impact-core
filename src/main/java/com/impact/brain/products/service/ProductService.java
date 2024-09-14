@@ -21,6 +21,7 @@ public class ProductService {
     @Autowired
     private ProductStatusRepository productStatusRepository;
 
+    public Iterable<Product> all(){return productRepository.findAll();}
     public Iterable<UnitOfMeasurement> units(){ return unitMeasurementRepository.findAll(); }
     public Iterable<CategoryType> types(){ return categoryRepository.findAll();}
 
