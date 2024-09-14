@@ -1,4 +1,4 @@
-package com.impact.brain.entity;
+package com.impact.brain.commonSpace.entity;
 
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
@@ -24,5 +24,4 @@ public class BuildingLocation {
     @NotNull
     @Column(name = "floor", nullable = false, length = 50)
     private String floor;
-
 }
