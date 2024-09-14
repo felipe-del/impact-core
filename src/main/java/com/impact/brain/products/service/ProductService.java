@@ -7,8 +7,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import java.util.Optional;
 
 
-@org.springframework.stereotype.Service("Service")
-public class Service {
+@org.springframework.stereotype.Service("productService")
+public class ProductService {
     @Autowired
     private CategoryRepository categoryRepository;
 
@@ -23,7 +23,7 @@ public class Service {
 
     public Iterable<Product> all(){return productRepository.findAll();}
     public Iterable<UnitOfMeasurement> units(){ return unitMeasurementRepository.findAll(); }
-    public Iterable<CategorieType> types(){ return categoryRepository.findAll();}
+    public Iterable<CategoryType> types(){ return categoryRepository.findAll();}
 
     public Iterable<ProductCategory> categories() {return productCategoryRepository.findAll();}
 
@@ -32,7 +32,7 @@ public class Service {
         System.out.println("Saving category: " + category);
     }
 
-    public Optional<CategorieType> findById(int id){ return categoryRepository.findById(id); }
+    public Optional<CategoryType> findById(int id){ return categoryRepository.findById(id); }
 
     public Optional<UnitOfMeasurement> findByIdU(int id){ return unitMeasurementRepository.findById(id); }
 

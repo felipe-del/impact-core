@@ -24,8 +24,8 @@ public class Product {
     private LocalDate expiryDate;
 
     @ManyToOne
-    @JoinColumn(name = "categorie_id")
-    private ProductCategory categorie;
+    @JoinColumn(name = "category_id")
+    private ProductCategory category;
 
     @ManyToOne
     @JoinColumn(name = "status")
@@ -55,12 +55,12 @@ public class Product {
         this.expiryDate = expiryDate;
     }
 
-    public ProductCategory getCategorie() {
-        return categorie;
+    public ProductCategory getCategory() {
+        return category;
     }
 
-    public void setCategorie(ProductCategory categorie) {
-        this.categorie = categorie;
+    public void setCategory(ProductCategory category) {
+        this.category = category;
     }
 
     public ProductStatus getStatus() {
@@ -77,7 +77,7 @@ public class Product {
                 "id=" + id +
                 ", purchaseDate=" + purchaseDate +
                 ", expiryDate=" + expiryDate +
-                ", categorie=" + categorie +
+                ", categorie=" + category +
                 ", status=" + status +
                 '}';
     }
