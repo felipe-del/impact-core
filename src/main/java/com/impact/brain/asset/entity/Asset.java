@@ -1,5 +1,7 @@
-package com.impact.brain.entity;
+package com.impact.brain.asset.entity;
 
+import com.impact.brain.entity.Brand;
+import com.impact.brain.entity.Supplier;
 import com.impact.brain.user.entity.User;
 import jakarta.persistence.*;
 import lombok.Getter;
