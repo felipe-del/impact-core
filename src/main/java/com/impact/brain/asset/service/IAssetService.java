@@ -17,4 +17,5 @@ public interface IAssetService {
     Asset mapper_DTOtoEntity(AssetDTO dto);
     AssetCategory findCategoryById(int id);
     Asset save(AssetDTO dto);
+    AssetCategory saveCategory(AssetCategory category);
 }

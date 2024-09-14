@@ -46,7 +46,13 @@ public class AssetController {
 
     @PostMapping()
     public void create(@RequestBody AssetDTO assetDTO){
+        System.out.println(assetDTO.toString());
         assetService.save(assetDTO);
+    }
+
+    @PostMapping("/category")
+    public AssetCategory createCategory(@RequestBody AssetCategory assetCategory){
+       return assetService.saveCategory(assetCategory);
     }
 
 }

@@ -12,6 +12,7 @@ import com.impact.brain.brand.entity.Brand;
 import com.impact.brain.brand.repository.BrandRepository;
 import com.impact.brain.supplier.entity.Supplier;
 import com.impact.brain.supplier.service.impl.SupplierService;
+import com.impact.brain.user.entity.User;
 import com.impact.brain.user.service.impl.UserService;
 import org.springframework.stereotype.Service;
 
@@ -69,14 +70,36 @@ public class AssetService implements IAssetService {
         asset.setId(dto.getId());
         asset.setPurchaseDate(dto.getPurchaseDate());
         asset.setValue(dto.getValue());
+
+        // Set Supplier
         Optional<Supplier> supplierOptional = supplierService.getById(dto.getSupplierId());
-        supplierOptional.ifPresent(asset::setSupplier);
+        if (supplierOptional.isPresent()) {
+            asset.setSupplier(supplierOptional.get());
+        }
+
+        // Set Brand
         Optional<Brand> brandOptional = brandRepository.findById(dto.getBrandId());
-        brandOptional.ifPresent(asset::setBrand);
-        asset.setIsDeleted(dto.getIsDeleted());
-        asset.setCategory(assetCategoryRepository.findById(dto.getCategoryId()).orElse(null));
-        asset.setResponsible(userService.findById(dto.getResponsibleId()));
+        if (brandOptional.isPresent()) {
+            asset.setBrand(brandOptional.get());
+        }
+
+        // Set Category
+        AssetCategory category = assetCategoryRepository.findById(dto.getCategoryId()).orElse(null);
+        asset.setCategory(category);
+
+        // Set Responsible User
+        User responsible = userService.findById(dto.getResponsibleId());
+        asset.setResponsible(responsible);
+
+        // Set Status
+        AssetStatus status = assetStatusRepository.findById(dto.getStatusId()).orElse(null);
+        asset.setStatus(status);
+
+        // Set IsDeleted
+        asset.setIsDeleted(dto.getIsDeleted() != null ? dto.getIsDeleted() : false);
+
         return asset;
+
     }
 
     @Override
@@ -87,5 +110,10 @@ public class AssetService implements IAssetService {
     @Override
     public Asset save(AssetDTO dto) {
         return assetRepository.save(this.mapper_DTOtoEntity(dto));
+    }
+
+    @Override
+    public AssetCategory saveCategory(AssetCategory category) {
+        return assetCategoryRepository.save(category);
     }
 }

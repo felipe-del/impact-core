@@ -91,4 +91,19 @@ public class AssetDTO {
     public void setIsDeleted(Boolean isDeleted) {
         this.isDeleted = isDeleted;
     }
+
+    @Override
+    public String toString() {
+        return "AssetDTO{" +
+                "id=" + id +
+                ", purchaseDate=" + purchaseDate +
+                ", value=" + value +
+                ", responsibleId=" + responsibleId +
+                ", supplierId=" + supplierId +
+                ", categoryId=" + categoryId +
+                ", brandId=" + brandId +
+                ", statusId=" + statusId +
+                ", isDeleted=" + isDeleted +
+                '}';
+    }
 }

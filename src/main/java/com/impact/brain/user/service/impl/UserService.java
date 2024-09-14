@@ -14,6 +14,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 /**
  * @author Isaac F. B. C.
@@ -33,9 +34,20 @@ public class UserService implements IUserService {
     }
 
     @Override
-    public List<User> findAll(){
-        return this.userRepository.findAll();
+    public List<UserDTO> findAll() {
+        List<User> users = this.userRepository.findAll();
+        return users.stream()
+                .map(user -> {
+                    UserDTO dto = new UserDTO();
+                    dto.setId(user.getId());
+                    dto.setName(user.getName());
+                    dto.setEmail(user.getEmail());
+                    // Mapea otros campos si es necesario
+                    return dto;
+                })
+                .collect(Collectors.toList());
     }
+
 
     @Override
     public User saveUser(User user) throws Exception {

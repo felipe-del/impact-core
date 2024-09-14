@@ -10,7 +10,7 @@ import java.util.List;
  * @since 9/5/2024 - 10:26 AM
  */
 public interface IUserService {
-    List<User> findAll();
+    List<UserDTO> findAll();
 
     User saveUser(User user) throws Exception;
 

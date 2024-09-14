@@ -1,5 +1,6 @@
 package com.impact.brain.user.controller;
 
+import com.impact.brain.user.dto.UserDTO;
 import com.impact.brain.user.entity.User;
 import com.impact.brain.user.service.impl.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -26,7 +27,7 @@ public class UserController {
     }
 
     @GetMapping
-    public ResponseEntity<List<User>> findAll(){
+    public ResponseEntity<List<UserDTO>> findAll(){
         return ResponseEntity.ok(userService.findAll());
     }
 
