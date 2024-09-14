@@ -23,11 +23,11 @@ public class Product {
     @Column(name = "expiry_date")
     private LocalDate expiryDate;
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne
     @JoinColumn(name = "categorie_id")
     private ProductCategory categorie;
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne
     @JoinColumn(name = "status")
     private ProductStatus status;
 
