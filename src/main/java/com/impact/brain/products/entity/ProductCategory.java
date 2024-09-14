@@ -1,7 +1,5 @@
 package com.impact.brain.products.entity;
 
-import com.impact.brain.products.entity.CategorieType;
-import com.impact.brain.products.entity.UnitOfMeasurement;
 import jakarta.persistence.*;
 
 @Entity
@@ -18,12 +16,9 @@ public class ProductCategory {
     @Column(name = "cantidad_minima", nullable = false)
     private Integer cantidadMinima;
 
-//    @Column(name = "product_type", nullable = false, length = 50)
-//    private String productType;
-
     @ManyToOne
-    @JoinColumn(name = "categorie_type", referencedColumnName = "id")
-    private CategorieType categorieType;
+    @JoinColumn(name = "category_type", referencedColumnName = "id")
+    private CategoryType categoryType;
 
     @ManyToOne
     @JoinColumn(name = "unit_of_measurement", referencedColumnName = "id")
@@ -53,20 +48,12 @@ public class ProductCategory {
         this.cantidadMinima = cantidadMinima;
     }
 
-//    public String getProductType() {
-//        return productType;
-//    }
-//
-//    public void setProductType(String productType) {
-//        this.productType = productType;
-//    }
-
-    public CategorieType getCategorieType() {
-        return categorieType;
+    public CategoryType getCategorieType() {
+        return categoryType;
     }
 
-    public void setCategorieType(CategorieType categorieType) {
-        this.categorieType = categorieType;
+    public void setCategoryType(CategoryType categoryType) {
+        this.categoryType = categoryType;
     }
 
     public UnitOfMeasurement getUnitOfMeasurement() {
@@ -83,7 +70,7 @@ public class ProductCategory {
                 "id=" + id +
                 ", name='" + name + '\'' +
                 ", cantidadMinima=" + cantidadMinima +
-                ", categorieType=" + categorieType +
+                ", categorieType=" + categoryType +
                 ", unitOfMeasurement=" + unitOfMeasurement +
                 '}';
     }
