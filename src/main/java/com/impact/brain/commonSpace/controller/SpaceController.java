@@ -14,7 +14,7 @@ public class SpaceController {
     @Autowired
     SpaceService spaceService;
 
-    @GetMapping("")
+    @GetMapping("/all")
     public Iterable<Space> getSpaces() { return spaceService.spaces(); }
 
     @GetMapping("/types")
