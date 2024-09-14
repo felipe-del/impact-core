@@ -1,6 +1,6 @@
 package com.impact.brain.commonSpace.entity;
 
-import com.impact.brain.entity.Brand;
+import com.impact.brain.brand.entity.Brand;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
