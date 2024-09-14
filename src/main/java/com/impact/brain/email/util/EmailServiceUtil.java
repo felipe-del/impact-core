@@ -26,4 +26,17 @@ public class EmailServiceUtil {
         return new SendRequest(user.getEmail(), "Restablecimiento de contraseña", "reset-password-email", metaData);
     }
 
+    public static List<SendRequest> prepareNotificationEmailToAdmin(List<User> users) {
+        List<SendRequest> sendRequests = new ArrayList<>();
+        for (User user : users) {
+            List<MetaData> metaData = new ArrayList<>();
+            metaData.add(new MetaData("name", user.getName()));
+            metaData.add(new MetaData("email", user.getEmail()));
+
+            SendRequest request = new SendRequest(user.getEmail(),"Registro de un nuevo usuario","notification-new-user",metaData);
+            sendRequests.add(request);
+        }
+        return sendRequests;
+    }
+
 }

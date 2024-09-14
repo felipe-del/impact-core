@@ -30,14 +30,4 @@ public class UserController {
     public ResponseEntity<List<UserDTO>> findAll(){
         return ResponseEntity.ok(userService.findAll());
     }
-
-    @PostMapping("/register")
-    public ResponseEntity<User> register(@RequestBody User newUser) {
-        try {
-            User savedUser = userService.saveUser(newUser);
-            return ResponseEntity.status(HttpStatus.CREATED).body(savedUser);
-        } catch (Exception e) {
-            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Registration failed", e);
-        }
-    }
 }
