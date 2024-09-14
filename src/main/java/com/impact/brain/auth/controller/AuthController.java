@@ -7,6 +7,7 @@ import com.impact.brain.exception.dto.SuccessResponseDTO;
 import com.impact.brain.security.UserDetailsImp;
 import com.impact.brain.user.dto.UserDTO;
 import com.impact.brain.user.entity.User;
+import com.impact.brain.user.service.impl.UserService;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -28,28 +29,34 @@ import java.util.Map;
 public class AuthController {
 
     private final AuthService authService;
+    private final UserService userService;
 
     @Autowired
-    public AuthController(AuthService authService) {
+    public AuthController(AuthService authService, UserService userService) {
         this.authService = authService;
+        this.userService = userService;
     }
+
     /**
      * Handles the login request for a user.
      *
-     * @param user the details of the user attempting to log in (in JSON format from the request body)
-     * @param request   the HTTP request
+     * @param user    the details of the user attempting to log in (in JSON format from the request body)
+     * @param request the HTTP request
      * @return ResponseEntity with the authenticated user (without the password) if the login is successful
      * @throws ResponseStatusException if login fails, returning an HTTP 401 (UNAUTHORIZED) error
      */
     @PostMapping("/login")
     public ResponseEntity<UserDTO> login(@RequestBody User user, HttpServletRequest request) {
-        System.out.println(user.getEmail()+" "+user.getPassword());
+        System.out.println(user.getEmail() + " " + user.getPassword());
         UserDTO authenticatedUser = authService.authenticate(user.getEmail(), user.getPassword(), request);
         if (authenticatedUser != null) {
             authenticatedUser.setAuthenticated(true);
-        }else{authenticatedUser.setAuthenticated(false); }
+        } else {
+            authenticatedUser.setAuthenticated(false);
+        }
         return ResponseEntity.ok(authenticatedUser);
     }
+
     /**
      * Handles the logout request for a user.
      *
@@ -67,6 +74,7 @@ public class AuthController {
             throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, "Logout failed", e);
         }
     }
+
     /**
      * Retrieves the information of the currently authenticated user.
      *
@@ -79,6 +87,7 @@ public class AuthController {
         UserDTO userSession = authService.getCurrentUserSession();
         return ResponseEntity.ok(userSession);
     }
+
     /**
      * Initiates the password recovery process by sending a reset email.
      *
@@ -93,6 +102,7 @@ public class AuthController {
         response.put("message", "Password reset email sent successfully");
         return ResponseEntity.ok(response);
     }
+
     /**
      * Verifies the password recovery code provided by the user.
      *
@@ -117,4 +127,17 @@ public class AuthController {
         User user = authService.changePassword(request);
         return ResponseEntity.ok(user);
     }
+
+    @PostMapping("/sign-up")
+    public ResponseEntity<User> register(@RequestBody User newUser) {
+        try {
+            System.out.println("Datos recibidos para el registro: " + newUser);
+            User savedUser = userService.saveUser(newUser);
+            return ResponseEntity.status(HttpStatus.CREATED).body(savedUser);
+        } catch (Exception e) {
+            e.printStackTrace();  // Para obtener más detalles sobre la excepción
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Registration failed", e);
+        }
+    }
+
 }
