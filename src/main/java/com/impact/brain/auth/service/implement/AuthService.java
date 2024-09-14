@@ -133,7 +133,7 @@ public class AuthService implements IAuthService {
             }
 
             // Obtener el usuario asociado al token
-            Optional<User> userOptional = userService.findById(token.getUser().getId());
+            Optional<User> userOptional = Optional.ofNullable(userService.findById(token.getUser().getId()));
 
             if (userOptional.isEmpty()) {
                 throw new ResponseStatusException(HttpStatus.NOT_FOUND, "User not found for token");
@@ -157,7 +157,7 @@ public class AuthService implements IAuthService {
         String password = changePasswordRequest.getPassword();
         UserToken token = tokenService.findByToken(code);
         System.out.println("El token es "+ token.toString());
-        Optional<User> user = userService.findById(token.getUser().getId());
+        Optional<User> user = Optional.ofNullable(userService.findById(token.getUser().getId()));
         if (!user.isPresent()) {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, "User not found for token");
         }

@@ -1,5 +1,6 @@
 package com.impact.brain.entity;
 
+import com.impact.brain.asset.entity.Asset;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.Size;
 import lombok.Getter;
