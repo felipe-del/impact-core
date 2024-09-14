@@ -12,6 +12,8 @@ public class UserDTO {
     private String state;
     private boolean isAuthenticated;
 
+    public UserDTO() {}
+
     public UserDTO(int id, String name, String email, String role, String state) {
         this.id = id;
         this.name = name;

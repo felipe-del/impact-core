@@ -1,4 +1,4 @@
-package com.impact.brain.entity;
+package com.impact.brain.commonSpace.entity;
 
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
@@ -9,8 +9,8 @@ import lombok.Setter;
 @Getter
 @Setter
 @Entity
-@Table(name = "asset_status")
-public class AssetStatus {
+@Table(name = "space_status")
+public class SpaceStatus {
     @Id
     @Column(name = "id", nullable = false)
     private Integer id;

@@ -1,4 +1,4 @@
-package com.impact.brain.entity;
+package com.impact.brain.products.entity;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -12,15 +12,20 @@ import lombok.Setter;
 @Getter
 @Setter
 @Entity
-@Table(name = "brand")
-public class Brand {
+@Table(name = "category_type")
+public class CategoryType {
     @Id
     @Column(name = "id", nullable = false)
     private Integer id;
 
+    @Size(max = 50)
+    @NotNull
+    @Column(name = "name", nullable = false, length = 50)
+    private String name;
+
     @Size(max = 100)
     @NotNull
-    @Column(name = "name", nullable = false, length = 100)
-    private String name;
+    @Column(name = "description", nullable = false, length = 100)
+    private String description;
 
 }
