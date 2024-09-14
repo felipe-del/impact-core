@@ -4,7 +4,6 @@ import com.impact.brain.user.dto.UserDTO;
 import com.impact.brain.user.entity.User;
 
 import java.util.List;
-import java.util.Optional;
 
 /**
  * @author Isaac F. B. C.
@@ -17,7 +16,7 @@ public interface IUserService {
 
     User findByEmail(String email);
 
-    Optional<User> findById(int id);
+    User findById(int id);
     User changePassword(int userId, String newPassword);
     UserDTO mapToUserDTO(User user);
 }

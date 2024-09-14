@@ -1,4 +1,4 @@
-package com.impact.brain.entity;
+package com.impact.brain.brand.entity;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;

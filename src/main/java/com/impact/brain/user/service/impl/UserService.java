@@ -14,7 +14,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
 
 import java.util.List;
-import java.util.Optional;
 
 /**
  * @author Isaac F. B. C.
@@ -76,8 +75,8 @@ public class UserService implements IUserService {
     }
 
     @Override
-    public Optional<User> findById(int id) {
-        return userRepository.findById(id);
+    public User findById(int id) {
+        return userRepository.findById(id).get();
     }
 
     @Override
