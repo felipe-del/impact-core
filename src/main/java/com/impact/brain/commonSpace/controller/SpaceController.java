@@ -20,34 +20,8 @@ import java.util.stream.StreamSupport;
 public class SpaceController {
     @Autowired
     SpaceService spaceService;
-
     @GetMapping("/all")
-    public Iterable<SpaceDTO> getAllSpaces() {
-        try {
-            // Obtenemos todos los espacios
-            Iterable<Space> spaces = spaceService.spaces();
-
-            // Convertimos cada entidad Space en SpaceDTO manualmente y devolvemos un iterable
-            Iterable<SpaceDTO> spaceDTOs = StreamSupport.stream(spaces.spliterator(), false)
-                    .map(space -> {
-                        SpaceDTO dto = new SpaceDTO();
-                        dto.setId(space.getId());
-                        dto.setName(space.getName());
-                        dto.setSpaceCode(space.getSpaceCode());
-                        dto.setLocationName(space.getLocation().getBuilding().getName());
-                        dto.setMaxPeople(space.getMaxPeople());
-                        dto.setTypeName(space.getType().getType());
-                        dto.setStatusName(space.getStatus() != null ? space.getStatus().getName() : null);
-                        return dto;
-                    })
-                    .collect(Collectors.toList());
-            return spaceDTOs;
-        } catch (Exception e) {
-            System.out.println(e.getMessage());
-            throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, "Error al recuperar los espacios.");
-        }
-    }
-
+    public Iterable<Space> getSpaces() { return spaceService.spaces(); }
     @GetMapping("/types")
     public Iterable<SpaceType> findSpaces() { return spaceService.spaceTypes(); }
 
