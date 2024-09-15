@@ -17,6 +17,10 @@ import java.util.Optional;
 public class ProductController {
     @Autowired
     ProductService productService;
+    @GetMapping("/all")
+    public Iterable<Product> all(){
+        return productService.all();
+    }
     @GetMapping("/types")
     public Iterable<CategoryType> read(){
         return productService.types();
@@ -37,18 +41,15 @@ public class ProductController {
             ProductCategory categoryA= new ProductCategory();
             categoryA.setName(category.getName());
             categoryA.setCantidadMinima(category.getCantidadMinima());
+
             Optional<CategoryType> c= productService.findById(category.getCategoryType());
             c.ifPresent(categoryA::setCategoryType);
-            //CategorieType c= service.findById(category.getCategoryType());
-            //categoryA.setCategorieTypeByCategorieType(c);
-
             Optional<UnitOfMeasurement> u= productService.findByIdU(category.getUnit_of_measurement());
             u.ifPresent(categoryA::setUnitOfMeasurement);
+
             System.out.println(category.toString());
             System.out.println(categoryA.toString());
-//            Optional<CategorieType> c= service.findById(category.get());
-//            Optional<UnitOfMeasurement> u= service.findByIdU(category.getUnitOfMeasurement());
-//            if(u.isPresent() && c.isPresent())
+
             productService.saveC(categoryA);
         }catch(Exception e){
             System.out.println(e.getMessage());

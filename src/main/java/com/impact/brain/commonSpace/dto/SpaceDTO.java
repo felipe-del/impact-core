@@ -70,5 +70,16 @@ public class SpaceDTO {
 
     public void setStatusName(String statusName) {
         this.statusName = statusName;
+
+    @Override
+    public String toString() {
+        return "SpaceDTO{" +
+                ", name='" + name + '\'' +
+                ", codigoDeEspacio=" + spaceCode +
+                ", cantidadPersonas=" + maxPeople +
+                ", tipodeEspacio=" + spaceType +
+                ", statusActual=" + spaceStatus +
+                ", buildingLocation=" + buildingLocation +
+                '}';
     }
 }
