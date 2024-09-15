@@ -79,6 +79,6 @@ Para más información o contribuciones, por favor contactar a:
 - *Joel Ramírez Vargas*
     - Correo: [joelramva07@gmail.com](mailto:joelramva07@gmail.com)
 - *Raquel Alfaro Barrantes*
-    - Correo: [raquel.alfaro.barrantes@est.una.ac.cr](mailto:raquel.alfaro.barrantes@est.una.ac.cr)
+    - Correo: [raquealfaba@gmail.com](mailto:raquealfaba@gmail.com)
 
 ---
