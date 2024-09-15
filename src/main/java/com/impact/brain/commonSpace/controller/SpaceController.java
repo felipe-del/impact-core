@@ -68,7 +68,7 @@ public class SpaceController {
 
     // Methods are missing their implementation
     @PostMapping("/create")
-    public void createSpace(@RequestBody SpaceDTO space) {
+    public Space createSpace(@RequestBody SpaceDTO space) {
         try{
             Space newSpace = new Space();
             newSpace.setId(0);
@@ -92,7 +92,7 @@ public class SpaceController {
             System.out.println(bType.get().getType());
             System.out.println(bStatus.get().getName());
 
-            spaceService.saveSpace(newSpace);
+            return spaceService.saveSpace(newSpace);
         }
         catch(Exception e){
             System.out.println(e.getMessage());
@@ -102,12 +102,9 @@ public class SpaceController {
 
     // Method needs refinement in case a bad string is sent
     @PostMapping("/create/space-type")
-    public void createSpaceType(@RequestBody String type) {
+    public SpaceType createSpaceType(@RequestBody SpaceType type) {
         try {
-            SpaceType spaceType = new SpaceType();
-            spaceType.setId(0);
-            spaceType.setType(type);
-            spaceService.saveSpaceType(spaceType);
+            return spaceService.saveSpaceType(type);
         }
         catch(Exception e){
             System.out.println(e.getMessage());
@@ -117,12 +114,9 @@ public class SpaceController {
 
     // Method needs refinement in case a bad string is sent
     @PostMapping("/create/building")
-    public void createBuilding(@RequestBody String buildingName) {
+    public Building createBuilding(@RequestBody Building building) {
         try {
-            Building building = new Building();
-            building.setId(0);
-            building.setName(buildingName);
-            spaceService.saveBuilding(building);
+            return spaceService.saveBuilding(building);
         }
         catch(Exception e){
             System.out.println(e.getMessage());
@@ -131,7 +125,7 @@ public class SpaceController {
     }
 
     @PostMapping("/create/building-location")
-    public void createBuildingLocation(@RequestBody BuildingLocationDTO buildingLocationDTO) {
+    public BuildingLocation createBuildingLocation(@RequestBody BuildingLocationDTO buildingLocationDTO) {
         try {
             BuildingLocation buildingLocation = new BuildingLocation();
             buildingLocation.setId(0);
@@ -140,7 +134,7 @@ public class SpaceController {
             Optional<Building> building = spaceService.buildingById(buildingLocationDTO.getBuildingId());
             building.ifPresent(buildingLocation::setBuilding);
 
-            spaceService.saveBuildingLocation(buildingLocation);
+            return spaceService.saveBuildingLocation(buildingLocation);
         }
         catch(Exception e){
             System.out.println(e.getMessage());

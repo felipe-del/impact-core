@@ -27,5 +27,4 @@ public class BrandController {
     public Brand addBrand(@RequestBody Brand brand) {
         return brandService.saveBrand(brand);
     }
-
 }
