@@ -77,24 +77,20 @@ public class SpaceService {
     }
 
     /* Save methods for each of the classes that have relationships with the Space class */
-    public void saveSpaceType(SpaceType spaceType) {
-        spaceTypeRepository.save(spaceType);
-        System.out.println("Saving spaceType: " + spaceType);
+    public SpaceType saveSpaceType(SpaceType spaceType) {
+        return spaceTypeRepository.save(spaceType);
     }
 
-    public void saveSpace(Space space) {
-        spaceRepository.save(space);
-        System.out.println("Saving space: " + space);
+    public Space saveSpace(Space space) {
+        return spaceRepository.save(space);
     }
 
-    public void saveBuilding(Building building){
-        buildingRepository.save(building);
-        System.out.println("Saving building: " + building);
+    public Building saveBuilding(Building building){
+        return buildingRepository.save(building);
     }
 
-    public void saveBuildingLocation(BuildingLocation buildingLocation){
-        buildingLocationRepository.save(buildingLocation);
-        System.out.println("Saving buildingLocation: " + buildingLocation);
+    public BuildingLocation saveBuildingLocation(BuildingLocation buildingLocation){
+        return buildingLocationRepository.save(buildingLocation);
     }
 
     public void saveSpaceEquipment(SpaceEquipment spaceEquipment) {

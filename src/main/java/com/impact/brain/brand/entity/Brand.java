@@ -22,5 +22,4 @@ public class Brand {
     @NotNull
     @Column(name = "name", nullable = false, length = 100)
     private String name;
-
 }
