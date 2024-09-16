@@ -17,7 +17,7 @@ public class SpaceDTO {
     public String toString() {
         return "SpaceDTO{" +
                 ", name='" + name + '\'' +
-                ", codigoDeEspacio=" + spaceCode +
+        ", codigoDeEspacio=" + spaceCode +
                 ", cantidadPersonas=" + maxPeople +
                 ", tipodeEspacio=" + spaceType +
                 ", statusActual=" + spaceStatus +

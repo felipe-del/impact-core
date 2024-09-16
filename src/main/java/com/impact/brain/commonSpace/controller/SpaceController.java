@@ -1,7 +1,7 @@
 package com.impact.brain.commonSpace.controller;
 
-import com.impact.brain.commonSpace.dto.BuildingLocationDTO;
 import com.impact.brain.commonSpace.dto.BuildingDTO;
+import com.impact.brain.commonSpace.dto.BuildingLocationDTO;
 import com.impact.brain.commonSpace.dto.SpaceDTO;
 import com.impact.brain.commonSpace.entity.*;
 import com.impact.brain.commonSpace.service.SpaceService;
@@ -11,16 +11,18 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ResponseStatusException;
 
 import java.util.Optional;
+import java.util.stream.Collectors;
+import java.util.stream.StreamSupport;
+
 
 @RestController
 @RequestMapping("/common-space")
 public class SpaceController {
     @Autowired
     SpaceService spaceService;
-
+  
     @GetMapping("/all")
     public Iterable<Space> getSpaces() { return spaceService.spaces(); }
-
     @GetMapping("/types")
     public Iterable<SpaceType> findSpaces() { return spaceService.spaceTypes(); }
 
