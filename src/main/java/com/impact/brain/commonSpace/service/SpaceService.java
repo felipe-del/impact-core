@@ -61,18 +61,21 @@ public class SpaceService {
     // Method to sort all locations by their corresponding buildings
     public Iterable<BuildingDTO> locationsByBuilding() {
         ArrayList<BuildingDTO> locationsOfBuildings = new ArrayList<>();
+
         for(Building currentBuilding : buildingRepository.findAll()) {
+
             BuildingDTO locationsOfCurrBuilding = new BuildingDTO();
             locationsOfCurrBuilding.setBuilding(currentBuilding);
 
-            for(BuildingLocationDTO currentLocation : buildingLocations()) {
-                if(currentBuilding.getId() == currentLocation.getBuildingId()) {
-                    locationsOfCurrBuilding.getLocations().add(currentLocation);
+            for(BuildingLocationDTO bLoc : buildingLocations()){
+                if(currentBuilding.getId() == bLoc.getBuildingId()){
+                    locationsOfCurrBuilding.getLocations().add(bLoc);
                 }
             }
 
             locationsOfBuildings.add(locationsOfCurrBuilding);
         }
+
         return locationsOfBuildings;
     }
 
