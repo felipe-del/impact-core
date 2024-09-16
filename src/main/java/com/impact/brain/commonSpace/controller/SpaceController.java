@@ -20,6 +20,7 @@ import java.util.stream.StreamSupport;
 public class SpaceController {
     @Autowired
     SpaceService spaceService;
+  
     @GetMapping("/all")
     public Iterable<Space> getSpaces() { return spaceService.spaces(); }
     @GetMapping("/types")
