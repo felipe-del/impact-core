@@ -260,7 +260,6 @@ CREATE TABLE product_category (
     id                   INT AUTO_INCREMENT PRIMARY KEY,
     name                 VARCHAR(100),
     cantidad_minima      INT NOT NULL,
-    product_type         VARCHAR(50) NOT NULL UNIQUE,
     category_type       INT,
     unit_of_measurement  INT,
     FOREIGN KEY (category_type) REFERENCES category_type(id),
@@ -278,7 +277,6 @@ CREATE TABLE product (
     expiry_date     DATE,
     category_id    INT,
     status          INT,
-    CONSTRAINT PRIMARY KEY (id),
     CONSTRAINT FOREIGN KEY (status) REFERENCES product_status(id),
     CONSTRAINT FOREIGN KEY (category_id) REFERENCES product_category(id)
 );
