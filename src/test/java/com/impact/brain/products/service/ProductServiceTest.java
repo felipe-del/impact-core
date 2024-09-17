@@ -42,9 +42,9 @@ class ProductServiceTest {
 
     @Test
     void testSaveProduct() {
-        // Crear un producto ficticio
+        // create a product
         Product product = new Product();
-        product.setId(1);  // Simulamos que el ID sería autogenerado, pero lo configuramos por el test
+        product.setId(1);  // simulated the ID would be auto-generated, but we set it manually for the test
         product.setPurchaseDate(LocalDate.now());
         product.setExpiryDate(LocalDate.now().plusDays(60));
         product.setStatus(new ProductStatus());
@@ -61,19 +61,18 @@ class ProductServiceTest {
         if(s!=null) product.setStatus(s);
 
 
-        // Simular el comportamiento del repositorio al guardar el producto
+        // simulate the repository behavior when saving the product
         Mockito.when(productRepository.save(Mockito.any(Product.class))).thenReturn(product);
 
-        // Llamar al método que queremos testear
+        // call methods
         productService.saveP(product);
 
-        // Verificar que el repositorio haya sido llamado correctamente
+        // verify that the repository was called correctly
         Mockito.verify(productRepository, Mockito.times(1)).save(product);
 
-        // Verificar que el producto no sea nulo después de guardar
+        // verify that the product is not null after saving
         Assertions.assertNotNull(product);
 
-        // Puedes agregar más aserciones según lo que esperes que suceda al guardar un producto
         System.out.println("Producto guardado: " + product);
     }
     @Test
@@ -112,14 +111,11 @@ class ProductServiceTest {
     }
     @Test
     void testAllProducts() {
-        // Configuración
         Iterable<Product> products = mock(Iterable.class);
         when(productRepository.findAll()).thenReturn(products);
 
-        // Ejecución
         Iterable<Product> result = productService.all();
 
-        // Verificación
         assertNotNull(result);
         verify(productRepository, times(1)).findAll();
     }
