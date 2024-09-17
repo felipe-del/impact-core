@@ -273,8 +273,8 @@ DROP TABLE product_type;
 -- PRODUCT -- 
 
 CREATE TABLE product (
-    id              INT AUTO_INCREMENT,
-    purchase_date   DATE,                          
+    id              INT AUTO_INCREMENT PRIMARY KEY,
+    purchase_date   DATE,
     expiry_date     DATE,
     category_id    INT,
     status          INT,
