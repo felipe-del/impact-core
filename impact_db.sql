@@ -224,7 +224,7 @@ CREATE TABLE invoices (
 
 drop table invoices;
 
--- CATEGORIE TYPE --
+-- CATEGORY TYPE --
 
 CREATE TABLE category_type (
     id          INT AUTO_INCREMENT PRIMARY KEY,
@@ -254,13 +254,14 @@ VALUES
     ('Unidad', 'UND');
 
 
--- PRODUCT CATEGORIE --
+-- PRODUCT CATEGORY --
 
 CREATE TABLE product_category (
     id                   INT AUTO_INCREMENT PRIMARY KEY,
     name                 VARCHAR(100),
     cantidad_minima      INT NOT NULL,
-    category_type        INT,
+    product_type         VARCHAR(50) NOT NULL UNIQUE,
+    category_type       INT,
     unit_of_measurement  INT,
     FOREIGN KEY (category_type) REFERENCES category_type(id),
     FOREIGN KEY (unit_of_measurement) REFERENCES unit_of_measurement(id)
@@ -275,10 +276,11 @@ CREATE TABLE product (
     id              INT AUTO_INCREMENT PRIMARY KEY,
     purchase_date   DATE,
     expiry_date     DATE,
-    category_id     INT,
+    category_id    INT,
     status          INT,
-    FOREIGN KEY (status) REFERENCES product_status(id),
-    FOREIGN KEY (category_id) REFERENCES product_category(id)
+    CONSTRAINT PRIMARY KEY (id),
+    CONSTRAINT FOREIGN KEY (status) REFERENCES product_status(id),
+    CONSTRAINT FOREIGN KEY (category_id) REFERENCES product_category(id)
 );
 
 drop table product;
