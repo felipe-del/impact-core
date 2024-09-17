@@ -47,7 +47,7 @@ public class Asset {
     private AssetStatus status;
 
     @ColumnDefault("0")
-    @Column(name = "isDeleted")
+    @Column(name = "is_deleted")
     private Boolean isDeleted;
 
 }
