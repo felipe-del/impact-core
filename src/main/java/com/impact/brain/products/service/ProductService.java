@@ -26,7 +26,7 @@ public class ProductService {
     public Iterable<CategoryType> types(){ return categoryRepository.findAll();}
 
     public Iterable<ProductCategory> categories() {return productCategoryRepository.findAll();}
-
+    public Long productsCount(int id){return productRepository.countProductsByCategoryId(id);}
     public void saveC(ProductCategory category){
         productCategoryRepository.save(category);
         System.out.println("Saving category: " + category);
