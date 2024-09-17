@@ -145,7 +145,7 @@ CREATE TABLE space (
     max_people      INT,
     type_id         INT NOT NULL,
     status_id       INT, -- Referencia al estado del espacio
-    isDeleted       BOOLEAN DEFAULT FALSE,
+    is_deleted       BOOLEAN DEFAULT FALSE,
     FOREIGN KEY (location_id) REFERENCES building_location(id),
     FOREIGN KEY (type_id) REFERENCES space_type(id),
     FOREIGN KEY (status_id) REFERENCES space_status(id) -- Clave foránea para status
@@ -224,15 +224,15 @@ CREATE TABLE invoices (
 
 drop table invoices;
 
--- CATEGORIE TYPE --
+-- CATEGORY TYPE --
 
-CREATE TABLE categorie_type (
+CREATE TABLE category_type (
     id          INT AUTO_INCREMENT PRIMARY KEY,
     name        VARCHAR(50) NOT NULL UNIQUE,
     description VARCHAR(100) NOT NULL UNIQUE
 );
 
-INSERT INTO categorie_type (name, description) 
+INSERT INTO category_type (name, description) 
 VALUES 
     ('Limpieza', 'Productos para limpieza'),
     ('Oficina', 'Productos de oficina');
@@ -254,16 +254,15 @@ VALUES
     ('Unidad', 'UND');
 
 
--- PRODUCT CATEGORIE --
+-- PRODUCT CATEGORY --
 
 CREATE TABLE product_category (
     id                   INT AUTO_INCREMENT PRIMARY KEY,
     name                 VARCHAR(100),
     cantidad_minima      INT NOT NULL,
-    product_type         VARCHAR(50) NOT NULL UNIQUE,
-    categorie_type       INT,
+    category_type       INT,
     unit_of_measurement  INT,
-    FOREIGN KEY (categorie_type) REFERENCES categorie_type(id),
+    FOREIGN KEY (category_type) REFERENCES category_type(id),
     FOREIGN KEY (unit_of_measurement) REFERENCES unit_of_measurement(id)
 );
 
@@ -273,14 +272,13 @@ DROP TABLE product_type;
 -- PRODUCT -- 
 
 CREATE TABLE product (
-    id              INT AUTO_INCREMENT,
-    purchase_date   DATE,                          
+    id              INT AUTO_INCREMENT PRIMARY KEY,
+    purchase_date   DATE,
     expiry_date     DATE,
-    categorie_id    INT,
+    category_id    INT,
     status          INT,
-    CONSTRAINT PRIMARY KEY (id),
     CONSTRAINT FOREIGN KEY (status) REFERENCES product_status(id),
-    CONSTRAINT FOREIGN KEY (categorie_id) REFERENCES product_category(id)
+    CONSTRAINT FOREIGN KEY (category_id) REFERENCES product_category(id)
 );
 
 drop table product;
@@ -341,7 +339,7 @@ CREATE TABLE asset (
     category_id        INT,
     brand_id           INT,
     status_id          INT,
-    isDeleted          BOOLEAN DEFAULT FALSE,
+    is_deleted          BOOLEAN DEFAULT FALSE,
     FOREIGN KEY (responsible_id) REFERENCES user(id),
     FOREIGN KEY (supplier_id) REFERENCES supplier(id),
     FOREIGN KEY (category_id) REFERENCES asset_category(id),
