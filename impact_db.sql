@@ -436,3 +436,77 @@ CREATE TABLE space_movements(
 
 
 drop table space_movements;
+
+
+-------------------------
+
+
+-- Tabla para almacenar tipos de entidad (física o jurídica)
+CREATE TABLE entity_type (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    type_name VARCHAR(50) NOT NULL
+);
+
+-- Tabla para almacenar monedas
+CREATE TABLE currency (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    currency_code VARCHAR(10) NOT NULL,
+    currency_name VARCHAR(50) NOT NULL
+);
+
+-- Tabla para almacenar modelos de activos
+CREATE TABLE asset_model (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    model_name VARCHAR(100) NOT NULL
+);
+
+-- Tabla para almacenar cuentas de proveedores
+CREATE TABLE supplier_account (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    supplier_id INT,
+    account_number VARCHAR(50) NOT NULL,
+    FOREIGN KEY (supplier_id) REFERENCES supplier(id)
+);
+
+
+-- NUEVO ACTIVO 
+CREATE TABLE asset (
+    id                 INT AUTO_INCREMENT PRIMARY KEY,
+    purchase_date      DATE,
+    value              DECIMAL(10, 2),
+    responsible_id     INT,
+    supplier_id        INT,
+    category_id        INT,
+    brand_id           INT,
+    status_id          INT,
+    is_deleted         BOOLEAN DEFAULT FALSE,
+    asset_series       VARCHAR(50),
+    plate_number       VARCHAR(50),
+    entity_type_id     INT,
+    currency_id        INT,
+    asset_model_id     INT,
+    FOREIGN KEY (responsible_id) REFERENCES user(id),
+    FOREIGN KEY (supplier_id) REFERENCES supplier(id),
+    FOREIGN KEY (category_id) REFERENCES asset_category(id),
+    FOREIGN KEY (brand_id) REFERENCES brand(id),
+    FOREIGN KEY (status_id) REFERENCES asset_status(id),
+    FOREIGN KEY (entity_type_id) REFERENCES entity_type(id),
+    FOREIGN KEY (currency_id) REFERENCES currency(id),
+    FOREIGN KEY (asset_model_id) REFERENCES asset_model(id)
+);
+
+-- NUEVO
+CREATE TABLE asset_category (
+    id          INT AUTO_INCREMENT PRIMARY KEY,
+    name        VARCHAR(100) NOT NULL
+);
+
+CREATE TABLE asset_subcategory (
+    id          INT AUTO_INCREMENT PRIMARY KEY,
+    name        VARCHAR(100) NOT NULL,
+    description VARCHAR(255),
+    category_id INT,
+    FOREIGN KEY (category_id) REFERENCES asset_category(id)
+);
+
+
