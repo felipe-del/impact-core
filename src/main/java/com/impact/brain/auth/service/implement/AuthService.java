@@ -51,12 +51,12 @@ public class AuthService implements IAuthService {
             UserDetailsImp userDetails = (UserDetailsImp) auth.getPrincipal();
             User authenticatedUser = userDetails.getUser();
             System.out.println(authenticatedUser);
-            // Si hay relaciones en User, asegúrate de que están inicializadas
+
             if (authenticatedUser.getRole() != null) {
-                Hibernate.initialize(authenticatedUser.getRole()); // Inicializa el proxy si es necesario
+                Hibernate.initialize(authenticatedUser.getRole()); // Initialize proxy
             }
 
-            authenticatedUser.setPassword(null); // No devolver la contraseña
+            authenticatedUser.setPassword(null); // security (not return password)
             return userService.mapToUserDTO(authenticatedUser);
         } catch (ServletException e) {
             throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, "Authentication failed: " + e.getMessage(), e);
@@ -72,7 +72,7 @@ public class AuthService implements IAuthService {
 
         UserDetailsImp userDetails = (UserDetailsImp) authentication.getPrincipal();
         User userSession = userDetails.getUser();
-        userSession.setPassword(null); // Optionally clear the password before returning
+        userSession.setPassword(null);
 
         return userService.mapToUserDTO(userSession);
     }
