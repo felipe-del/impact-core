@@ -523,10 +523,17 @@ ADD FOREIGN KEY (asset_model_id) REFERENCES asset_model(id);
 
 -- NUEVO
 
+CREATE TABLE asset_category (
+    id          INT AUTO_INCREMENT PRIMARY KEY,
+    name        VARCHAR(100) NOT NULL,
+    subcategory_id INT,
+    FOREIGN KEY (subcategory_id) REFERENCES asset_subcategory(id)
+);
+
 CREATE TABLE asset_subcategory (
     id          INT AUTO_INCREMENT PRIMARY KEY,
     name        VARCHAR(100) NOT NULL,
-    description VARCHAR(255),
-    category_id INT,
-    FOREIGN KEY (category_id) REFERENCES asset_category(id)
+    description VARCHAR(255)
 );
+
+drop table asset_category;
