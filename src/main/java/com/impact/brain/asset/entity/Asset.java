@@ -1,9 +1,11 @@
 package com.impact.brain.asset.entity;
 
 import com.impact.brain.brand.entity.Brand;
+import com.impact.brain.supplier.entity.EntityType;
 import com.impact.brain.supplier.entity.Supplier;
 import com.impact.brain.user.entity.User;
 import jakarta.persistence.*;
+import jakarta.validation.constraints.Size;
 import lombok.Getter;
 import lombok.Setter;
 import org.hibernate.annotations.ColumnDefault;
@@ -49,5 +51,21 @@ public class Asset {
     @ColumnDefault("0")
     @Column(name = "is_deleted")
     private Boolean isDeleted;
+
+    @Size(max = 50)
+    @Column(name = "asset_series", length = 50)
+    private String assetSeries;
+
+    @Size(max = 50)
+    @Column(name = "plate_number", length = 50)
+    private String plateNumber;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "currency_id")
+    private Currency currency;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "asset_model_id")
+    private AssetModel assetModel;
 
 }

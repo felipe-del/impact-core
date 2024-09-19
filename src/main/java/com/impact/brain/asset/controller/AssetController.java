@@ -2,9 +2,7 @@ package com.impact.brain.asset.controller;
 
 import com.impact.brain.asset.dto.AssetDTO;
 import com.impact.brain.asset.dto.AssetListDTO;
-import com.impact.brain.asset.entity.Asset;
-import com.impact.brain.asset.entity.AssetCategory;
-import com.impact.brain.asset.entity.AssetStatus;
+import com.impact.brain.asset.entity.*;
 import com.impact.brain.asset.service.impl.AssetService;
 import com.impact.brain.products.dto.ProductCategoryDTO;
 import com.impact.brain.products.entity.CategoryType;
@@ -46,6 +44,21 @@ public class AssetController {
         return assetService.allCategories();
     }
 
+    @GetMapping("/currency")
+    public Iterable<Currency> getCurrency() {
+        return assetService.allCurrency();
+    }
+
+    @GetMapping("/subcategory")
+    public Iterable<AssetSubcategory> getSubcategory() {
+        return assetService.allAssetSubcategory();
+    }
+
+    @GetMapping("/model")
+    public Iterable<AssetModel> getAssetModel() {
+        return assetService.allAssetModel();
+    }
+
     @PostMapping()
     public void create(@RequestBody AssetDTO assetDTO){
         System.out.println(assetDTO.toString());
@@ -55,6 +68,15 @@ public class AssetController {
     @PostMapping("/category")
     public AssetCategory createCategory(@RequestBody AssetCategory assetCategory){
        return assetService.saveCategory(assetCategory);
+    }
+    @PostMapping("/subcategory")
+    public AssetSubcategory createSubcategory(@RequestBody AssetSubcategory assetSubcategory){
+        return assetService.saveSubcategory(assetSubcategory);
+    }
+
+    @PostMapping("/model")
+    public AssetModel createModel(@RequestBody AssetModel assetModel){
+        return assetService.saveModel(assetModel);
     }
 
     @GetMapping("/all")

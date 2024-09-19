@@ -1,12 +1,8 @@
 package com.impact.brain.asset.service.impl;
 
 import com.impact.brain.asset.dto.AssetDTO;
-import com.impact.brain.asset.entity.Asset;
-import com.impact.brain.asset.entity.AssetCategory;
-import com.impact.brain.asset.entity.AssetStatus;
-import com.impact.brain.asset.repository.AssetCategoryRepository;
-import com.impact.brain.asset.repository.AssetRepository;
-import com.impact.brain.asset.repository.AssetStatusRepository;
+import com.impact.brain.asset.entity.*;
+import com.impact.brain.asset.repository.*;
 import com.impact.brain.asset.service.IAssetService;
 import com.impact.brain.brand.entity.Brand;
 import com.impact.brain.brand.repository.BrandRepository;
@@ -32,16 +28,28 @@ public class AssetService implements IAssetService {
     private final BrandRepository brandRepository;
     private final UserService userService;
 
+    private  final AssetModelRepository assetModelRepository;
+    private  final AssetSubcategoryRepository assetSubcategoryRepository;
+    private  final CurrencyRepository assetCurrencyRepository;
+
     public AssetService(AssetCategoryRepository assetCategoryRepository,
                         AssetRepository assetRepository,
                         AssetStatusRepository assetStatusRepository,
-                        SupplierService supplierService, BrandRepository brandRepository, UserService userService) {
+                        SupplierService supplierService,
+                        BrandRepository brandRepository,
+                        UserService userService,
+                        AssetModelRepository assetModelRepository,
+                        AssetSubcategoryRepository assetSubcategoryRepository,
+                        CurrencyRepository assetCurrencyRepository) {
         this.assetCategoryRepository = assetCategoryRepository;
         this.assetRepository = assetRepository;
         this.assetStatusRepository = assetStatusRepository;
         this.supplierService = supplierService;
         this.brandRepository = brandRepository;
         this.userService = userService;
+        this.assetModelRepository = assetModelRepository;
+        this.assetSubcategoryRepository = assetSubcategoryRepository;
+        this.assetCurrencyRepository = assetCurrencyRepository;
     }
 
     @Override
@@ -60,6 +68,21 @@ public class AssetService implements IAssetService {
     }
 
     @Override
+    public Iterable<Currency> allCurrency() {
+        return assetCurrencyRepository.findAll();
+    }
+
+    @Override
+    public Iterable<AssetSubcategory> allAssetSubcategory() {
+        return assetSubcategoryRepository.findAll();
+    }
+
+    @Override
+    public Iterable<AssetModel> allAssetModel() {
+        return assetModelRepository.findAll();
+    }
+
+    @Override
     public Asset findById(int id) {
         return assetRepository.findById(id).orElse(null);
     }
@@ -67,21 +90,19 @@ public class AssetService implements IAssetService {
     @Override
     public Asset mapper_DTOtoEntity(AssetDTO dto) {
         Asset asset = new Asset();
+
+        // Asignar ID, fecha de compra, y valor
         asset.setId(dto.getId());
         asset.setPurchaseDate(dto.getPurchaseDate());
         asset.setValue(dto.getValue());
 
         // Set Supplier
         Optional<Supplier> supplierOptional = supplierService.getById(dto.getSupplierId());
-        if (supplierOptional.isPresent()) {
-            asset.setSupplier(supplierOptional.get());
-        }
+        supplierOptional.ifPresent(asset::setSupplier);
 
         // Set Brand
         Optional<Brand> brandOptional = brandRepository.findById(dto.getBrandId());
-        if (brandOptional.isPresent()) {
-            asset.setBrand(brandOptional.get());
-        }
+        brandOptional.ifPresent(asset::setBrand);
 
         // Set Category
         AssetCategory category = assetCategoryRepository.findById(dto.getCategoryId()).orElse(null);
@@ -98,9 +119,21 @@ public class AssetService implements IAssetService {
         // Set IsDeleted
         asset.setIsDeleted(dto.getIsDeleted() != null ? dto.getIsDeleted() : false);
 
-        return asset;
+        // Set Currency (buscando por el nombre)
+        Currency currency = assetCurrencyRepository.findByCurrencyName(dto.getCurrencyName()) ;
+        asset.setCurrency(currency);
 
+        // Set AssetModel (buscando por el nombre)
+        AssetModel assetModel = assetModelRepository.findByModelName(dto.getAssetModelName());
+        asset.setAssetModel(assetModel);
+
+        // Asignar valores adicionales
+        asset.setAssetSeries(dto.getAssetSeries());
+        asset.setPlateNumber(dto.getPlateNumber());
+
+        return asset;
     }
+
 
     @Override
     public AssetCategory findCategoryById(int id) {
@@ -115,5 +148,13 @@ public class AssetService implements IAssetService {
     @Override
     public AssetCategory saveCategory(AssetCategory category) {
         return assetCategoryRepository.save(category);
+    }
+    @Override
+    public AssetSubcategory saveSubcategory(AssetSubcategory assetSubcategory) {
+        return assetSubcategoryRepository.save(assetSubcategory);
+    }
+    @Override
+    public AssetModel saveModel(AssetModel assetModel) {
+        return assetModelRepository.save(assetModel);
     }
 }
