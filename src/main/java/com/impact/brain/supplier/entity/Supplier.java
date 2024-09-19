@@ -32,4 +32,8 @@ public class Supplier {
     @Column(name = "address")
     private String address;
 
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "entity_type_id")
+    private EntityType entityType;
+
 }

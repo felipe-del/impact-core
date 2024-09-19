@@ -1,9 +1,8 @@
 package com.impact.brain.asset.service;
 
+import ch.qos.logback.core.model.Model;
 import com.impact.brain.asset.dto.AssetDTO;
-import com.impact.brain.asset.entity.Asset;
-import com.impact.brain.asset.entity.AssetCategory;
-import com.impact.brain.asset.entity.AssetStatus;
+import com.impact.brain.asset.entity.*;
 
 /**
  * @author Isaac F. B. C.
@@ -13,9 +12,20 @@ public interface IAssetService {
     Iterable<Asset> all();
     Iterable<AssetStatus> allStatus();
     Iterable<AssetCategory> allCategories();
+
+    Iterable<Currency> allCurrency();
+
+    Iterable<AssetSubcategory> allAssetSubcategory();
+
+    Iterable<AssetModel> allAssetModel();
+
     Asset findById(int id);
     Asset mapper_DTOtoEntity(AssetDTO dto);
     AssetCategory findCategoryById(int id);
     Asset save(AssetDTO dto);
     AssetCategory saveCategory(AssetCategory category);
+
+    AssetSubcategory saveSubcategory(AssetSubcategory assetSubcategory);
+
+    AssetModel saveModel(AssetModel assetModel);
 }
