@@ -1,5 +1,6 @@
 package com.impact.brain.asset.controller;
 
+import com.impact.brain.asset.dto.AssetCategoryDTO;
 import com.impact.brain.asset.dto.AssetDTO;
 import com.impact.brain.asset.dto.AssetListDTO;
 import com.impact.brain.asset.entity.*;
@@ -66,8 +67,8 @@ public class AssetController {
     }
 
     @PostMapping("/category")
-    public AssetCategory createCategory(@RequestBody AssetCategory assetCategory){
-       return assetService.saveCategory(assetCategory);
+    public AssetCategory createCategory(@RequestBody AssetCategoryDTO assetDTO){
+       return assetService.saveCategory(assetService.mapper_DTOtoAssetCategory(assetDTO));
     }
     @PostMapping("/subcategory")
     public AssetSubcategory createSubcategory(@RequestBody AssetSubcategory assetSubcategory){

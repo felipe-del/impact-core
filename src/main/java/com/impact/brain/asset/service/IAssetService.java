@@ -1,6 +1,7 @@
 package com.impact.brain.asset.service;
 
 import ch.qos.logback.core.model.Model;
+import com.impact.brain.asset.dto.AssetCategoryDTO;
 import com.impact.brain.asset.dto.AssetDTO;
 import com.impact.brain.asset.entity.*;
 
@@ -21,6 +22,9 @@ public interface IAssetService {
 
     Asset findById(int id);
     Asset mapper_DTOtoEntity(AssetDTO dto);
+
+    AssetCategory mapper_DTOtoAssetCategory(AssetCategoryDTO dto);
+
     AssetCategory findCategoryById(int id);
     Asset save(AssetDTO dto);
     AssetCategory saveCategory(AssetCategory category);
