@@ -90,12 +90,13 @@ CREATE TABLE request (
 -- SUPPLIER -- 
 
 CREATE TABLE supplier (
-    id             INT AUTO_INCREMENT PRIMARY KEY,
-    name           VARCHAR(100) NOT NULL,
-    phone          VARCHAR(100),
-    email          VARCHAR(100),
-    address        TEXT,
-    entity_type_id INT,
+    id                     INT AUTO_INCREMENT PRIMARY KEY,
+    name                   VARCHAR(100) NOT NULL,
+    phone                  VARCHAR(100),
+    email                  VARCHAR(100),
+    address                TEXT,
+    entity_type_id         INT,  -- Identifica si la cédula es física o jurídica
+    client_contact         VARCHAR(100), -- Contacto de algún cliente del proveedor
     FOREIGN KEY (entity_type_id) REFERENCES entity_type(id)
 );
 
