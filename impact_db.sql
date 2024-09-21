@@ -100,14 +100,6 @@ CREATE TABLE supplier (
     FOREIGN KEY (entity_type_id) REFERENCES entity_type(id)
 );
 
-
--- CATEGORY -- 
-
-CREATE TABLE asset_category (
-    id          INT AUTO_INCREMENT PRIMARY KEY,
-    name        VARCHAR(100) NOT NULL
-);
-
 DROP TABLE asset_category;
 
 -- BRAND -- 
@@ -335,29 +327,6 @@ CREATE TABLE product_request (
 
 drop table product_request;
 
-
--- ASSET -- 
-
-CREATE TABLE asset (
-    id                 INT AUTO_INCREMENT PRIMARY KEY,
-    purchase_date      DATE,
-    value              DECIMAL(10, 2),
-    responsible_id     INT,
-    supplier_id        INT,
-    category_id        INT,
-    brand_id           INT,
-    status_id          INT,
-    is_deleted          BOOLEAN DEFAULT FALSE,
-    FOREIGN KEY (responsible_id) REFERENCES user(id),
-    FOREIGN KEY (supplier_id) REFERENCES supplier(id),
-    FOREIGN KEY (category_id) REFERENCES asset_category(id),
-    FOREIGN KEY (brand_id) REFERENCES brand(id),
-    FOREIGN KEY (status_id) REFERENCES asset_status(id)
-);
-
-
-drop table asset;
-
 -- ASSET STATUS --
 
 CREATE TABLE asset_status (
@@ -496,6 +465,8 @@ CREATE TABLE asset (
     supplier_id        INT,
     category_id        INT,
     brand_id           INT,
+    currency_id        INT,
+    entity_type_id     INT,
     status_id          INT,
     is_deleted         BOOLEAN DEFAULT FALSE,
     asset_series       VARCHAR(50),
@@ -505,22 +476,12 @@ CREATE TABLE asset (
     FOREIGN KEY (supplier_id) REFERENCES supplier(id),
     FOREIGN KEY (category_id) REFERENCES asset_category(id),
     FOREIGN KEY (brand_id) REFERENCES brand(id),
+    FOREIGN KEY (entity_type_id) REFERENCES entity_type(id),
     FOREIGN KEY (status_id) REFERENCES asset_status(id),
+    FOREIGN KEY (currency_id) REFERENCES currency(id),
     FOREIGN KEY (currency_id) REFERENCES currency(id),
     FOREIGN KEY (asset_model_id) REFERENCES asset_model(id)
 );
-
-
-alter table asset
-ADD COLUMN asset_series VARCHAR(50),
-ADD COLUMN plate_number VARCHAR(50),
-ADD COLUMN entity_type_id INT,
-ADD COLUMN currency_id INT,
-ADD COLUMN asset_model_id INT,
-ADD FOREIGN KEY (entity_type_id) REFERENCES entity_type(id),
-ADD FOREIGN KEY (currency_id) REFERENCES currency(id),
-ADD FOREIGN KEY (asset_model_id) REFERENCES asset_model(id);
-
 
 -- NUEVO
 
@@ -538,3 +499,4 @@ CREATE TABLE asset_subcategory (
 );
 
 drop table asset_category;
+
