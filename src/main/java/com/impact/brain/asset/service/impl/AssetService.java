@@ -139,7 +139,14 @@ public class AssetService implements IAssetService {
 
         return asset;
     }
-
+    @Override
+    public AssetCategory mapper_DTOtoAssetCategory(AssetCategoryDTO dto) {
+        AssetCategory assetCategory = new AssetCategory();
+        assetCategory.setId(dto.getId());
+        assetCategory.setName(dto.getName());
+        assetCategory.setSubcategory(assetSubcategoryRepository.findById(dto.getSubcategoryId()).orElse(null));
+        return assetCategory;
+    }
 
     @Override
     public AssetCategory findCategoryById(int id) {
@@ -153,6 +160,7 @@ public class AssetService implements IAssetService {
 
     @Override
     public AssetCategory saveCategory(AssetCategory category) {
+
         return assetCategoryRepository.save(category);
     }
     @Override
