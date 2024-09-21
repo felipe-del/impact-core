@@ -8,18 +8,20 @@ import java.math.BigDecimal;
 @Setter
 @Getter
 public class AssetListDTO {
-    int id;
+    String plate;
     String category;
-    BigDecimal number;
+    String subcategory;
     String status;
+    String description;
 
     @Override
     public String toString() {
         return "AssetListDTO{" +
-                "id=" + id +
+                "plate=" + plate +
                 ", category=" + category +
-                ", number=" + number +
+                ", subcategory=" + subcategory +
                 ", status=" + status +
+                ", description=" + description +
                 '}';
     }
 }
