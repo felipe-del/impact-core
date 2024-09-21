@@ -1,5 +1,6 @@
 package com.impact.brain.asset.controller;
 
+import com.impact.brain.asset.dto.AssetCategoryDTO;
 import com.impact.brain.asset.dto.AssetDTO;
 import com.impact.brain.asset.dto.AssetListDTO;
 import com.impact.brain.asset.entity.*;
@@ -40,7 +41,7 @@ public class AssetController {
     }
 
     @GetMapping("/category")
-    public Iterable<AssetCategory> getAssetCategory() {
+    public Iterable<AssetCategoryDTO> getAssetCategory() {
         return assetService.allCategories();
     }
 

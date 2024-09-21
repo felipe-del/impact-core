@@ -1,7 +1,9 @@
 package com.impact.brain.supplier.service;
 
+import com.impact.brain.supplier.dto.SupplierDTO;
 import com.impact.brain.supplier.entity.Supplier;
 
+import java.util.List;
 import java.util.Optional;
 
 /**
@@ -9,7 +11,7 @@ import java.util.Optional;
  * @since 9/14/2024 - 6:47 AM
  */
 public interface ISupplierService {
-    Iterable<Supplier> getSuppliers();
-    Supplier save(Supplier supplier);
+    List<SupplierDTO> getSuppliers();
+    Supplier save(SupplierDTO supplier);
     Optional<Supplier> getById(int id);
 }

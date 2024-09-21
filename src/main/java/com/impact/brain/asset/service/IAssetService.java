@@ -1,6 +1,7 @@
 package com.impact.brain.asset.service;
 
 import ch.qos.logback.core.model.Model;
+import com.impact.brain.asset.dto.AssetCategoryDTO;
 import com.impact.brain.asset.dto.AssetDTO;
 import com.impact.brain.asset.entity.*;
 
@@ -11,7 +12,7 @@ import com.impact.brain.asset.entity.*;
 public interface IAssetService {
     Iterable<Asset> all();
     Iterable<AssetStatus> allStatus();
-    Iterable<AssetCategory> allCategories();
+    Iterable<AssetCategoryDTO> allCategories();
 
     Iterable<Currency> allCurrency();
 
