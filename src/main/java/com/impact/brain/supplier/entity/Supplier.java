@@ -36,4 +36,8 @@ public class Supplier {
     @JoinColumn(name = "entity_type_id")
     private EntityType entityType;
 
+    @Size(max = 100)
+    @Column(name = "client_contact", length = 100)
+    private String clientContact;
+
 }

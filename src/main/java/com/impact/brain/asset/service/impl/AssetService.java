@@ -14,6 +14,8 @@ import com.impact.brain.user.service.impl.UserService;
 import org.springframework.stereotype.Service;
 
 import java.util.Optional;
+import java.util.stream.Collectors;
+import java.util.stream.StreamSupport;
 
 /**
  * @author Isaac F. B. C.
@@ -64,8 +66,11 @@ public class AssetService implements IAssetService {
     }
 
     @Override
-    public Iterable<AssetCategory> allCategories() {
-        return assetCategoryRepository.findAll();
+    public Iterable<AssetCategoryDTO> allCategories() {
+        Iterable<AssetCategory> categories = assetCategoryRepository.findAll();
+        return StreamSupport.stream(categories.spliterator(), false)
+                .map(this::mapEntityToDto) // Map each AssetCategory to AssetCategoryDTO
+                .collect(Collectors.toList());
     }
 
     @Override
@@ -166,4 +171,34 @@ public class AssetService implements IAssetService {
     public AssetModel saveModel(AssetModel assetModel) {
         return assetModelRepository.save(assetModel);
     }
+    public AssetCategory mapDtoToEntity(AssetCategoryDTO dto) {
+        if (dto == null) {
+            throw new IllegalArgumentException("AssetCategoryDTO cannot be null");
+        }
+
+        AssetCategory category = new AssetCategory();
+        category.setId(dto.getId());
+        category.setName(dto.getName());
+
+        // Assuming you have a repository to fetch the subcategory by ID
+        AssetSubcategory subcategory = assetSubcategoryRepository.findById(dto.getSubcategoryId())
+                .orElseThrow(() -> new RuntimeException("Subcategory not found"));
+        category.setSubcategory(subcategory);
+
+        return category;
+    }
+    public AssetCategoryDTO mapEntityToDto(AssetCategory category) {
+        if (category == null) {
+            throw new IllegalArgumentException("AssetCategory cannot be null");
+        }
+
+        AssetCategoryDTO dto = new AssetCategoryDTO();
+        dto.setId(category.getId());
+        dto.setName(category.getName());
+        dto.setSubcategoryId(category.getSubcategory().getId()); // Get subcategory ID
+
+        return dto;
+    }
+
+
 }

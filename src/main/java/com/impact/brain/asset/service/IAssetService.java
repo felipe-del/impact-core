@@ -12,7 +12,7 @@ import com.impact.brain.asset.entity.*;
 public interface IAssetService {
     Iterable<Asset> all();
     Iterable<AssetStatus> allStatus();
-    Iterable<AssetCategory> allCategories();
+    Iterable<AssetCategoryDTO> allCategories();
 
     Iterable<Currency> allCurrency();
 

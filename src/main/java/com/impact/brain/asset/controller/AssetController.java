@@ -41,7 +41,7 @@ public class AssetController {
     }
 
     @GetMapping("/category")
-    public Iterable<AssetCategory> getAssetCategory() {
+    public Iterable<AssetCategoryDTO> getAssetCategory() {
         return assetService.allCategories();
     }
 
