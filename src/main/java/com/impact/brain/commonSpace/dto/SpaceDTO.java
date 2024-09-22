@@ -9,7 +9,6 @@ public class SpaceDTO {
     private String name;
     private int spaceCode;
     private int maxPeople;
-    private int spaceType;
     private int spaceStatus;
     private int buildingLocation;
 
@@ -19,7 +18,6 @@ public class SpaceDTO {
                 ", name='" + name + '\'' +
         ", codigoDeEspacio=" + spaceCode +
                 ", cantidadPersonas=" + maxPeople +
-                ", tipodeEspacio=" + spaceType +
                 ", statusActual=" + spaceStatus +
                 ", buildingLocation=" + buildingLocation +
                 '}';
