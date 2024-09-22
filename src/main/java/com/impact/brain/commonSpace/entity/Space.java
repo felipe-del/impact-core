@@ -32,11 +32,6 @@ public class Space {
     @Column(name = "max_people")
     private Integer maxPeople;
 
-    @NotNull
-    @ManyToOne(fetch = FetchType.EAGER, optional = false)
-    @JoinColumn(name = "type_id", nullable = false)
-    private SpaceType type;
-
     @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "status_id")
     private SpaceStatus status;
