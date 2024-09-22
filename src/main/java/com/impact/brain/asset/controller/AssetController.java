@@ -59,8 +59,8 @@ public class AssetController {
     }
 
     @PostMapping("/category")
-    public AssetCategory createCategory(@RequestBody AssetCategory assetCategory){
-       return assetService.saveCategory(assetCategory);
+    public AssetCategory createCategory(@RequestBody AssetCategoryDTO assetDTO){
+       return assetService.saveCategory(assetService.mapper_DTOtoAssetCategory(assetDTO));
     }
     @PostMapping("/subcategory")
     public AssetSubcategory createSubcategory(@RequestBody AssetSubcategoryDTO assetSubcategoryDTO){

@@ -10,9 +10,10 @@ CREATE TABLE user_role (
 );
 
 INSERT INTO user_role (name, description) VALUES 
-('Administrator', 'Has the ability to receive more reports and access user management.'),
-('Manager', 'Cannot receive more reports and has no access to user management.'),
-('Teacher', 'Standard user with no special privileges.');
+('Administrador', 'Tiene la capacidad de recibir más informes y acceder a la gestión de usuarios.'),
+('Gerente', 'No puede recibir más informes y no tiene acceso a la gestión de usuarios.'),
+('Profesor', 'Usuario estándar sin privilegios especiales.');
+
 
 select * from user_role;
 
@@ -25,9 +26,9 @@ CREATE TABLE user_state (
 );
 
 INSERT INTO user_state (name, description) VALUES 
-('active', 'User is active and can log in'),
-('inactive', 'User cannot access the system'),
-('suspended', 'User is temporarily suspended');
+('activo', 'El usuario está activo y puede iniciar sesión'),
+('inactivo', 'El usuario no puede acceder al sistema'),
+('suspendido', 'El usuario está temporalmente suspendido');
 
 select * from user_state;
 
@@ -66,11 +67,12 @@ CREATE TABLE request_status (
 );
 
 INSERT INTO request_status (status_name, description) VALUES 
-('Pending', 'Request is pending review.'),
-('Approved', 'Request has been approved.'),
-('Rejected', 'Request has been rejected.'),
-('Completed', 'The request has been completed and all associated tasks are finished.'),
-('Cancelled', 'The request has been cancelled and will not be processed.');
+('Pendiente', 'La solicitud está pendiente de revisión.'),
+('Aprobada', 'La solicitud ha sido aprobada.'),
+('Rechazada', 'La solicitud ha sido rechazada.'),
+('Completada', 'La solicitud ha sido completada y todas las tareas asociadas han finalizado.'),
+('Cancelada', 'La solicitud ha sido cancelada y no será procesada.');
+
 
 select * from request_status;
 
@@ -88,19 +90,22 @@ CREATE TABLE request (
 -- SUPPLIER -- 
 
 CREATE TABLE supplier (
-    id       INT AUTO_INCREMENT PRIMARY KEY,
-    name     VARCHAR(100) NOT NULL,
-    phone    VARCHAR(100),
-    email    VARCHAR(100),
-    address  TEXT
+    id                     INT AUTO_INCREMENT PRIMARY KEY,
+    name                   VARCHAR(100) NOT NULL,
+    phone                  VARCHAR(100),
+    email                  VARCHAR(100),
+    address                TEXT,
+    entity_type_id         INT,  -- Identifica si la cédula es física o jurídica
+    client_contact         VARCHAR(100), -- Contacto de algún cliente del proveedor
+    FOREIGN KEY (entity_type_id) REFERENCES entity_type(id)
 );
+
 
 -- CATEGORY -- 
 
 CREATE TABLE asset_category (
     id          INT AUTO_INCREMENT PRIMARY KEY,
-    name        VARCHAR(100) NOT NULL,
-    description VARCHAR(100) NOT NULL UNIQUE
+    name        VARCHAR(100) NOT NULL
 );
 
 DROP TABLE asset_category;
@@ -163,10 +168,11 @@ CREATE TABLE space_status (
 
 -- Inserción de datos predefinidos para los estados de space
 INSERT INTO space_status (name, description) VALUES 
-('Available', 'The space is available for use.'),
-('Occupied', 'The space is currently occupied.'),
-('Under Maintenance', 'The space is under maintenance and not available for use.'),
-('Out of Service', 'The space is no longer available or operational.');
+('Disponible', 'El espacio está disponible para su uso.'),
+('Ocupado', 'El espacio está actualmente ocupado.'),
+('En Mantenimiento', 'El espacio está en mantenimiento y no está disponible para su uso.'),
+('Fuera de Servicio', 'El espacio ya no está disponible o no está operativo.');
+
 
 -- SPACE EQUIPMENT --
 
@@ -293,9 +299,10 @@ CREATE TABLE product_status(
 );
 
 INSERT INTO product_status (name, description) VALUES 
-('Available', 'The product is available for request.'),
-('Pending', 'The product is pending to be delivered or processed.'),
-('Loaned ', 'The product has been given in loan.');
+('Disponible', 'El producto está disponible para solicitar.'),
+('Pendiente', 'El producto está pendiente de ser entregado o procesado.'),
+('Prestado', 'El producto ha sido entregado en préstamo.');
+
 
 -- RESOURCE REQUEST STATUS -- 
 
@@ -306,11 +313,12 @@ CREATE TABLE resource_request_status (
 );
 
 INSERT INTO resource_request_status (name, description) VALUES 
-('Pending', 'The product is pending to be delivered or processed.'),
-('Issued', 'The product has been issued or lent out.'),
-('Returned', 'The product has been returned.'),
-('Cancelled', 'The request for the product has been cancelled.'),
-('Available', 'The product is available for request.');
+('Pendiente', 'El producto está pendiente de ser entregado o procesado.'),
+('Emitido', 'El producto ha sido emitido o prestado.'),
+('Devuelto', 'El producto ha sido devuelto.'),
+('Cancelado', 'La solicitud del producto ha sido cancelada.'),
+('Disponible', 'El producto está disponible para solicitar.');
+
 
 -- PRODUCTO REQUEST -- 
 
@@ -360,10 +368,11 @@ CREATE TABLE asset_status (
 );
 
 INSERT INTO asset_status (name, description) VALUES 
-('Available', 'The asset is available for use.'),
-('In Maintenance', 'The asset is undergoing maintenance.'),
-('Loaned', 'The asset has been loaned out to someone.'),
-('Out of Service', 'The asset is no longer operational or in use.');
+('Disponible', 'El activo está disponible para su uso.'),
+('En Mantenimiento', 'El activo está en mantenimiento.'),
+('Prestado', 'El activo ha sido prestado a alguien.'),
+('Fuera de Servicio', 'El activo ya no está operativo o en uso.');
+
 
 
 -- ASSET_REQUEST -- 
@@ -392,10 +401,11 @@ CREATE TABLE transaction_type (
 
 -- Inserción de datos predefinidos (CRUD y otros estados)
 INSERT INTO transaction_type (type_name, description) VALUES
-('Create', 'Represents the creation of a new record or entity.'),
-('Read', 'Represents the retrieval of information or data.'),
-('Update', 'Represents the update or modification of an existing record.'),
-('Delete', 'Represents the deletion of a record or entity.');
+('Crear', 'Representa la creación de un nuevo registro o entidad.'),
+('Leer', 'Representa la recuperación de información o datos.'),
+('Actualizar', 'Representa la actualización o modificación de un registro existente.'),
+('Eliminar', 'Representa la eliminación de un registro o entidad.');
+
 
 -- ASSET MOVEMENTS --
 
@@ -447,12 +457,20 @@ CREATE TABLE entity_type (
     type_name VARCHAR(50) NOT NULL
 );
 
+INSERT INTO entity_type (type_name) VALUES 
+('Física'),
+('Jurídica');
+
 -- Tabla para almacenar monedas
 CREATE TABLE currency (
     id INT AUTO_INCREMENT PRIMARY KEY,
     currency_code VARCHAR(10) NOT NULL,
     currency_name VARCHAR(50) NOT NULL
 );
+
+INSERT INTO currency (currency_code, currency_name) VALUES 
+('CRC', 'Colones'),
+('USD', 'Dólares');
 
 -- Tabla para almacenar modelos de activos
 CREATE TABLE asset_model (
@@ -482,31 +500,41 @@ CREATE TABLE asset (
     is_deleted         BOOLEAN DEFAULT FALSE,
     asset_series       VARCHAR(50),
     plate_number       VARCHAR(50),
-    entity_type_id     INT,
-    currency_id        INT,
     asset_model_id     INT,
     FOREIGN KEY (responsible_id) REFERENCES user(id),
     FOREIGN KEY (supplier_id) REFERENCES supplier(id),
     FOREIGN KEY (category_id) REFERENCES asset_category(id),
     FOREIGN KEY (brand_id) REFERENCES brand(id),
     FOREIGN KEY (status_id) REFERENCES asset_status(id),
-    FOREIGN KEY (entity_type_id) REFERENCES entity_type(id),
     FOREIGN KEY (currency_id) REFERENCES currency(id),
     FOREIGN KEY (asset_model_id) REFERENCES asset_model(id)
 );
 
+
+alter table asset
+ADD COLUMN asset_series VARCHAR(50),
+ADD COLUMN plate_number VARCHAR(50),
+ADD COLUMN entity_type_id INT,
+ADD COLUMN currency_id INT,
+ADD COLUMN asset_model_id INT,
+ADD FOREIGN KEY (entity_type_id) REFERENCES entity_type(id),
+ADD FOREIGN KEY (currency_id) REFERENCES currency(id),
+ADD FOREIGN KEY (asset_model_id) REFERENCES asset_model(id);
+
+
 -- NUEVO
+
 CREATE TABLE asset_category (
     id          INT AUTO_INCREMENT PRIMARY KEY,
-    name        VARCHAR(100) NOT NULL
+    name        VARCHAR(100) NOT NULL,
+    subcategory_id INT,
+    FOREIGN KEY (subcategory_id) REFERENCES asset_subcategory(id)
 );
 
 CREATE TABLE asset_subcategory (
     id          INT AUTO_INCREMENT PRIMARY KEY,
     name        VARCHAR(100) NOT NULL,
-    description VARCHAR(255),
-    category_id INT,
-    FOREIGN KEY (category_id) REFERENCES asset_category(id)
+    description VARCHAR(255)
 );
 
-
+drop table asset_category;

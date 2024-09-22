@@ -101,7 +101,7 @@ public class ProductController {
             dto.setAvailableQuantity(count);
             dto.setProductCategory(category.getCategorieType().getName());
             if(category.getCantidadMinima() >= count){
-                dto.setStatus("Requerido");
+                dto.setStatus("Por solicitar");
             }else dto.setStatus("Suficiente");
 
             // Agregar el DTO a la lista
