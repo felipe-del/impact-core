@@ -23,8 +23,6 @@ public class SpaceController {
   
     @GetMapping("/all")
     public Iterable<Space> getSpaces() { return spaceService.spaces(); }
-    @GetMapping("/types")
-    public Iterable<SpaceType> findSpaces() { return spaceService.spaceTypes(); }
 
     @GetMapping("/status")
     public Iterable<SpaceStatus> findStatus() { return spaceService.spaceStatuses(); }
@@ -57,29 +55,13 @@ public class SpaceController {
             Optional<BuildingLocation> bLoc = spaceService.buildingLocationById(space.getBuildingLocation());
             bLoc.ifPresent(newSpace::setLocation);
 
-            Optional<SpaceType> bType = spaceService.spaceTypeById(space.getSpaceType());
-            bType.ifPresent(newSpace::setType);
-
             Optional<SpaceStatus> bStatus = spaceService.spaceStatusById(space.getSpaceStatus());
             bStatus.ifPresent(newSpace::setStatus);
 
             System.out.println(bLoc.get().getFloor());
-            System.out.println(bType.get().getType());
             System.out.println(bStatus.get().getName());
 
             return spaceService.saveSpace(newSpace);
-        }
-        catch(Exception e){
-            System.out.println(e.getMessage());
-            throw new ResponseStatusException(HttpStatus.CONFLICT);
-        }
-    }
-
-    // Method needs refinement in case a bad string is sent
-    @PostMapping("/create/space-type")
-    public SpaceType createSpaceType(@RequestBody SpaceType type) {
-        try {
-            return spaceService.saveSpaceType(type);
         }
         catch(Exception e){
             System.out.println(e.getMessage());

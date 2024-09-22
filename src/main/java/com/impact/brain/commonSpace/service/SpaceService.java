@@ -12,9 +12,6 @@ import java.util.Optional;
 @org.springframework.stereotype.Service("spaceService")
 public class SpaceService {
     @Autowired
-    private SpaceTypeRepository spaceTypeRepository;
-
-    @Autowired
     private SpaceRepository spaceRepository;
 
     @Autowired
@@ -30,7 +27,6 @@ public class SpaceService {
     private BuildingLocationRepository buildingLocationRepository;
 
     /* FindAll() methods to retrieve the entire list of each object type respectively  */
-    public Iterable<SpaceType> spaceTypes() { return spaceTypeRepository.findAll(); }
     public Iterable<SpaceEquipment> spaceEquipments() { return spaceEquipmentRepository.findAll(); }
     public Iterable<SpaceStatus> spaceStatuses() { return spaceStatusRepository.findAll(); }
     public Iterable<Building> buildings() { return buildingRepository.findAll(); }
@@ -79,11 +75,6 @@ public class SpaceService {
         return locationsOfBuildings;
     }
 
-    /* Save methods for each of the classes that have relationships with the Space class */
-    public SpaceType saveSpaceType(SpaceType spaceType) {
-        return spaceTypeRepository.save(spaceType);
-    }
-
     public Space saveSpace(Space space) {
         return spaceRepository.save(space);
     }
@@ -102,10 +93,6 @@ public class SpaceService {
     }
 
     /* Methods to get objects */
-    public Optional<SpaceType> spaceTypeById(int id) {
-        return spaceTypeRepository.findById(id);
-    }
-
     public Optional<SpaceStatus> spaceStatusById(int id) {
         return spaceStatusRepository.findById(id);
     }
