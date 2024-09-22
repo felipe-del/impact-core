@@ -1,21 +1,13 @@
 package com.impact.brain.asset.controller;
 
-import com.impact.brain.asset.dto.AssetCategoryDTO;
 import com.impact.brain.asset.dto.AssetDTO;
 import com.impact.brain.asset.dto.AssetListDTO;
+import com.impact.brain.asset.dto.AssetSubcategoryDTO;
 import com.impact.brain.asset.entity.*;
 import com.impact.brain.asset.service.impl.AssetService;
-import com.impact.brain.products.dto.ProductCategoryDTO;
-import com.impact.brain.products.entity.CategoryType;
-import com.impact.brain.products.entity.ProductCategory;
-import com.impact.brain.products.entity.UnitOfMeasurement;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.server.ResponseStatusException;
 
 import java.util.ArrayList;
-import java.util.Optional;
 
 /**
  * @author Isaac F. B. C.
@@ -41,7 +33,7 @@ public class AssetController {
     }
 
     @GetMapping("/category")
-    public Iterable<AssetCategoryDTO> getAssetCategory() {
+    public Iterable<AssetCategory> getAssetCategory() {
         return assetService.allCategories();
     }
 
@@ -51,7 +43,7 @@ public class AssetController {
     }
 
     @GetMapping("/subcategory")
-    public Iterable<AssetSubcategory> getSubcategory() {
+    public Iterable<AssetSubcategoryDTO> getSubcategory() {
         return assetService.allAssetSubcategory();
     }
 
@@ -61,27 +53,28 @@ public class AssetController {
     }
 
     @PostMapping()
-    public void create(@RequestBody AssetDTO assetDTO){
+    public void create(@RequestBody AssetDTO assetDTO) {
         System.out.println(assetDTO.toString());
         assetService.save(assetDTO);
     }
 
     @PostMapping("/category")
-    public AssetCategory createCategory(@RequestBody AssetCategoryDTO assetDTO){
-       return assetService.saveCategory(assetService.mapper_DTOtoAssetCategory(assetDTO));
+    public AssetCategory createCategory(@RequestBody AssetCategoryDTO assetDTO) {
+        return assetService.saveCategory(assetService.mapper_DTOtoAssetCategory(assetDTO));
     }
+
     @PostMapping("/subcategory")
-    public AssetSubcategory createSubcategory(@RequestBody AssetSubcategory assetSubcategory){
-        return assetService.saveSubcategory(assetSubcategory);
+    public AssetSubcategory createSubcategory(@RequestBody AssetSubcategoryDTO assetSubcategoryDTO) {
+        return assetService.saveSubcategory(assetSubcategoryDTO);
     }
 
     @PostMapping("/model")
-    public AssetModel createModel(@RequestBody AssetModel assetModel){
+    public AssetModel createModel(@RequestBody AssetModel assetModel) {
         return assetService.saveModel(assetModel);
     }
 
     @GetMapping("/all")
-    public Iterable<AssetListDTO> getList(){
+    public Iterable<AssetListDTO> getList() {
         // Obtener todas las categorías
         Iterable<Asset> assets = assetService.all();
         // Crear una lista para almacenar los DTOs
@@ -91,9 +84,10 @@ public class AssetController {
         for (Asset asset : assets) {
             // Crear el DTO con los datos necesarios
             AssetListDTO dto = new AssetListDTO();
+            dto.setId(asset.getId());
             dto.setPlate(asset.getPlateNumber());
             dto.setCategory(asset.getCategory().getName());
-            dto.setSubcategory(asset.getCategory().getSubcategory().getName());
+            dto.setSubcategory(asset.getSubcategory().getName());
             dto.setStatus(asset.getStatus().getName());
             dto.setDescription(asset.getCategory().getSubcategory().getDescription());
             assetsDTO.add(dto);

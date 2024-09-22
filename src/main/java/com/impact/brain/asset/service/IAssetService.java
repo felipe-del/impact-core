@@ -1,8 +1,7 @@
 package com.impact.brain.asset.service;
 
-import ch.qos.logback.core.model.Model;
-import com.impact.brain.asset.dto.AssetCategoryDTO;
 import com.impact.brain.asset.dto.AssetDTO;
+import com.impact.brain.asset.dto.AssetSubcategoryDTO;
 import com.impact.brain.asset.entity.*;
 
 /**
@@ -12,11 +11,11 @@ import com.impact.brain.asset.entity.*;
 public interface IAssetService {
     Iterable<Asset> all();
     Iterable<AssetStatus> allStatus();
-    Iterable<AssetCategoryDTO> allCategories();
+    Iterable<AssetCategory> allCategories();
 
     Iterable<Currency> allCurrency();
 
-    Iterable<AssetSubcategory> allAssetSubcategory();
+    Iterable<AssetSubcategoryDTO> allAssetSubcategory();
 
     Iterable<AssetModel> allAssetModel();
 
@@ -29,7 +28,7 @@ public interface IAssetService {
     Asset save(AssetDTO dto);
     AssetCategory saveCategory(AssetCategory category);
 
-    AssetSubcategory saveSubcategory(AssetSubcategory assetSubcategory);
+    AssetSubcategory saveSubcategory(AssetSubcategoryDTO assetSubcategoryDTO);
 
     AssetModel saveModel(AssetModel assetModel);
 }

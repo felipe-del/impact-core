@@ -40,4 +40,8 @@ public class Supplier {
     @Column(name = "client_contact", length = 100)
     private String clientContact;
 
+    @Size(max = 50)
+    @Column(name = "id_number", length = 50)
+    private String idNumber;
+
 }

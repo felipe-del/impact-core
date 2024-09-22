@@ -8,17 +8,19 @@ import java.math.BigDecimal;
 @Setter
 @Getter
 public class AssetListDTO {
-    String plate;
-    String category;
-    String subcategory;
+    int id;                  // Assuming this is still needed
+    String plate;           // New field from master branch
+    String category;        // New field from master branch
+    String subcategory;     // Existing field from feature branch
     String status;
     String description;
 
     @Override
     public String toString() {
         return "AssetListDTO{" +
-                "plate=" + plate +
-                ", category=" + category +
+                "id=" + id +                 // Keeping the id field
+                ", plate=" + plate +         // Added plate field
+                ", category=" + category +   // Added category field
                 ", subcategory=" + subcategory +
                 ", status=" + status +
                 ", description=" + description +

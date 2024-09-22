@@ -25,4 +25,6 @@ public class SupplierDTO {
 
     private String clientContact;
 
+    private String idNumber;
+
 }

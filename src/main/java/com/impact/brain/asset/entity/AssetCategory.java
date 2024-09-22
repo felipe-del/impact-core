@@ -20,8 +20,4 @@ public class AssetCategory {
     @Column(name = "name", nullable = false, length = 100)
     private String name;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "subcategory_id")
-    private AssetSubcategory subcategory;
-
 }
