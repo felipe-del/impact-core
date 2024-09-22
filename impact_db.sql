@@ -133,13 +133,6 @@ CREATE TABLE building_location (
     FOREIGN KEY (building_id) REFERENCES building(id)
 );
 
--- SPACE TYPE --
-
-CREATE TABLE space_type (
-    id   INT AUTO_INCREMENT PRIMARY KEY,
-    type VARCHAR(50) NOT NULL UNIQUE
-);
-
 -- SPACE --
 
 CREATE TABLE space (
@@ -148,11 +141,9 @@ CREATE TABLE space (
     space_code      INT UNIQUE,
     location_id     INT NOT NULL,
     max_people      INT,
-    type_id         INT NOT NULL,
     status_id       INT, -- Referencia al estado del espacio
     is_deleted       BOOLEAN DEFAULT FALSE,
     FOREIGN KEY (location_id) REFERENCES building_location(id),
-    FOREIGN KEY (type_id) REFERENCES space_type(id),
     FOREIGN KEY (status_id) REFERENCES space_status(id) -- Clave foránea para status
 );
 
@@ -507,6 +498,12 @@ CREATE TABLE asset_subcategory (
     category_id INT,
     FOREIGN KEY (category_id) REFERENCES asset_category(id)
 );
-drop table asset_subcategory;
-select * from asset_subcategory;
-drop table asset_category;
+
+-- Do these ALTER TABLEs and delete the space_type table
+-- first to not have everything fuck up in the backend
+ALTER TABLE space
+DROP FOREIGN KEY  space_ibfk_2;
+ALTER TABLE space
+DROP COLUMN type_id;
+
+DROP TABLE space_type;
