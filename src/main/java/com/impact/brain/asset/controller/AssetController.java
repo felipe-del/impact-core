@@ -53,7 +53,7 @@ public class AssetController {
     }
 
     @PostMapping()
-    public void create(@RequestBody AssetDTO assetDTO) {
+    public void create(@RequestBody AssetDTO assetDTO){
         System.out.println(assetDTO.toString());
         assetService.save(assetDTO);
     }
@@ -62,19 +62,18 @@ public class AssetController {
     public AssetCategory createCategory(@RequestBody AssetCategory assetDTO) {
         return assetService.saveCategory(assetDTO);
     }
-
     @PostMapping("/subcategory")
-    public AssetSubcategory createSubcategory(@RequestBody AssetSubcategoryDTO assetSubcategoryDTO) {
+    public AssetSubcategory createSubcategory(@RequestBody AssetSubcategoryDTO assetSubcategoryDTO){
         return assetService.saveSubcategory(assetSubcategoryDTO);
     }
 
     @PostMapping("/model")
-    public AssetModel createModel(@RequestBody AssetModel assetModel) {
+    public AssetModel createModel(@RequestBody AssetModel assetModel){
         return assetService.saveModel(assetModel);
     }
 
     @GetMapping("/all")
-    public Iterable<AssetListDTO> getList() {
+    public Iterable<AssetListDTO> getList(){
         // Obtener todas las categorías
         Iterable<Asset> assets = assetService.all();
         // Crear una lista para almacenar los DTOs
@@ -85,8 +84,6 @@ public class AssetController {
             // Crear el DTO con los datos necesarios
             AssetListDTO dto = new AssetListDTO();
             dto.setId(asset.getId());
-            dto.setPlate(asset.getPlateNumber());
-            dto.setCategory(asset.getSubcategory().getName());
             dto.setSubcategory(asset.getSubcategory().getName());
             dto.setStatus(asset.getStatus().getName());
             assetsDTO.add(dto);
