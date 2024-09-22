@@ -20,7 +20,7 @@ public class AssetDTO {
     private BigDecimal value;
     private Integer responsibleId;
     private Integer supplierId;
-    private Integer categoryId;
+    private Integer subcategoryId;
     private Integer brandId;
     private Integer statusId;
     private Boolean isDeleted;
@@ -37,10 +37,14 @@ public class AssetDTO {
                 ", value=" + value +
                 ", responsibleId=" + responsibleId +
                 ", supplierId=" + supplierId +
-                ", categoryId=" + categoryId +
+                ", subcategoryId=" + subcategoryId +
                 ", brandId=" + brandId +
                 ", statusId=" + statusId +
                 ", isDeleted=" + isDeleted +
+                ", assetSeries='" + assetSeries + '\'' +
+                ", plateNumber='" + plateNumber + '\'' +
+                ", currencyName='" + currencyName + '\'' +
+                ", assetModelName='" + assetModelName + '\'' +
                 '}';
     }
 }

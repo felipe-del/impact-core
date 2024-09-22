@@ -65,6 +65,7 @@ public class SupplierService implements ISupplierService {
         supplier.setPhone(dto.getPhone());
         supplier.setEmail(dto.getEmail());
         supplier.setAddress(dto.getAddress());
+        supplier.setIdNumber(dto.getIdNumber());
         supplier.setEntityType(entityType);  // Asignar el EntityType
         supplier.setClientContact(dto.getClientContact());
 

@@ -1,7 +1,7 @@
 package com.impact.brain.asset.service.impl;
 
-import com.impact.brain.asset.dto.AssetCategoryDTO;
 import com.impact.brain.asset.dto.AssetDTO;
+import com.impact.brain.asset.dto.AssetSubcategoryDTO;
 import com.impact.brain.asset.entity.*;
 import com.impact.brain.asset.repository.*;
 import com.impact.brain.asset.service.IAssetService;
@@ -66,11 +66,8 @@ public class AssetService implements IAssetService {
     }
 
     @Override
-    public Iterable<AssetCategoryDTO> allCategories() {
-        Iterable<AssetCategory> categories = assetCategoryRepository.findAll();
-        return StreamSupport.stream(categories.spliterator(), false)
-                .map(this::mapEntityToDto) // Map each AssetCategory to AssetCategoryDTO
-                .collect(Collectors.toList());
+    public Iterable<AssetCategory> allCategories() {
+        return assetCategoryRepository.findAll();
     }
 
     @Override
@@ -79,9 +76,13 @@ public class AssetService implements IAssetService {
     }
 
     @Override
-    public Iterable<AssetSubcategory> allAssetSubcategory() {
-        return assetSubcategoryRepository.findAll();
+    public Iterable<AssetSubcategoryDTO> allAssetSubcategory() {
+        return assetSubcategoryRepository.findAll()
+                .stream()
+                .map(this::toDTO) // Convierte cada entidad en un DTO
+                .collect(Collectors.toList());      // Recoge los DTOs en una lista
     }
+
 
     @Override
     public Iterable<AssetModel> allAssetModel() {
@@ -111,8 +112,8 @@ public class AssetService implements IAssetService {
         brandOptional.ifPresent(asset::setBrand);
 
         // Set Category
-        AssetCategory category = assetCategoryRepository.findById(dto.getCategoryId()).orElse(null);
-        asset.setCategory(category);
+        AssetSubcategory assetSubcategory = assetSubcategoryRepository.findById(dto.getSubcategoryId()).orElse(null);
+        asset.setSubcategory(assetSubcategory);
 
         // Set Responsible User
         User responsible = userService.findById(dto.getResponsibleId());
@@ -156,41 +157,33 @@ public class AssetService implements IAssetService {
         return assetCategoryRepository.save(category);
     }
     @Override
-    public AssetSubcategory saveSubcategory(AssetSubcategory assetSubcategory) {
-        return assetSubcategoryRepository.save(assetSubcategory);
+    public AssetSubcategory saveSubcategory(AssetSubcategoryDTO assetSubcategoryDTO) {
+        System.out.println(assetSubcategoryDTO);
+        return assetSubcategoryRepository.save(toEntity(assetSubcategoryDTO));
     }
     @Override
     public AssetModel saveModel(AssetModel assetModel) {
         return assetModelRepository.save(assetModel);
     }
-    public AssetCategory mapDtoToEntity(AssetCategoryDTO dto) {
-        if (dto == null) {
-            throw new IllegalArgumentException("AssetCategoryDTO cannot be null");
-        }
 
-        AssetCategory category = new AssetCategory();
-        category.setId(dto.getId());
-        category.setName(dto.getName());
-
-        // Assuming you have a repository to fetch the subcategory by ID
-        AssetSubcategory subcategory = assetSubcategoryRepository.findById(dto.getSubcategoryId())
-                .orElseThrow(() -> new RuntimeException("Subcategory not found"));
-        category.setSubcategory(subcategory);
-
-        return category;
+    // Método para convertir de DTO a Entidad
+    public AssetSubcategory toEntity(AssetSubcategoryDTO dto) {
+        System.out.println("ing to entity");
+        AssetSubcategory subcategory = new AssetSubcategory();
+        subcategory.setId(dto.getId());
+        subcategory.setName(dto.getName());
+        subcategory.setDescription(dto.getDescription());
+        subcategory.setCategory(assetCategoryRepository.findById(dto.getCategoryId()).get());
+        return subcategory;
     }
-    public AssetCategoryDTO mapEntityToDto(AssetCategory category) {
-        if (category == null) {
-            throw new IllegalArgumentException("AssetCategory cannot be null");
-        }
 
-        AssetCategoryDTO dto = new AssetCategoryDTO();
-        dto.setId(category.getId());
-        dto.setName(category.getName());
-        dto.setSubcategoryId(category.getSubcategory().getId()); // Get subcategory ID
-
+    // Método para convertir de Entidad a DTO
+    public AssetSubcategoryDTO toDTO(AssetSubcategory entity) {
+        AssetSubcategoryDTO dto =  new AssetSubcategoryDTO();
+        dto.setId(entity.getId());
+        dto.setName(entity.getName());
+        dto.setDescription(entity.getDescription());
+        dto.setCategoryId(entity.getCategory().getId());
         return dto;
     }
-
-
 }

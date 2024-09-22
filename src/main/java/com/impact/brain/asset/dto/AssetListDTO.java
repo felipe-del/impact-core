@@ -9,7 +9,7 @@ import java.math.BigDecimal;
 @Getter
 public class AssetListDTO {
     int id;
-    String category;
+    String subcategory;
     BigDecimal number;
     String status;
 
@@ -17,7 +17,7 @@ public class AssetListDTO {
     public String toString() {
         return "AssetListDTO{" +
                 "id=" + id +
-                ", category=" + category +
+                ", category=" + subcategory +
                 ", number=" + number +
                 ", status=" + status +
                 '}';
