@@ -67,7 +67,7 @@ public class ProductController {
                 productA.setExpiryDate(product.getExpiryDate());
                 Optional<ProductCategory> c= productService.findByIdPC(product.getCategory());
                 c.ifPresent(productA::setCategory);
-                ProductStatus s= productService.findByNamePS("Available");
+                ProductStatus s= productService.findByNamePS("Disponible");
                 if(s!=null) productA.setStatus(s);
 
                 System.out.println(productA);
