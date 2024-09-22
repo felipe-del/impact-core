@@ -95,9 +95,17 @@ CREATE TABLE supplier (
     phone                  VARCHAR(100),
     email                  VARCHAR(100),
     address                TEXT,
-    entity_type_id         INT,  -- Identifica si la cédula es física o jurídica
-    client_contact         VARCHAR(100), -- Contacto de algún cliente del proveedor
+    entity_type_id         INT,  -- Identifies whether the ID is personal or corporate
+    client_contact         VARCHAR(100), -- Contact for a client of the supplier
+    id_number              VARCHAR(50), -- New column for the ID number
     FOREIGN KEY (entity_type_id) REFERENCES entity_type(id)
+);
+
+-- CATEGORY -- 
+
+CREATE TABLE asset_category (
+    id          INT AUTO_INCREMENT PRIMARY KEY,
+    name        VARCHAR(100) NOT NULL
 );
 
 DROP TABLE asset_category;
@@ -463,25 +471,25 @@ CREATE TABLE asset (
     value              DECIMAL(10, 2),
     responsible_id     INT,
     supplier_id        INT,
-    category_id        INT,
+    subcategory_id        INT,
     brand_id           INT,
-    currency_id        INT,
-    entity_type_id     INT,
     status_id          INT,
     is_deleted         BOOLEAN DEFAULT FALSE,
     asset_series       VARCHAR(50),
     plate_number       VARCHAR(50),
     asset_model_id     INT,
+    currency_id        INT,
     FOREIGN KEY (responsible_id) REFERENCES user(id),
     FOREIGN KEY (supplier_id) REFERENCES supplier(id),
-    FOREIGN KEY (category_id) REFERENCES asset_category(id),
+    FOREIGN KEY (subcategory_id) REFERENCES asset_subcategory(id),
     FOREIGN KEY (brand_id) REFERENCES brand(id),
-    FOREIGN KEY (entity_type_id) REFERENCES entity_type(id),
     FOREIGN KEY (status_id) REFERENCES asset_status(id),
-    FOREIGN KEY (currency_id) REFERENCES currency(id),
     FOREIGN KEY (currency_id) REFERENCES currency(id),
     FOREIGN KEY (asset_model_id) REFERENCES asset_model(id)
 );
+
+
+
 
 -- NUEVO
 
@@ -495,69 +503,10 @@ CREATE TABLE asset_category (
 CREATE TABLE asset_subcategory (
     id          INT AUTO_INCREMENT PRIMARY KEY,
     name        VARCHAR(100) NOT NULL,
-    description VARCHAR(255)
+    description VARCHAR(255),
+    category_id INT,
+    FOREIGN KEY (category_id) REFERENCES asset_category(id)
 );
-
+drop table asset_subcategory;
+select * from asset_subcategory;
 drop table asset_category;
-
-INSERT INTO supplier (name, phone, email, address, entity_type_id, client_contact) 
-VALUES 
-('Proveedor 1', '123456789', 'proveedor1@mail.com', '123 Calle Principal', 1, 'Contacto Cliente 1'),
-('Proveedor 2', '987654321', 'proveedor2@mail.com', '456 Calle Secundaria', 2, 'Contacto Cliente 2'),
-('Proveedor 3', '111222333', 'proveedor3@mail.com', '789 Calle Industrial', 1, 'Contacto Cliente 3');
-
-INSERT INTO brand (name) 
-VALUES 
-('Marca A'),
-('Marca B'),
-('Marca C');
-
-INSERT INTO asset_model (model_name) 
-VALUES 
-('Modelo X'),
-('Modelo Y'),
-('Modelo Z');
-
-INSERT INTO asset_category (name) 
-VALUES 
-('Equipos de Oficina'),
-('Electrónica'),
-('Mobiliario');
-
-INSERT INTO asset_subcategory (name, description) 
-VALUES 
-('Computadoras', 'Equipos de cómputo de oficina'),
-('Impresoras', 'Impresoras y dispositivos de escaneo'),
-('Sillas', 'Mobiliario de oficina, sillas y escritorios');
-
-INSERT INTO user (name, email, password, role_id, state_id) 
-VALUES 
-('Juan Pérez', 'juan.perez@mail.com', 'password123', 1, 1),
-('María López', 'maria.lopez@mail.com', 'password456', 2, 1),
-('Carlos Díaz', 'carlos.diaz@mail.com', 'password789', 3, 2);
-
-INSERT INTO asset (purchase_date, value, responsible_id, supplier_id, category_id, brand_id, currency_id, entity_type_id, status_id, asset_series, plate_number, asset_model_id) 
-VALUES 
-('2023-08-15', 500000.00, 1, 1, 1, 1, 1, 1, 1, 'SER-12345', 'PLT-67890', 1),
-('2023-09-20', 250000.00, 2, 2, 2, 2, 2, 2, 2, 'SER-98765', 'PLT-43210', 2),
-('2023-07-10', 100000.00, 3, 3, 3, 3, 1, 1, 3, 'SER-55555', 'PLT-11111', 3),
-('2024-01-01', 750000.00, 1, 1, 1, 2, 1, 1, 1, 'SER-77777', 'PLT-22222', 1);
-
-select * from asset;
-
--- Actualiza las categorías para asignarles subcategorías
-UPDATE asset_category
-SET subcategory_id = (SELECT id FROM asset_subcategory WHERE name = 'Subcategoría para Electrónica')
-WHERE name = 'Electrónica';
-
-UPDATE asset_category
-SET subcategory_id = (SELECT id FROM asset_subcategory WHERE name = 'Subcategoría para Mobiliario')
-WHERE name = 'Mobiliario';
-
-UPDATE asset_category
-SET subcategory_id = (SELECT id FROM asset_subcategory WHERE name = 'Subcategoría para Tecnología')
-WHERE name = 'Tecnología';
-
-UPDATE asset_category
-SET subcategory_id = (SELECT id FROM asset_subcategory WHERE name = 'Subcategoría para Electrónica')
-WHERE id = (SELECT id FROM asset_category WHERE name = 'Electrónica');
