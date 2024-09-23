@@ -1,5 +1,6 @@
 package com.impact.brain.supplier.service.impl;
 
+import com.impact.brain.exception.ResourceNotFoundException;
 import com.impact.brain.supplier.dto.SupplierDTO;
 import com.impact.brain.supplier.entity.EntityType;
 import com.impact.brain.supplier.entity.Supplier;
@@ -9,6 +10,7 @@ import com.impact.brain.supplier.service.ISupplierService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -33,6 +35,13 @@ public class SupplierService implements ISupplierService {
     @Override
     public List<SupplierDTO> getSuppliers() {
         Iterable<Supplier> suppliers = supplierRepository.findAll();
+
+        // Verificar si no hay proveedores y devolver lista vacía
+        if (!suppliers.iterator().hasNext()) {
+            return new ArrayList<>(); // Devolver una lista vacía
+        }
+
+        // Convertir Iterable a List<SupplierDTO>
         return StreamSupport.stream(suppliers.spliterator(), false)
                 .map(this::mapEntityToDto) // Mapeo de Supplier a SupplierDTO
                 .collect(Collectors.toList());
@@ -49,9 +58,11 @@ public class SupplierService implements ISupplierService {
     }
 
     @Override
-    public Optional<Supplier> getById(int id) {
-        return supplierRepository.findById(id);
+    public Supplier getById(int id) {
+        return supplierRepository.findById(id)
+                .orElseThrow(() -> new ResourceNotFoundException("Supplier not found with id " + id));
     }
+
 
     public Supplier mapDtoToSupplier(SupplierDTO dto) {
         // Obtener el EntityType utilizando el ID

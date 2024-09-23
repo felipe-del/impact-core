@@ -104,8 +104,8 @@ public class AssetService implements IAssetService {
         asset.setValue(dto.getValue());
 
         // Set Supplier
-        Optional<Supplier> supplierOptional = supplierService.getById(dto.getSupplierId());
-        supplierOptional.ifPresent(asset::setSupplier);
+        Supplier supplier = supplierService.getById(dto.getSupplierId());
+        asset.setSupplier(supplier);
 
         // Set Brand
         Optional<Brand> brandOptional = brandRepository.findById(dto.getBrandId());
@@ -165,6 +165,8 @@ public class AssetService implements IAssetService {
     public AssetModel saveModel(AssetModel assetModel) {
         return assetModelRepository.save(assetModel);
     }
+
+
 
     // Método para convertir de DTO a Entidad
     public AssetSubcategory toEntity(AssetSubcategoryDTO dto) {
