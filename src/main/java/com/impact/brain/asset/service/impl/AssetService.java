@@ -7,6 +7,7 @@ import com.impact.brain.asset.repository.*;
 import com.impact.brain.asset.service.IAssetService;
 import com.impact.brain.brand.entity.Brand;
 import com.impact.brain.brand.repository.BrandRepository;
+import com.impact.brain.exception.ResourceNotFoundException;
 import com.impact.brain.supplier.entity.Supplier;
 import com.impact.brain.supplier.service.impl.SupplierService;
 import com.impact.brain.user.entity.User;
@@ -164,6 +165,12 @@ public class AssetService implements IAssetService {
     @Override
     public AssetModel saveModel(AssetModel assetModel) {
         return assetModelRepository.save(assetModel);
+    }
+
+    @Override
+    public Asset getById(Integer id) {
+        return assetRepository.findById(id)
+                .orElseThrow(() -> new ResourceNotFoundException("Asset not found with ID: " + id));
     }
 
 

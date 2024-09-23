@@ -9,4 +9,5 @@ import org.springframework.data.repository.CrudRepository;
  * @since 9/14/2024 - 6:23 AM
  */
 public interface AssetRepository extends JpaRepository<Asset, Integer> {
+    Asset getById(int id);
 }
