@@ -33,4 +33,5 @@ public interface IAssetService {
     AssetModel saveModel(AssetModel assetModel);
     LocationNumber saveLocationNumber(LocationNumberDTO locationNumberDTO);
     LocationType saveLocationType(LocationType locationType);
+    Asset getById(Integer id);
 }

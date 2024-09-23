@@ -9,6 +9,7 @@ import com.impact.brain.asset.repository.*;
 import com.impact.brain.asset.service.IAssetService;
 import com.impact.brain.brand.entity.Brand;
 import com.impact.brain.brand.repository.BrandRepository;
+import com.impact.brain.exception.ResourceNotFoundException;
 import com.impact.brain.supplier.entity.Supplier;
 import com.impact.brain.supplier.service.impl.SupplierService;
 import com.impact.brain.user.entity.User;
@@ -114,8 +115,8 @@ public class AssetService implements IAssetService {
         asset.setValue(dto.getValue());
 
         // Set Supplier
-        Optional<Supplier> supplierOptional = supplierService.getById(dto.getSupplierId());
-        supplierOptional.ifPresent(asset::setSupplier);
+        Supplier supplier = supplierService.getById(dto.getSupplierId());
+        asset.setSupplier(supplier);
 
         // Set Brand
         Optional<Brand> brandOptional = brandRepository.findById(dto.getBrandId());
@@ -195,6 +196,12 @@ public class AssetService implements IAssetService {
         locationNumber.setLocationType((LocationType) locationTypeRepository.findById(locationNumberDTO.getLocationType()).get());
         return locationNumber;
     }
+
+    public Asset getById(Integer id) {
+        return assetRepository.findById(id)
+                .orElseThrow(() -> new ResourceNotFoundException("Asset not found with ID: " + id));
+    }
+
     // Método para convertir de DTO a Entidad
     public AssetSubcategory toEntity(AssetSubcategoryDTO dto) {
         System.out.println("ing to entity");

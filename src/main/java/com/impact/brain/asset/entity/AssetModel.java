@@ -21,6 +21,6 @@ public class AssetModel {
     @Size(max = 100)
     @NotNull
     @Column(name = "model_name", nullable = false, length = 100)
-    private String modelName;
+    private String name;
 
 }
