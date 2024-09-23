@@ -4,6 +4,8 @@ import com.impact.brain.supplier.dto.SupplierDTO;
 import com.impact.brain.supplier.entity.EntityType;
 import com.impact.brain.supplier.entity.Supplier;
 import com.impact.brain.supplier.service.impl.SupplierService;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -27,12 +29,20 @@ public class SupplierController {
     }
 
     @GetMapping("/allEntityType")
-    public Iterable<EntityType> getAllEntityType() {
-        return supplierService.getEntityType();
+    public ResponseEntity<Iterable<EntityType>> getAllEntityType() {
+        try {
+            Iterable<EntityType> entityTypes = supplierService.getEntityType();
+            return ResponseEntity.ok(entityTypes); // 200 OK
+        } catch (Exception e) {
+            // Log the exception
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build(); // 500 Internal Server Error
+        }
     }
 
     @PostMapping
-    public Supplier saveSupplier(@RequestBody SupplierDTO supplierDTO) {
-        return supplierService.save(supplierDTO);
+    public ResponseEntity<Supplier> saveSupplier(@RequestBody SupplierDTO supplierDTO) {
+        Supplier savedSupplier = supplierService.save(supplierDTO);
+        return ResponseEntity.status(HttpStatus.CREATED).body(savedSupplier);
     }
+
 }

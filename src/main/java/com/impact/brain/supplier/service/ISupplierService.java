@@ -13,5 +13,5 @@ import java.util.Optional;
 public interface ISupplierService {
     List<SupplierDTO> getSuppliers();
     Supplier save(SupplierDTO supplier);
-    Optional<Supplier> getById(int id);
+    Supplier getById(int id);
 }
