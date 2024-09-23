@@ -68,4 +68,8 @@ public class Asset {
     @JoinColumn(name = "subcategory_id")
     private AssetSubcategory subcategory;
 
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "location_number_id")
+    private LocationNumber locationNumber;
+
 }

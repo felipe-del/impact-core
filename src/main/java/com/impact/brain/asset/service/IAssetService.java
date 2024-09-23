@@ -2,6 +2,7 @@ package com.impact.brain.asset.service;
 
 import com.impact.brain.asset.dto.AssetDTO;
 import com.impact.brain.asset.dto.AssetSubcategoryDTO;
+import com.impact.brain.asset.dto.LocationNumberDTO;
 import com.impact.brain.asset.entity.*;
 
 /**
@@ -30,6 +31,7 @@ public interface IAssetService {
     AssetSubcategory saveSubcategory(AssetSubcategoryDTO assetSubcategoryDTO);
 
     AssetModel saveModel(AssetModel assetModel);
-
+    LocationNumber saveLocationNumber(LocationNumberDTO locationNumberDTO);
+    LocationType saveLocationType(LocationType locationType);
     Asset getById(Integer id);
 }

@@ -2,6 +2,8 @@ package com.impact.brain.asset.service.impl;
 
 import com.impact.brain.asset.dto.AssetDTO;
 import com.impact.brain.asset.dto.AssetSubcategoryDTO;
+import com.impact.brain.asset.dto.LocationNumberDTO;
+import com.impact.brain.asset.dto.NumberAndTypeLocationDTO;
 import com.impact.brain.asset.entity.*;
 import com.impact.brain.asset.repository.*;
 import com.impact.brain.asset.service.IAssetService;
@@ -14,6 +16,8 @@ import com.impact.brain.user.entity.User;
 import com.impact.brain.user.service.impl.UserService;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
 import java.util.stream.StreamSupport;
@@ -35,6 +39,8 @@ public class AssetService implements IAssetService {
     private  final AssetModelRepository assetModelRepository;
     private  final AssetSubcategoryRepository assetSubcategoryRepository;
     private  final CurrencyRepository assetCurrencyRepository;
+    private final LocationNumberRepository locationNumberRepository;
+    private final LocationTypeRepository locationTypeRepository;
 
     public AssetService(AssetCategoryRepository assetCategoryRepository,
                         AssetRepository assetRepository,
@@ -44,7 +50,9 @@ public class AssetService implements IAssetService {
                         UserService userService,
                         AssetModelRepository assetModelRepository,
                         AssetSubcategoryRepository assetSubcategoryRepository,
-                        CurrencyRepository assetCurrencyRepository) {
+                        CurrencyRepository assetCurrencyRepository,
+                        LocationNumberRepository locationNumberRepository,
+                        LocationTypeRepository locationTypeRepository) {
         this.assetCategoryRepository = assetCategoryRepository;
         this.assetRepository = assetRepository;
         this.assetStatusRepository = assetStatusRepository;
@@ -54,6 +62,8 @@ public class AssetService implements IAssetService {
         this.assetModelRepository = assetModelRepository;
         this.assetSubcategoryRepository = assetSubcategoryRepository;
         this.assetCurrencyRepository = assetCurrencyRepository;
+        this.locationNumberRepository = locationNumberRepository;
+        this.locationTypeRepository = locationTypeRepository;
     }
 
     @Override
@@ -128,16 +138,18 @@ public class AssetService implements IAssetService {
         asset.setIsDeleted(dto.getIsDeleted() != null ? dto.getIsDeleted() : false);
 
         // Set Currency (buscando por el nombre)
-        Currency currency = assetCurrencyRepository.findByCurrencyName(dto.getCurrencyName()) ;
+        Currency currency = assetCurrencyRepository.findById(dto.getCurrencyId()).get() ;
         asset.setCurrency(currency);
 
         // Set AssetModel (buscando por el nombre)
-        AssetModel assetModel = assetModelRepository.findByModelName(dto.getAssetModelName());
+        AssetModel assetModel = assetModelRepository.findById(dto.getAssetModelId()).get();
         asset.setAssetModel(assetModel);
 
         // Asignar valores adicionales
         asset.setAssetSeries(dto.getAssetSeries());
         asset.setPlateNumber(dto.getPlateNumber());
+
+        asset.setLocationNumber(locationNumberRepository.findById(dto.getLocationNumber()).get());
 
         return asset;
     }
@@ -168,12 +180,27 @@ public class AssetService implements IAssetService {
     }
 
     @Override
+    public LocationNumber saveLocationNumber(LocationNumberDTO locationNumberDTO) {
+        return locationNumberRepository.save(toEntity(locationNumberDTO));
+    }
+
+    @Override
+    public LocationType saveLocationType(LocationType locationType) {
+        return locationTypeRepository.save(locationType);
+    }
+
+    public  LocationNumber toEntity(LocationNumberDTO locationNumberDTO){
+        LocationNumber locationNumber = new LocationNumber();
+        locationNumber.setId(locationNumberDTO.getId());
+        locationNumber.setLocationNumber(locationNumberDTO.getLocationNumber());
+        locationNumber.setLocationType((LocationType) locationTypeRepository.findById(locationNumberDTO.getLocationType()).get());
+        return locationNumber;
+    }
+
     public Asset getById(Integer id) {
         return assetRepository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("Asset not found with ID: " + id));
     }
-
-
 
     // Método para convertir de DTO a Entidad
     public AssetSubcategory toEntity(AssetSubcategoryDTO dto) {
@@ -194,5 +221,21 @@ public class AssetService implements IAssetService {
         dto.setDescription(entity.getDescription());
         dto.setCategoryId(entity.getCategory().getId());
         return dto;
+    }
+    public Iterable<LocationType> getAllLocationType(){
+        return locationTypeRepository.findAll();
+    }
+    public List<NumberAndTypeLocationDTO> getAllLocationNumber(){
+        List<NumberAndTypeLocationDTO> numberAndTypeLocationDTOS = new ArrayList<>();
+        // Obtenemos todos los números y tipos de localización desde los repositorios
+        Iterable<LocationNumber> locationNumbers = locationNumberRepository.findAll();
+        for (LocationNumber locationNumber : locationNumbers) {
+            NumberAndTypeLocationDTO dto = new NumberAndTypeLocationDTO();
+            dto.setId(locationNumber.getId());
+            dto.setLocationNumber(locationNumber.getLocationNumber());
+            dto.setLocationType(locationNumber.getLocationType().getTypeName());
+            numberAndTypeLocationDTOS.add(dto);
+        }
+        return numberAndTypeLocationDTOS;
     }
 }

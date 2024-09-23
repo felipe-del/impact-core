@@ -26,8 +26,9 @@ public class AssetDTO {
     private Boolean isDeleted;
     private String assetSeries;
     private String plateNumber;
-    private String currencyName;
-    private String assetModelName;
+    private Integer currencyId;
+    private Integer assetModelId;
+    private Integer locationNumber;
 
     @Override
     public String toString() {
@@ -43,8 +44,8 @@ public class AssetDTO {
                 ", isDeleted=" + isDeleted +
                 ", assetSeries='" + assetSeries + '\'' +
                 ", plateNumber='" + plateNumber + '\'' +
-                ", currencyName='" + currencyName + '\'' +
-                ", assetModelName='" + assetModelName + '\'' +
+                ", currencyName='" + currencyId+ '\'' +
+                ", assetModelName='" + assetModelId + '\'' +
                 '}';
     }
 }
