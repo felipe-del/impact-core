@@ -1,7 +1,7 @@
 package com.impact.brain.asset.entity;
 
 import com.impact.brain.brand.entity.Brand;
-import com.impact.brain.supplier.entity.EntityType;
+import com.impact.brain.commonSpace.entity.Building;
 import com.impact.brain.supplier.entity.Supplier;
 import com.impact.brain.user.entity.User;
 import jakarta.persistence.*;
@@ -67,5 +67,9 @@ public class Asset {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "subcategory_id")
     private AssetSubcategory subcategory;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "location_number_id")
+    private LocationNumber locationNumber;
 
 }

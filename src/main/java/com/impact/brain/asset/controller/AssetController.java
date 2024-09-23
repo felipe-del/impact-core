@@ -1,13 +1,12 @@
 package com.impact.brain.asset.controller;
 
-import com.impact.brain.asset.dto.AssetDTO;
-import com.impact.brain.asset.dto.AssetListDTO;
-import com.impact.brain.asset.dto.AssetSubcategoryDTO;
+import com.impact.brain.asset.dto.*;
 import com.impact.brain.asset.entity.*;
 import com.impact.brain.asset.service.impl.AssetService;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.ArrayList;
+import java.util.List;
 
 /**
  * @author Isaac F. B. C.
@@ -71,7 +70,22 @@ public class AssetController {
     public AssetModel createModel(@RequestBody AssetModel assetModel){
         return assetService.saveModel(assetModel);
     }
-
+    @PostMapping("/locationNumber")
+    public LocationNumber createLocationNumber(@RequestBody LocationNumberDTO locationNumberDTO){
+        return assetService.saveLocationNumber(locationNumberDTO);
+    }
+    @PostMapping("/locationType")
+    public LocationType createLocationType(@RequestBody LocationType locationType){
+        return assetService.saveLocationType(locationType);
+    }
+    @GetMapping("/locationType")
+    public Iterable<LocationType> getAll(){
+        return assetService.getAllLocationType();
+    }
+    @GetMapping("/locationNumber")
+    public List<NumberAndTypeLocationDTO> getAllLocationNumber(){
+        return assetService.getAllLocationNumber();
+    }
     @GetMapping("/all")
     public Iterable<AssetListDTO> getList(){
         // Obtener todas las categorías
