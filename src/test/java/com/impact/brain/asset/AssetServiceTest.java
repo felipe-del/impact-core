@@ -107,8 +107,8 @@ public class AssetServiceTest {
         assetDTO.setSubcategoryId(1);
         assetDTO.setResponsibleId(1);
         assetDTO.setStatusId(1);
-        assetDTO.setCurrencyName("USD");
-        assetDTO.setAssetModelName("Model Test");
+        assetDTO.setCurrencyId(1);
+        assetDTO.setAssetModelId(1);
 
         // Mocking the dependencies
         Supplier supplier = new Supplier();
@@ -132,11 +132,11 @@ public class AssetServiceTest {
         when(assetStatusRepository.findById(1)).thenReturn(Optional.of(status));
 
         Currency currency = new Currency();
-        currency.setName("USD");
+        currency.setCurrencyName("USD");
         when(currencyRepository.findByCurrencyName("USD")).thenReturn(currency);
 
         AssetModel assetModel = new AssetModel();
-        assetModel.setName("Model Test");
+        assetModel.setModelName("Model Test");
         when(assetModelRepository.findByModelName("Model Test")).thenReturn(assetModel);
 
         // Stubbing the repository to save the asset.

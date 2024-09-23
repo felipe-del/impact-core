@@ -26,6 +26,6 @@ public class Currency {
     @Size(max = 50)
     @NotNull
     @Column(name = "currency_name", nullable = false, length = 50)
-    private String name;
+    private String currencyName;
 
 }
