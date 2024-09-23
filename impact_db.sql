@@ -513,9 +513,7 @@ FOREIGN KEY (location_type_id) REFERENCES location_type(id)
 
 CREATE TABLE asset_category (
     id          INT AUTO_INCREMENT PRIMARY KEY,
-    name        VARCHAR(100) NOT NULL,
-    subcategory_id INT,
-    FOREIGN KEY (subcategory_id) REFERENCES asset_subcategory(id)
+    name        VARCHAR(100) NOT NULL
 );
 
 CREATE TABLE asset_subcategory (
@@ -528,3 +526,4 @@ CREATE TABLE asset_subcategory (
 drop table asset_subcategory;
 select * from asset_subcategory;
 drop table asset_category;
+
