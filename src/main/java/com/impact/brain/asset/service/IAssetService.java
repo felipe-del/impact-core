@@ -30,4 +30,6 @@ public interface IAssetService {
     AssetSubcategory saveSubcategory(AssetSubcategoryDTO assetSubcategoryDTO);
 
     AssetModel saveModel(AssetModel assetModel);
+
+    Asset getById(Integer id);
 }

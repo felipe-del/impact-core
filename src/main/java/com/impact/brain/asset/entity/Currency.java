@@ -21,11 +21,11 @@ public class Currency {
     @Size(max = 10)
     @NotNull
     @Column(name = "currency_code", nullable = false, length = 10)
-    private String currencyCode;
+    private String code;
 
     @Size(max = 50)
     @NotNull
     @Column(name = "currency_name", nullable = false, length = 50)
-    private String currencyName;
+    private String name;
 
 }
