@@ -133,6 +133,13 @@ CREATE TABLE building_location (
     FOREIGN KEY (building_id) REFERENCES building(id)
 );
 
+-- SPACE TYPE --
+
+CREATE TABLE space_type (
+    id   INT AUTO_INCREMENT PRIMARY KEY,
+    type VARCHAR(50) NOT NULL UNIQUE
+);
+
 -- SPACE --
 
 CREATE TABLE space (
@@ -141,9 +148,11 @@ CREATE TABLE space (
     space_code      INT UNIQUE,
     location_id     INT NOT NULL,
     max_people      INT,
+    type_id         INT NOT NULL,
     status_id       INT, -- Referencia al estado del espacio
     is_deleted       BOOLEAN DEFAULT FALSE,
     FOREIGN KEY (location_id) REFERENCES building_location(id),
+    FOREIGN KEY (type_id) REFERENCES space_type(id),
     FOREIGN KEY (status_id) REFERENCES space_status(id) -- Clave foránea para status
 );
 
@@ -462,7 +471,7 @@ CREATE TABLE asset (
     value              DECIMAL(10, 2),
     responsible_id     INT,
     supplier_id        INT,
-    subcategory_id        INT,
+    subcategory_id     INT,
     brand_id           INT,
     status_id          INT,
     is_deleted         BOOLEAN DEFAULT FALSE,
@@ -470,16 +479,34 @@ CREATE TABLE asset (
     plate_number       VARCHAR(50),
     asset_model_id     INT,
     currency_id        INT,
+    location_number_id INT,  
     FOREIGN KEY (responsible_id) REFERENCES user(id),
     FOREIGN KEY (supplier_id) REFERENCES supplier(id),
     FOREIGN KEY (subcategory_id) REFERENCES asset_subcategory(id),
     FOREIGN KEY (brand_id) REFERENCES brand(id),
     FOREIGN KEY (status_id) REFERENCES asset_status(id),
     FOREIGN KEY (currency_id) REFERENCES currency(id),
-    FOREIGN KEY (asset_model_id) REFERENCES asset_model(id)
+    FOREIGN KEY (asset_model_id) REFERENCES asset_model(id),
+    FOREIGN KEY (location_number_id) REFERENCES location_number(id)  
 );
 
 
+ALTER TABLE asset
+ADD COLUMN location_number_id INT,
+ADD FOREIGN KEY (location_number_id) REFERENCES location_number(id);
+
+
+CREATE TABLE location_type (
+id INT AUTO_INCREMENT PRIMARY KEY,
+type_name VARCHAR(100) NOT NULL
+);
+
+CREATE TABLE location_number (
+id INT AUTO_INCREMENT PRIMARY KEY,
+location_type_id INT,
+location_number INT,
+FOREIGN KEY (location_type_id) REFERENCES location_type(id)
+);
 
 
 -- NUEVO
@@ -498,12 +525,6 @@ CREATE TABLE asset_subcategory (
     category_id INT,
     FOREIGN KEY (category_id) REFERENCES asset_category(id)
 );
-
--- Do these ALTER TABLEs and delete the space_type table
--- first to not have everything fuck up in the backend
-ALTER TABLE space
-DROP FOREIGN KEY  space_ibfk_2;
-ALTER TABLE space
-DROP COLUMN type_id;
-
-DROP TABLE space_type;
+drop table asset_subcategory;
+select * from asset_subcategory;
+drop table asset_category;
