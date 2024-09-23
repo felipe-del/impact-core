@@ -98,7 +98,11 @@ public class AssetController {
             // Crear el DTO con los datos necesarios
             AssetListDTO dto = new AssetListDTO();
             dto.setId(asset.getId());
+            dto.setCategory(asset.getSubcategory().getCategory().getName());
             dto.setSubcategory(asset.getSubcategory().getName());
+            dto.setDescription(asset.getSubcategory().getDescription());
+            dto.setPlate(asset.getPlateNumber());
+            dto.setLocation(asset.getLocationNumber().getLocationType().getTypeName());
             dto.setStatus(asset.getStatus().getName());
             assetsDTO.add(dto);
         }
