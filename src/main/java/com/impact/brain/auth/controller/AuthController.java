@@ -51,10 +51,12 @@ public class AuthController {
         UserDTO authenticatedUser = authService.authenticate(user.getEmail(), user.getPassword(), request);
         if (authenticatedUser != null) {
             authenticatedUser.setAuthenticated(true);
+            return ResponseEntity.ok(authenticatedUser);
         } else {
-            authenticatedUser.setAuthenticated(false);
+            UserDTO errorUser = new UserDTO();
+            errorUser.setAuthenticated(false);
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(errorUser);
         }
-        return ResponseEntity.ok(authenticatedUser);
     }
 
     /**
