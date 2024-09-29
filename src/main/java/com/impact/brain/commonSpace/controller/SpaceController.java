@@ -39,42 +39,18 @@ public class SpaceController {
     @GetMapping("/locations-by-building")
     public Iterable<BuildingDTO> findLocationsByBuilding() { return spaceService.locationsByBuilding(); }
 
-    // Methods are missing their implementation
     @PostMapping("/create")
     public Space createSpace(@RequestBody SpaceDTO space) {
-        try{
-            Space newSpace = new Space();
-            newSpace.setId(0);
-            newSpace.setName(space.getName());
-            newSpace.setSpaceCode(space.getSpaceCode());
-            newSpace.setMaxPeople(space.getMaxPeople());
-            newSpace.setLocation(new BuildingLocation());
-            newSpace.setIsDeleted(false);
-
-            // Adding the spaceType, spaceStatus, buildingLocation and Building using an idSearch;
-            Optional<BuildingLocation> bLoc = spaceService.buildingLocationById(space.getBuildingLocation());
-            bLoc.ifPresent(newSpace::setLocation);
-
-            Optional<SpaceStatus> bStatus = spaceService.spaceStatusById(space.getSpaceStatus());
-            bStatus.ifPresent(newSpace::setStatus);
-
-            System.out.println(bLoc.get().getFloor());
-            System.out.println(bStatus.get().getName());
-
-            return spaceService.saveSpace(newSpace);
-        }
+        try { return spaceService.saveSpace(space); }
         catch(Exception e){
             System.out.println(e.getMessage());
             throw new ResponseStatusException(HttpStatus.CONFLICT);
         }
     }
 
-    // Method needs refinement in case a bad string is sent
     @PostMapping("/create/building")
     public Building createBuilding(@RequestBody Building building) {
-        try {
-            return spaceService.saveBuilding(building);
-        }
+        try { return spaceService.saveBuilding(building); }
         catch(Exception e){
             System.out.println(e.getMessage());
             throw new ResponseStatusException(HttpStatus.CONFLICT);
@@ -83,25 +59,25 @@ public class SpaceController {
 
     @PostMapping("/create/building-location")
     public BuildingLocation createBuildingLocation(@RequestBody BuildingLocationDTO buildingLocationDTO) {
-        try {
-            BuildingLocation buildingLocation = new BuildingLocation();
-            buildingLocation.setId(0);
-            buildingLocation.setFloor(buildingLocationDTO.getFloorId());
-
-            Optional<Building> building = spaceService.buildingById(buildingLocationDTO.getBuildingId());
-            building.ifPresent(buildingLocation::setBuilding);
-
-            return spaceService.saveBuildingLocation(buildingLocation);
-        }
+        try { return spaceService.saveBuildingLocation(buildingLocationDTO); }
         catch(Exception e){
             System.out.println(e.getMessage());
             throw new ResponseStatusException(HttpStatus.CONFLICT);
         }
     }
 
-    // Methods are missing their implementation
+    // Method missing implementation
     @PostMapping("/create/equipment")
     public Space createSpaceEquipment(@RequestBody SpaceEquipment spaceEquipment) {
         return null;
+    }
+
+    @GetMapping("/find/space/{spaceId}")
+    public Space findSpaceById(@PathVariable int spaceId) {
+        try { return spaceService.spaceById(spaceId).get(); }
+        catch (Exception e){
+            System.out.println(e.getMessage());
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND);
+        }
     }
 }
