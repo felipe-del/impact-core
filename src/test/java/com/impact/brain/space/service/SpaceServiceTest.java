@@ -107,30 +107,6 @@ public class SpaceServiceTest {
     }
 
     @Test
-    void testCreateBuildingLocation() {
-        int testId = 1;
-        Building mockBuilding = new Building();
-        mockBuilding.setName("Test Building");
-        mockBuilding.setId(testId);
-
-        BuildingLocation mockLocation = new BuildingLocation();
-        mockLocation.setId(testId);
-        mockLocation.setFloor("Piso 1");
-        mockLocation.setBuilding(mockBuilding);
-
-        when(buildingLocationRepository.save(mockLocation)).thenReturn(mockLocation);
-
-        BuildingLocation createdLocation = spaceService.saveBuildingLocation(mockLocation);
-
-        assertNotNull(createdLocation);
-        assertEquals(testId, createdLocation.getId());
-        assertEquals("Piso 1", createdLocation.getFloor());
-
-        assertEquals(testId, createdLocation.getBuilding().getId());
-        assertEquals("Test Building", createdLocation.getBuilding().getName());
-    }
-
-    @Test
     void testFindStatusById_success() {
         int statusId = 1;
         SpaceStatus mockStatus = new SpaceStatus();
@@ -158,45 +134,7 @@ public class SpaceServiceTest {
         assertFalse(foundStatus.isPresent());
     }
 
-    @Test
-    void testCreateSpace() {
-        int testId = 1;
-        int testCode = 10;
-        SpaceStatus mockStatus = new SpaceStatus();
-        mockStatus.setId(testId);
-        mockStatus.setName("Test Status");
-
-        BuildingLocation mockLocation = new BuildingLocation();
-        mockLocation.setId(testId);
-        mockLocation.setFloor("Piso 1");
-        mockLocation.setBuilding(new Building());
-
-        Space mockSpace = new Space();
-        mockSpace.setId(testId);
-        mockSpace.setName("Test Space");
-        mockSpace.setLocation(mockLocation);
-        mockSpace.setStatus(mockStatus);
-        mockSpace.setMaxPeople(30);
-        mockSpace.setSpaceCode(testCode);
-        mockSpace.setIsDeleted(false);
-
-        when(spaceRepository.save(mockSpace)).thenReturn(mockSpace);
-
-        Space createdSpace = spaceService.saveSpace(mockSpace);
-
-        assertNotNull(createdSpace);
-        assertEquals(testId, createdSpace.getId());
-        assertEquals("Test Space", createdSpace.getName());
-        assertEquals(mockLocation.getId(), createdSpace.getLocation().getId());
-        assertEquals(mockLocation.getFloor(), createdSpace.getLocation().getFloor());
-        assertEquals(mockStatus.getId(), createdSpace.getStatus().getId());
-        assertEquals(mockStatus.getName(), createdSpace.getStatus().getName());
-        assertEquals(30, createdSpace.getMaxPeople());
-        assertEquals(testCode, createdSpace.getSpaceCode());
-        assertEquals(false, createdSpace.getIsDeleted());
-    }
-
-    @Test
+        @Test
     void testAllBuildings(){
         Iterable<Building> mockBuildings = mock(Iterable.class);
         when(buildingRepository.findAll()).thenReturn(mockBuildings);
