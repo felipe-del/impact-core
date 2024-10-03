@@ -141,14 +141,15 @@ CREATE TABLE space_type (
 );
 
 -- SPACE --
-
+-- Added the attributes open_time and close_time for schedule availibility handling
 CREATE TABLE space (
     id              INT AUTO_INCREMENT PRIMARY KEY,
     name            VARCHAR(100) NOT NULL,
     space_code      INT UNIQUE,
     location_id     INT NOT NULL,
     max_people      INT,
-    type_id         INT NOT NULL,
+    open_time       TIME NOT NULL,
+    close_time      TIME NOT NULL,
     status_id       INT, -- Referencia al estado del espacio
     is_deleted       BOOLEAN DEFAULT FALSE,
     FOREIGN KEY (location_id) REFERENCES building_location(id),
