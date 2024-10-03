@@ -6,6 +6,8 @@ import com.impact.brain.commonSpace.dto.SpaceDTO;
 import com.impact.brain.commonSpace.entity.*;
 import com.impact.brain.commonSpace.repository.*;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.web.server.ResponseStatusException;
 
 import java.util.ArrayList;
 import java.util.Optional;
@@ -69,6 +71,8 @@ public class SpaceService {
         newSpace.setName(space.getName());
         newSpace.setSpaceCode(space.getSpaceCode());
         newSpace.setMaxPeople(space.getMaxPeople());
+        newSpace.setOpenTime(space.getOpenTime());
+        newSpace.setCloseTime(space.getCloseTime());
         newSpace.setIsDeleted(false);
 
         Optional<BuildingLocation> buildingLocation = buildingLocationById(space.getBuildingLocation());
@@ -111,7 +115,6 @@ public class SpaceService {
         return locationsOfBuildings;
     }
 
-
     /* Save methods ---------------------------------------------------------------------------------- */
     public Space saveSpace(SpaceDTO space) {
         return spaceRepository.save(spaceDTOToSpace(space));
@@ -143,5 +146,29 @@ public class SpaceService {
 
     public Optional<BuildingLocation> buildingLocationById(int id) {
         return buildingLocationRepository.findById(id);
+    }
+
+    /* Edit methods */
+    public Space editSpace(int spaceId, SpaceDTO newSpaceData){
+        Optional<Space> foundSpace = spaceById(spaceId);
+        if(foundSpace.isPresent()){
+            Space spaceToUpdate = foundSpace.get();
+            spaceToUpdate.setName(newSpaceData.getName());
+            spaceToUpdate.setSpaceCode(newSpaceData.getSpaceCode());
+            spaceToUpdate.setMaxPeople(newSpaceData.getMaxPeople());
+            spaceToUpdate.setOpenTime(newSpaceData.getOpenTime());
+            spaceToUpdate.setCloseTime(newSpaceData.getCloseTime());
+
+            Optional<BuildingLocation> buildingLocation = buildingLocationById(newSpaceData.getBuildingLocation());
+            buildingLocation.ifPresent(spaceToUpdate::setLocation);
+
+            Optional<SpaceStatus> spaceStatus = spaceStatusById(newSpaceData.getSpaceStatus());
+            spaceStatus.ifPresent(spaceToUpdate::setStatus);
+
+            return spaceRepository.save(spaceToUpdate);
+        }
+        else {
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND);
+        }
     }
 }

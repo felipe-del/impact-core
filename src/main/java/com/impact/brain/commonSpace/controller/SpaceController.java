@@ -80,4 +80,13 @@ public class SpaceController {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND);
         }
     }
+
+    @PutMapping("/edit/space/{spaceId}")
+    public Space updateSpace(@PathVariable int spaceId, @RequestBody SpaceDTO spaceToEdit) {
+        try { return spaceService.editSpace(spaceId, spaceToEdit); }
+        catch (Exception e){
+            System.out.println(e.getMessage());
+            throw new ResponseStatusException(HttpStatus.CONFLICT);
+        }
+    }
 }
