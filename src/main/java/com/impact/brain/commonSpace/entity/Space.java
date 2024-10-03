@@ -7,6 +7,8 @@ import lombok.Getter;
 import lombok.Setter;
 import org.hibernate.annotations.ColumnDefault;
 
+import java.time.LocalTime;
+
 @Getter
 @Setter
 @Entity
@@ -39,4 +41,13 @@ public class Space {
     @ColumnDefault("0")
     @Column(name = "is_deleted")
     private Boolean isDeleted;
+
+    @NotNull
+    @Column(name = "open_time", nullable = false)
+    private LocalTime openTime;
+
+    @NotNull
+    @Column(name = "close_time", nullable = false)
+    private LocalTime closeTime;
+
 }
