@@ -67,7 +67,21 @@ public class AssetService implements IAssetService {
     }
 
     @Override
-    public Iterable<Asset> all() {
+    public List<AssetDTO> all() {
+        Iterable<Asset> assets = assetRepository.findAll();
+
+        // Crear una lista para almacenar los DTOs
+        List<AssetDTO> assetDTOs = new ArrayList<>();
+
+        // Iterar sobre las entidades Asset y convertirlas a DTOs
+        for (Asset asset : assets) {
+            assetDTOs.add(toDTO(asset));
+        }
+
+        // Retornar la lista de DTOs como Iterable
+        return assetDTOs;
+    }
+    public Iterable<Asset> allAsset() {
         return assetRepository.findAll();
     }
 
@@ -220,6 +234,24 @@ public class AssetService implements IAssetService {
         dto.setName(entity.getName());
         dto.setDescription(entity.getDescription());
         dto.setCategoryId(entity.getCategory().getId());
+        return dto;
+    }
+    public AssetDTO toDTO(Asset entity) {
+        AssetDTO dto = new AssetDTO();
+        dto.setId(entity.getId());
+        dto.setPurchaseDate(entity.getPurchaseDate());
+        dto.setValue(entity.getValue());
+        dto.setSupplierId(entity.getSupplier().getId());
+        dto.setBrandId(entity.getBrand().getId());
+        dto.setSubcategoryId(entity.getSubcategory().getId());
+        dto.setResponsibleId(entity.getResponsible().getId());
+        dto.setStatusId(entity.getStatus().getId());
+        dto.setIsDeleted(entity.getIsDeleted());
+        dto.setAssetSeries(entity.getAssetSeries());
+        dto.setPlateNumber(entity.getPlateNumber());
+        dto.setCurrencyId(entity.getCurrency().getId());
+        dto.setAssetModelId(entity.getAssetModel().getId());
+        dto.setLocationNumber(entity.getLocationNumber().getId());
         return dto;
     }
     public Iterable<LocationType> getAllLocationType(){

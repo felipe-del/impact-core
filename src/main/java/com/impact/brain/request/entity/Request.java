@@ -1,4 +1,4 @@
-package com.impact.brain.entity;
+package com.impact.brain.request.entity;
 
 import com.impact.brain.user.entity.User;
 import jakarta.persistence.*;
@@ -13,6 +13,7 @@ import java.time.LocalDate;
 @Table(name = "request")
 public class Request {
     @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id", nullable = false)
     private Integer id;
 
