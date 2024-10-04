@@ -1,5 +1,8 @@
 package com.impact.brain.asset.controller;
 
+import com.impact.brain.asset.assetRequest.dto.AssetRequestDTO;
+import com.impact.brain.asset.assetRequest.entity.AssetRequest;
+import com.impact.brain.asset.assetRequest.service.implement.AssetRequestService;
 import com.impact.brain.asset.dto.*;
 import com.impact.brain.asset.entity.*;
 import com.impact.brain.asset.service.impl.AssetService;
@@ -16,13 +19,16 @@ import java.util.List;
 @RequestMapping("/asset")
 public class AssetController {
     final AssetService assetService;
+    private final AssetRequestService assetRequestService;
 
-    public AssetController(AssetService assetService) {
+    public AssetController(AssetService assetService,
+                           AssetRequestService assetRequestService) {
         this.assetService = assetService;
+        this.assetRequestService = assetRequestService;
     }
 
     @GetMapping
-    public Iterable<Asset> getAssets() {
+    public Iterable<AssetDTO> getAssets() {
         return assetService.all();
     }
 
@@ -89,7 +95,7 @@ public class AssetController {
     @GetMapping("/all")
     public Iterable<AssetListDTO> getList(){
         // Obtener todas las categorías
-        Iterable<Asset> assets = assetService.all();
+        Iterable<Asset> assets = assetService.allAsset();
         // Crear una lista para almacenar los DTOs
         ArrayList<AssetListDTO> assetsDTO = new ArrayList<>();
 
@@ -109,5 +115,10 @@ public class AssetController {
 
         // Retornar los DTOs al frontend
         return assetsDTO;
+    }
+    @PostMapping("/request")
+    public AssetRequestDTO createAssetRequest(@RequestBody AssetRequestDTO assetRequestDTO){
+        System.out.println(assetRequestDTO.toString());
+        return assetRequestService.save(assetRequestDTO);
     }
 }
