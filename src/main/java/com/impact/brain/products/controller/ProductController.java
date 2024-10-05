@@ -40,22 +40,27 @@ public class ProductController {
     @PostMapping()
     public void create(@RequestBody ProductCategoryDTO category){
         try{
-            ProductCategory categoryA= new ProductCategory();
-            categoryA.setName(category.getName());
-            categoryA.setCantidadMinima(category.getCantidadMinima());
-
-            Optional<CategoryType> c= productService.findById(category.getCategoryType());
-            c.ifPresent(categoryA::setCategoryType);
-            Optional<UnitOfMeasurement> u= productService.findByIdU(category.getUnit_of_measurement());
-            u.ifPresent(categoryA::setUnitOfMeasurement);
-
-            System.out.println(category.toString());
-            System.out.println(categoryA.toString());
-
+            ProductCategory categoryA= productService.dto2ProductCategory(category);
             productService.saveC(categoryA);
         }catch(Exception e){
             System.out.println(e.getMessage());
             throw new ResponseStatusException(HttpStatus.CONFLICT);
+        }
+    }
+    @GetMapping("/{id}")
+    public Product read(@PathVariable int id){
+        try{
+            return productService.findByIdP(id);
+        }catch(Exception e){
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND);
+        }
+    }
+    @GetMapping("/cat/{id}")
+    public Optional<ProductCategory> readC(@PathVariable int id){
+        try{
+            return productService.findByIdPC(id);
+        }catch(Exception e){
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND);
         }
     }
     @PostMapping("/product")
@@ -110,6 +115,30 @@ public class ProductController {
 
         // Retornar los DTOs al frontend
         return categoryCountDTOs;
+    }
+
+    @PutMapping("/category/{id}")
+    public void updateC(@PathVariable int id, @RequestBody ProductCategoryDTO updatedCategory){
+        try{
+            productService.editCategory(updatedCategory);
+        }catch(Exception e){
+            System.out.println(e.getMessage());
+            throw new ResponseStatusException(HttpStatus.CONFLICT);
+        }
+    }
+
+    @PutMapping("/edit/{id}")
+    public void updateP(@PathVariable int id, @RequestBody ProductDTO updatedProduct) {
+        try {
+            productService.editProduct(updatedProduct);
+        }catch(Exception e){
+            System.out.println(e.getMessage());
+            throw new ResponseStatusException(HttpStatus.CONFLICT);
+        }
+    }
+    @GetMapping("/status")
+    public Iterable<ProductStatus> statusIterable(){
+        return productService.getStatus();
     }
 
 }
