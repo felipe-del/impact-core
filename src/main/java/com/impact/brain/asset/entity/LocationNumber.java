@@ -16,7 +16,7 @@ public class LocationNumber {
     @Column(name = "location_number")
     private Integer locationNumber;
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "location_type_id")
     private LocationType locationType;
 
