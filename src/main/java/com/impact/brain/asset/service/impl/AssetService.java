@@ -70,7 +70,21 @@ public class AssetService implements IAssetService {
     }
 
     @Override
-    public Iterable<Asset> all() {
+    public List<AssetDTO> all() {
+        Iterable<Asset> assets = assetRepository.findAll();
+
+        // Crear una lista para almacenar los DTOs
+        List<AssetDTO> assetDTOs = new ArrayList<>();
+
+        // Iterar sobre las entidades Asset y convertirlas a DTOs
+        for (Asset asset : assets) {
+            assetDTOs.add(toDTO(asset));
+        }
+
+        // Retornar la lista de DTOs como Iterable
+        return assetDTOs;
+    }
+    public Iterable<Asset> allAsset() {
         return assetRepository.findAll();
     }
 
@@ -225,23 +239,22 @@ public class AssetService implements IAssetService {
         dto.setCategoryId(entity.getCategory().getId());
         return dto;
     }
-
-    public AssetDTO AssetToDTO(Asset asset){
+    public AssetDTO toDTO(Asset entity) {
         AssetDTO dto = new AssetDTO();
-        dto.setId(asset.getId());
-        dto.setPurchaseDate(asset.getPurchaseDate());
-        dto.setValue(asset.getValue());
-        dto.setResponsibleId(asset.getResponsible() != null ? asset.getResponsible().getId() : null);
-        dto.setSupplierId(asset.getSupplier() != null ? asset.getSupplier().getId() : null);
-        dto.setBrandId(asset.getBrand() != null ? asset.getBrand().getId() : null);
-        dto.setStatusId(asset.getStatus() != null ? asset.getStatus().getId() : null);
-        dto.setIsDeleted(asset.getIsDeleted());
-        dto.setAssetSeries(asset.getAssetSeries());
-        dto.setPlateNumber(asset.getPlateNumber());
-        dto.setCurrencyId(asset.getCurrency() != null ? asset.getCurrency().getId() : null);
-        dto.setAssetModelId(asset.getAssetModel() != null ? asset.getAssetModel().getId() : null);
-        dto.setSubcategoryId(asset.getSubcategory() != null ? asset.getSubcategory().getId() : null);
-        dto.setLocationNumber(asset.getLocationNumber() != null ? asset.getLocationNumber().getId() : null);
+        dto.setId(entity.getId());
+        dto.setPurchaseDate(entity.getPurchaseDate());
+        dto.setValue(entity.getValue());
+        dto.setSupplierId(entity.getSupplier().getId());
+        dto.setBrandId(entity.getBrand().getId());
+        dto.setSubcategoryId(entity.getSubcategory().getId());
+        dto.setResponsibleId(entity.getResponsible().getId());
+        dto.setStatusId(entity.getStatus().getId());
+        dto.setIsDeleted(entity.getIsDeleted());
+        dto.setAssetSeries(entity.getAssetSeries());
+        dto.setPlateNumber(entity.getPlateNumber());
+        dto.setCurrencyId(entity.getCurrency().getId());
+        dto.setAssetModelId(entity.getAssetModel().getId());
+        dto.setLocationNumber(entity.getLocationNumber().getId());
         return dto;
     }
     public Iterable<LocationType> getAllLocationType(){

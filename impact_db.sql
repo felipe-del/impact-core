@@ -360,6 +360,7 @@ CREATE TABLE asset_request (
     request_id      INT,
     asset_id        INT,
     status_id       INT,
+    reason          TEXT NULL,
     expiration_date DATE,
     UNIQUE KEY (request_id, asset_id),
     FOREIGN KEY (request_id) REFERENCES request(id),
