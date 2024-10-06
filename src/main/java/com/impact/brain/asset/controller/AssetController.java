@@ -129,7 +129,7 @@ public class AssetController {
     public AssetDTO findSpaceById(@PathVariable int id) {
         try {
             Asset asset = assetService.getById(id);
-            return assetService.AssetToDTO(asset);
+            return assetService.toDTO(asset);
         }
         catch (Exception e){
             System.out.println(e.getMessage());
