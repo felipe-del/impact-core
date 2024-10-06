@@ -328,6 +328,7 @@ CREATE TABLE product_request (
     request_id      INT,
     product_id      INT,
     status_id       INT,
+    reason          TEXT,
     UNIQUE KEY (request_id, product_id),
     FOREIGN KEY (request_id) REFERENCES request(id),
     FOREIGN KEY (product_id) REFERENCES product(id),
