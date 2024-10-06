@@ -1,7 +1,6 @@
-package com.impact.brain.entity;
+package com.impact.brain.products.entity;
 
 import com.impact.brain.asset.assetRequest.entity.ResourceRequestStatus;
-import com.impact.brain.products.entity.Product;
 import com.impact.brain.request.entity.Request;
 import jakarta.persistence.*;
 import lombok.Getter;
@@ -27,5 +26,9 @@ public class ProductRequest {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "status_id")
     private ResourceRequestStatus status;
+
+    @Lob
+    @Column(name = "reason")
+    private String reason;
 
 }
