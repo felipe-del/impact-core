@@ -6,7 +6,11 @@ import com.impact.brain.asset.assetRequest.service.implement.AssetRequestService
 import com.impact.brain.asset.dto.*;
 import com.impact.brain.asset.entity.*;
 import com.impact.brain.asset.service.impl.AssetService;
+import com.impact.brain.commonSpace.dto.SpaceDTO;
+import com.impact.brain.commonSpace.entity.Space;
+import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.server.ResponseStatusException;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -120,5 +124,26 @@ public class AssetController {
     public AssetRequestDTO createAssetRequest(@RequestBody AssetRequestDTO assetRequestDTO){
         System.out.println(assetRequestDTO.toString());
         return assetRequestService.save(assetRequestDTO);
+    }
+    @GetMapping("/{id}")
+    public AssetDTO findSpaceById(@PathVariable int id) {
+        try {
+            Asset asset = assetService.getById(id);
+            return assetService.toDTO(asset);
+        }
+        catch (Exception e){
+            System.out.println(e.getMessage());
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND);
+        }
+    }
+
+    @PutMapping("/edit/{id}")
+    public void updateSpace(@PathVariable int id, @RequestBody AssetDTO assetToEdit) {
+        try { assetService.edit(id, assetToEdit); }
+        catch (Exception e){
+            e.printStackTrace();
+            System.out.println(e.getMessage());
+            throw new ResponseStatusException(HttpStatus.CONFLICT);
+        }
     }
 }

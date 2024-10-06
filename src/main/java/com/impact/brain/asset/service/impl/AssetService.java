@@ -1,20 +1,23 @@
 package com.impact.brain.asset.service.impl;
 
-import com.impact.brain.asset.dto.AssetDTO;
-import com.impact.brain.asset.dto.AssetSubcategoryDTO;
-import com.impact.brain.asset.dto.LocationNumberDTO;
-import com.impact.brain.asset.dto.NumberAndTypeLocationDTO;
+import com.impact.brain.asset.dto.*;
 import com.impact.brain.asset.entity.*;
 import com.impact.brain.asset.repository.*;
 import com.impact.brain.asset.service.IAssetService;
 import com.impact.brain.brand.entity.Brand;
 import com.impact.brain.brand.repository.BrandRepository;
+import com.impact.brain.commonSpace.dto.SpaceDTO;
+import com.impact.brain.commonSpace.entity.BuildingLocation;
+import com.impact.brain.commonSpace.entity.Space;
+import com.impact.brain.commonSpace.entity.SpaceStatus;
 import com.impact.brain.exception.ResourceNotFoundException;
 import com.impact.brain.supplier.entity.Supplier;
 import com.impact.brain.supplier.service.impl.SupplierService;
 import com.impact.brain.user.entity.User;
 import com.impact.brain.user.service.impl.UserService;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
+import org.springframework.web.server.ResponseStatusException;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -269,5 +272,48 @@ public class AssetService implements IAssetService {
             numberAndTypeLocationDTOS.add(dto);
         }
         return numberAndTypeLocationDTOS;
+    }
+
+    public Asset edit(int assetId, AssetDTO assetDTO){
+        Asset assetToUpdate = getById(assetId);
+            if (assetToUpdate != null) {
+                assetToUpdate.setPlateNumber(assetDTO.getPlateNumber());
+                assetToUpdate.setAssetSeries(assetDTO.getAssetSeries());
+                assetToUpdate.setValue(assetDTO.getValue());
+                assetToUpdate.setPurchaseDate(assetDTO.getPurchaseDate());
+
+                User responsible = userService.findById(assetDTO.getResponsibleId());
+                if(responsible != null){
+                    assetToUpdate.setResponsible(responsible);
+                }else throw new ResponseStatusException(HttpStatus.NOT_FOUND);
+
+                Supplier supplier = supplierService.getById(assetDTO.getSupplierId());
+                if(supplier != null){
+                    assetToUpdate.setSupplier(supplier);
+                }else throw new ResponseStatusException(HttpStatus.NOT_FOUND);
+
+                Optional<Brand> brand = brandRepository.findById(assetDTO.getBrandId());
+                brand.ifPresent(assetToUpdate::setBrand);
+
+                Optional<AssetStatus> assetStatus = assetStatusRepository.findById(assetDTO.getStatusId());
+                assetStatus.ifPresent(assetToUpdate::setStatus);
+
+                Optional<Currency> currency = assetCurrencyRepository.findById(assetDTO.getCurrencyId());
+                currency.ifPresent(assetToUpdate::setCurrency);
+
+                Optional<AssetModel> assetModel = assetModelRepository.findById(assetDTO.getAssetModelId());
+                assetModel.ifPresent(assetToUpdate::setAssetModel);
+
+                Optional<AssetSubcategory> assetSubcategory = assetSubcategoryRepository.findById(assetDTO.getSubcategoryId());
+                assetSubcategory.ifPresent(assetToUpdate::setSubcategory);
+
+                Optional<LocationNumber> locationNumber = locationNumberRepository.findById(assetDTO.getLocationNumber());
+                locationNumber.ifPresent(assetToUpdate::setLocationNumber);
+
+                return assetRepository.save(assetToUpdate);
+            } else {
+                System.out.println("no encontrado");
+                throw new ResponseStatusException(HttpStatus.NOT_FOUND);
+            }
     }
 }
