@@ -3,10 +3,12 @@ package com.impact.brain.products.controller;
 import com.impact.brain.products.dto.ProductCategoryCountDTO;
 import com.impact.brain.products.dto.ProductCategoryDTO;
 import com.impact.brain.products.dto.ProductDTO;
+import com.impact.brain.products.dto.ProductRequestDTO;
 import com.impact.brain.products.entity.*;
-import com.impact.brain.products.service.ProductService;
+import com.impact.brain.products.service.implement.ProductService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ResponseStatusException;
 
@@ -110,6 +112,18 @@ public class ProductController {
 
         // Retornar los DTOs al frontend
         return categoryCountDTOs;
+    }
+
+    /**
+     * Creates a new product request.
+     *
+     * @param productRequestDTO the AssetRequestDTO object to be created.
+     * @return ResponseEntity containing the created AssetRequestDTO object.
+     */
+    @PostMapping("/request")
+    public ResponseEntity<ProductRequestDTO> createProductRequest(@RequestBody ProductRequestDTO productRequestDTO) {
+        System.out.println(productRequestDTO.toString());
+        return ResponseEntity.status(HttpStatus.CREATED).body(productService.save(productRequestDTO));
     }
 
 }

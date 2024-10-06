@@ -6,6 +6,8 @@ import com.impact.brain.asset.assetRequest.service.implement.AssetRequestService
 import com.impact.brain.asset.dto.*;
 import com.impact.brain.asset.entity.*;
 import com.impact.brain.asset.service.impl.AssetService;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.ArrayList;
@@ -18,7 +20,8 @@ import java.util.List;
 @RestController
 @RequestMapping("/asset")
 public class AssetController {
-    final AssetService assetService;
+
+    private final AssetService assetService;
     private final AssetRequestService assetRequestService;
 
     public AssetController(AssetService assetService,
@@ -27,73 +30,161 @@ public class AssetController {
         this.assetRequestService = assetRequestService;
     }
 
+    /**
+     * Retrieves all assets.
+     *
+     * @return ResponseEntity containing an iterable of AssetDTO objects.
+     */
     @GetMapping
-    public Iterable<AssetDTO> getAssets() {
-        return assetService.all();
+    public ResponseEntity<Iterable<AssetDTO>> getAssets() {
+        return ResponseEntity.ok(assetService.all());
     }
 
+    /**
+     * Retrieves all asset statuses.
+     *
+     * @return ResponseEntity containing an iterable of AssetStatus objects.
+     */
     @GetMapping("/status")
-    public Iterable<AssetStatus> getAssetStatus() {
-        return assetService.allStatus();
+    public ResponseEntity<Iterable<AssetStatus>> getAssetStatus() {
+        return ResponseEntity.ok(assetService.allStatus());
     }
 
+    /**
+     * Retrieves all asset categories.
+     *
+     * @return ResponseEntity containing an iterable of AssetCategory objects.
+     */
     @GetMapping("/category")
-    public Iterable<AssetCategory> getAssetCategory() {
-        return assetService.allCategories();
+    public ResponseEntity<Iterable<AssetCategory>> getAssetCategory() {
+        return ResponseEntity.ok(assetService.allCategories());
     }
 
+    /**
+     * Retrieves all currencies.
+     *
+     * @return ResponseEntity containing an iterable of Currency objects.
+     */
     @GetMapping("/currency")
-    public Iterable<Currency> getCurrency() {
-        return assetService.allCurrency();
+    public ResponseEntity<Iterable<Currency>> getCurrency() {
+        return ResponseEntity.ok(assetService.allCurrency());
     }
 
+    /**
+     * Retrieves all asset subcategories.
+     *
+     * @return ResponseEntity containing an iterable of AssetSubcategoryDTO objects.
+     */
     @GetMapping("/subcategory")
-    public Iterable<AssetSubcategoryDTO> getSubcategory() {
-        return assetService.allAssetSubcategory();
+    public ResponseEntity<Iterable<AssetSubcategoryDTO>> getSubcategory() {
+        return ResponseEntity.ok(assetService.allAssetSubcategory());
     }
 
+    /**
+     * Retrieves all asset models.
+     *
+     * @return ResponseEntity containing an iterable of AssetModel objects.
+     */
     @GetMapping("/model")
-    public Iterable<AssetModel> getAssetModel() {
-        return assetService.allAssetModel();
+    public ResponseEntity<Iterable<AssetModel>> getAssetModel() {
+        return ResponseEntity.ok(assetService.allAssetModel());
     }
 
-    @PostMapping()
-    public void create(@RequestBody AssetDTO assetDTO){
+    /**
+     * Creates a new asset.
+     *
+     * @param assetDTO the AssetDTO object to be created.
+     * @return ResponseEntity indicating the result of the creation operation.
+     */
+    @PostMapping
+    public ResponseEntity<Void> create(@RequestBody AssetDTO assetDTO) {
         System.out.println(assetDTO.toString());
         assetService.save(assetDTO);
+        return ResponseEntity.status(HttpStatus.CREATED).build(); // 201 Created
     }
 
+    /**
+     * Creates a new asset category.
+     *
+     * @param assetDTO the AssetCategory object to be created.
+     * @return ResponseEntity containing the created AssetCategory object.
+     */
     @PostMapping("/category")
-    public AssetCategory createCategory(@RequestBody AssetCategory assetDTO) {
-        return assetService.saveCategory(assetDTO);
-    }
-    @PostMapping("/subcategory")
-    public AssetSubcategory createSubcategory(@RequestBody AssetSubcategoryDTO assetSubcategoryDTO){
-        return assetService.saveSubcategory(assetSubcategoryDTO);
+    public ResponseEntity<AssetCategory> createCategory(@RequestBody AssetCategory assetDTO) {
+        return ResponseEntity.status(HttpStatus.CREATED).body(assetService.saveCategory(assetDTO));
     }
 
+    /**
+     * Creates a new asset subcategory.
+     *
+     * @param assetSubcategoryDTO the AssetSubcategoryDTO object to be created.
+     * @return ResponseEntity containing the created AssetSubcategory object.
+     */
+    @PostMapping("/subcategory")
+    public ResponseEntity<AssetSubcategory> createSubcategory(@RequestBody AssetSubcategoryDTO assetSubcategoryDTO) {
+        return ResponseEntity.status(HttpStatus.CREATED).body(assetService.saveSubcategory(assetSubcategoryDTO));
+    }
+
+    /**
+     * Creates a new asset model.
+     *
+     * @param assetModel the AssetModel object to be created.
+     * @return ResponseEntity containing the created AssetModel object.
+     */
     @PostMapping("/model")
-    public AssetModel createModel(@RequestBody AssetModel assetModel){
-        return assetService.saveModel(assetModel);
+    public ResponseEntity<AssetModel> createModel(@RequestBody AssetModel assetModel) {
+        return ResponseEntity.status(HttpStatus.CREATED).body(assetService.saveModel(assetModel));
     }
+
+    /**
+     * Creates a new location number.
+     *
+     * @param locationNumberDTO the LocationNumberDTO object to be created.
+     * @return ResponseEntity containing the created LocationNumber object.
+     */
     @PostMapping("/locationNumber")
-    public LocationNumber createLocationNumber(@RequestBody LocationNumberDTO locationNumberDTO){
-        return assetService.saveLocationNumber(locationNumberDTO);
+    public ResponseEntity<LocationNumber> createLocationNumber(@RequestBody LocationNumberDTO locationNumberDTO) {
+        return ResponseEntity.status(HttpStatus.CREATED).body(assetService.saveLocationNumber(locationNumberDTO));
     }
+
+    /**
+     * Creates a new location type.
+     *
+     * @param locationType the LocationType object to be created.
+     * @return ResponseEntity containing the created LocationType object.
+     */
     @PostMapping("/locationType")
-    public LocationType createLocationType(@RequestBody LocationType locationType){
-        return assetService.saveLocationType(locationType);
+    public ResponseEntity<LocationType> createLocationType(@RequestBody LocationType locationType) {
+        return ResponseEntity.status(HttpStatus.CREATED).body(assetService.saveLocationType(locationType));
     }
+
+    /**
+     * Retrieves all location types.
+     *
+     * @return ResponseEntity containing an iterable of LocationType objects.
+     */
     @GetMapping("/locationType")
-    public Iterable<LocationType> getAll(){
-        return assetService.getAllLocationType();
+    public ResponseEntity<Iterable<LocationType>> getAll() {
+        return ResponseEntity.ok(assetService.getAllLocationType());
     }
+
+    /**
+     * Retrieves all location numbers.
+     *
+     * @return ResponseEntity containing a list of NumberAndTypeLocationDTO objects.
+     */
     @GetMapping("/locationNumber")
-    public List<NumberAndTypeLocationDTO> getAllLocationNumber(){
-        return assetService.getAllLocationNumber();
+    public ResponseEntity<List<NumberAndTypeLocationDTO>> getAllLocationNumber() {
+        return ResponseEntity.ok(assetService.getAllLocationNumber());
     }
+
+    /**
+     * Retrieves a list of all assets with details.
+     *
+     * @return ResponseEntity containing an iterable of AssetListDTO objects.
+     */
     @GetMapping("/all")
-    public Iterable<AssetListDTO> getList(){
+    public ResponseEntity<Iterable<AssetListDTO>> getList() {
         // Obtener todas las categorías
         Iterable<Asset> assets = assetService.allAsset();
         // Crear una lista para almacenar los DTOs
@@ -114,11 +205,20 @@ public class AssetController {
         }
 
         // Retornar los DTOs al frontend
-        return assetsDTO;
+        return ResponseEntity.ok(assetsDTO);
     }
+
+    /**
+     * Creates a new asset request.
+     *
+     * @param assetRequestDTO the AssetRequestDTO object to be created.
+     * @return ResponseEntity containing the created AssetRequestDTO object.
+     */
     @PostMapping("/request")
-    public AssetRequestDTO createAssetRequest(@RequestBody AssetRequestDTO assetRequestDTO){
+    public ResponseEntity<AssetRequestDTO> createAssetRequest(@RequestBody AssetRequestDTO assetRequestDTO) {
         System.out.println(assetRequestDTO.toString());
-        return assetRequestService.save(assetRequestDTO);
+        return ResponseEntity.status(HttpStatus.CREATED).body(assetRequestService.save(assetRequestDTO));
     }
 }
+
+
