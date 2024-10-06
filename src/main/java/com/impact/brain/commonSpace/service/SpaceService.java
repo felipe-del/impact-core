@@ -1,10 +1,14 @@
 package com.impact.brain.commonSpace.service;
 
+import com.impact.brain.brand.entity.Brand;
+import com.impact.brain.brand.repository.BrandRepository;
 import com.impact.brain.commonSpace.dto.BuildingLocationDTO;
 import com.impact.brain.commonSpace.dto.BuildingDTO;
 import com.impact.brain.commonSpace.dto.SpaceDTO;
+import com.impact.brain.commonSpace.dto.SpaceEquipmentDTO;
 import com.impact.brain.commonSpace.entity.*;
 import com.impact.brain.commonSpace.repository.*;
+import com.impact.brain.user.entity.User;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.server.ResponseStatusException;
@@ -28,6 +32,9 @@ public class SpaceService {
 
     @Autowired
     private BuildingLocationRepository buildingLocationRepository;
+
+    @Autowired
+    private BrandRepository brandRepository;
 
     /* FindAll() methods to retrieve the entire list of each object type respectively  */
     public Iterable<SpaceEquipment> spaceEquipments() { return spaceEquipmentRepository.findAll(); }
@@ -115,6 +122,22 @@ public class SpaceService {
         return locationsOfBuildings;
     }
 
+    public SpaceEquipment dtoToEquipment(SpaceEquipmentDTO dto){
+        SpaceEquipment spaceEquipment = new SpaceEquipment();
+
+        spaceEquipment.setName(dto.getName());
+        spaceEquipment.setQuantity(dto.getQuantity());
+        spaceEquipment.setId(dto.getId());
+        Optional<Brand> brand = brandRepository.findById(dto.getBrandId());
+        brand.ifPresent(spaceEquipment::setBrand);
+        Space space = spaceRepository.findSpaceById(dto.getSpaceId());
+        if(space != null){
+            spaceEquipment.setSpace(space);
+        }else throw new ResponseStatusException(HttpStatus.NOT_FOUND);
+
+        return spaceEquipment;
+    }
+
     /* Save methods ---------------------------------------------------------------------------------- */
     public Space saveSpace(SpaceDTO space) {
         return spaceRepository.save(spaceDTOToSpace(space));
@@ -128,9 +151,8 @@ public class SpaceService {
         return buildingLocationRepository.save(buildingLocationDTOToBuildingLocation(buildingLocation));
     }
 
-    public void saveSpaceEquipment(SpaceEquipment spaceEquipment) {
-        spaceEquipmentRepository.save(spaceEquipment);
-        System.out.println("Saving spaceEquipment: " + spaceEquipment);
+    public SpaceEquipment saveSpaceEquipment(SpaceEquipmentDTO spaceEquipment) {
+        return spaceEquipmentRepository.save(dtoToEquipment(spaceEquipment));
     }
 
     /* Methods to get objects */

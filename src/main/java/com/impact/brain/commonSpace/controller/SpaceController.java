@@ -3,6 +3,7 @@ package com.impact.brain.commonSpace.controller;
 import com.impact.brain.commonSpace.dto.BuildingDTO;
 import com.impact.brain.commonSpace.dto.BuildingLocationDTO;
 import com.impact.brain.commonSpace.dto.SpaceDTO;
+import com.impact.brain.commonSpace.dto.SpaceEquipmentDTO;
 import com.impact.brain.commonSpace.entity.*;
 import com.impact.brain.commonSpace.service.SpaceService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -66,10 +67,13 @@ public class SpaceController {
         }
     }
 
-    // Method missing implementation
     @PostMapping("/create/equipment")
-    public Space createSpaceEquipment(@RequestBody SpaceEquipment spaceEquipment) {
-        return null;
+    public SpaceEquipment createSpaceEquipment(@RequestBody SpaceEquipmentDTO spaceEquipment) {
+        try {return spaceService.saveSpaceEquipment(spaceEquipment);}
+        catch(Exception e){
+            System.out.println(e.getMessage());
+            throw new ResponseStatusException(HttpStatus.CONFLICT);
+        }
     }
 
     @GetMapping("/find/space/{spaceId}")
