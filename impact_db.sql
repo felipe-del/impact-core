@@ -194,8 +194,8 @@ DROP TABLE space_equipment;
 CREATE TABLE space_reservation (
     id           INT AUTO_INCREMENT PRIMARY KEY,
     space_id     INT,
-    start_time   DATE,
-    end_time	 DATE,
+    start_time   DATETIME,
+    end_time	 DATETIME,
     FOREIGN KEY (space_id) REFERENCES space(id)
 );
 
@@ -208,8 +208,9 @@ CREATE TABLE space_request (
     request_id INT,
     space_id   INT,
     num_people INT,
-    event_desc INT,
+    event_desc VARCHAR(255),
     status_id  INT,
+    use_equipment TINYINT(1) DEFAULT 0,
     UNIQUE KEY (request_id, space_id),
     FOREIGN KEY (request_id) REFERENCES request(id),
     FOREIGN KEY (space_id) REFERENCES space(id),
