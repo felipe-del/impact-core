@@ -1,6 +1,6 @@
 package com.impact.brain.products.entity;
 
-import com.impact.brain.asset.assetRequest.entity.ResourceRequestStatus;
+import com.impact.brain.request.entity.ResourceRequestStatus;
 import com.impact.brain.request.entity.Request;
 import jakarta.persistence.*;
 import lombok.Getter;
