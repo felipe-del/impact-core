@@ -57,6 +57,7 @@ public class SpaceService {
     private SpaceReservationRepository spaceReservationRepository;
 
     /* FindAll() methods to retrieve the entire list of each object type respectively  */
+    public Iterable<Brand> brands() { return brandRepository.findAll(); }
     public Iterable<SpaceStatus> spaceStatuses() { return spaceStatusRepository.findAll(); }
     public Iterable<Building> buildings() { return buildingRepository.findAll(); }
     public Iterable<Space> spaces() { return spaceRepository.findAll(); }

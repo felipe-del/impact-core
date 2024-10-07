@@ -1,5 +1,6 @@
 package com.impact.brain.commonSpace.controller;
 
+import com.impact.brain.brand.entity.Brand;
 import com.impact.brain.commonSpace.dto.*;
 import com.impact.brain.commonSpace.entity.*;
 import com.impact.brain.commonSpace.service.SpaceService;
@@ -26,8 +27,11 @@ public class SpaceController {
     @GetMapping("/status")
     public Iterable<SpaceStatus> findStatus() { return spaceService.spaceStatuses(); }
 
+    @GetMapping("/brands")
+    public Iterable<Brand> findBrands() { return spaceService.brands();}
+
     @GetMapping("/equipment")
-    public Iterable<SpaceEquipmentDTO> findEquipment() { return spaceService.spaceEquipments(); }
+    public Iterable<SpaceEquipmentDTO> findSpaceEquipment() { return spaceService.spaceEquipments(); }
 
     @GetMapping("/equipment-by-space")
     public Iterable<SpaceEquipmentSortedDTO> findEquipmentBySpace() { return spaceService.equipmentBySpace(); }
