@@ -1,6 +1,6 @@
 package com.impact.brain.products.service;
 
-import com.impact.brain.asset.assetRequest.repository.ResourceRequestStatusRepository;
+import com.impact.brain.request.repository.ResourceRequestStatusRepository;
 import com.impact.brain.products.dto.ProductCategoryDTO;
 import com.impact.brain.products.dto.ProductDTO;
 import com.impact.brain.products.dto.ProductRequestDTO;
