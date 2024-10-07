@@ -65,6 +65,8 @@ public class SpaceService {
     public Iterable<Request> requests() { return requestRepository.findAll(); }
     public Iterable<RequestStatus> requestStatuses() { return requestStatusRepository.findAll(); }
     public Iterable<ResourceRequestStatus> resourceRequests() { return resourceRequestStatusRepository.findAll(); }
+    public Iterable<SpaceRequest> spaceRequests() { return spaceRequestRepository.findAll(); }
+    public Iterable<SpaceReservation> spaceReservations() { return spaceReservationRepository.findAll(); }
 
     /* Method to show all building locations, the BuildingLocationDTO
     *  is being used to avoid errors from LAZY type fetching in
