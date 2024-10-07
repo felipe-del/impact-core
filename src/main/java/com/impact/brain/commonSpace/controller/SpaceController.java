@@ -1,10 +1,6 @@
 package com.impact.brain.commonSpace.controller;
 
-import com.impact.brain.commonSpace.dto.BuildingDTO;
-import com.impact.brain.commonSpace.dto.BuildingLocationDTO;
-import com.impact.brain.commonSpace.dto.SpaceDTO;
-import com.impact.brain.commonSpace.dto.SpaceRequestInformationDTO;
-import com.impact.brain.commonSpace.dto.SpaceEquipmentDTO;
+import com.impact.brain.commonSpace.dto.*;
 import com.impact.brain.commonSpace.entity.*;
 import com.impact.brain.commonSpace.service.SpaceService;
 import com.impact.brain.user.service.impl.UserService;
@@ -31,7 +27,10 @@ public class SpaceController {
     public Iterable<SpaceStatus> findStatus() { return spaceService.spaceStatuses(); }
 
     @GetMapping("/equipment")
-    public Iterable<SpaceEquipment> findEquipment() { return spaceService.spaceEquipments(); }
+    public Iterable<SpaceEquipmentDTO> findEquipment() { return spaceService.spaceEquipments(); }
+
+    @GetMapping("/equipment-by-space")
+    public Iterable<SpaceEquipmentSortedDTO> findEquipmentBySpace() { return spaceService.equipmentBySpace(); }
 
     @GetMapping("/building")
     public Iterable<Building> findBuildings() { return spaceService.buildings(); }
