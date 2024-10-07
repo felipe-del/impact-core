@@ -1,5 +1,6 @@
 package com.impact.brain.entity;
 
+import com.impact.brain.commonSpace.entity.SpaceReservation;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
