@@ -12,7 +12,6 @@ import com.impact.brain.request.entity.ResourceRequestStatus;
 import com.impact.brain.request.repository.RequestRepository;
 import com.impact.brain.request.repository.RequestStatusRepository;
 import com.impact.brain.request.repository.ResourceRequestStatusRepository;
-import com.impact.brain.user.repository.UserRepository;
 import org.antlr.v4.runtime.misc.Pair;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -58,7 +57,6 @@ public class SpaceService {
     private SpaceReservationRepository spaceReservationRepository;
 
     /* FindAll() methods to retrieve the entire list of each object type respectively  */
-    public Iterable<SpaceEquipment> spaceEquipments() { return spaceEquipmentRepository.findAll(); }
     public Iterable<SpaceStatus> spaceStatuses() { return spaceStatusRepository.findAll(); }
     public Iterable<Building> buildings() { return buildingRepository.findAll(); }
     public Iterable<Space> spaces() { return spaceRepository.findAll(); }
@@ -83,6 +81,19 @@ public class SpaceService {
         newLocation.setFloorId(building.getFloor());
 
         return newLocation;
+    }
+
+    private SpaceEquipmentDTO spaceEquipmentToDTO(SpaceEquipment spaceEquipment){
+        SpaceEquipmentDTO spaceEquipmentDTO = new SpaceEquipmentDTO();
+
+        spaceEquipmentDTO.setId(spaceEquipment.getId());
+        spaceEquipmentDTO.setName(spaceEquipment.getName());
+        spaceEquipmentDTO.setBrandId(spaceEquipment.getBrand().getId());
+        spaceEquipmentDTO.setSpaceId(spaceEquipment.getSpace().getId());
+
+        spaceEquipmentDTO.setQuantity(spaceEquipment.getQuantity());
+
+        return spaceEquipmentDTO;
     }
 
     private BuildingLocation buildingLocationDTOToBuildingLocation(BuildingLocationDTO buildingLocation){
@@ -144,7 +155,7 @@ public class SpaceService {
         return new Pair<>(newSpaceRequest, newSpaceReservation);
     }
 
-    public SpaceEquipment SpaceEquipmentDTOToEquipment(SpaceEquipmentDTO dto){
+    public SpaceEquipment spaceEquipmentDTOToEquipment(SpaceEquipmentDTO dto){
         SpaceEquipment spaceEquipment = new SpaceEquipment();
 
         spaceEquipment.setName(dto.getName());
@@ -184,6 +195,14 @@ public class SpaceService {
         return buildingLocations;
     }
 
+    public Iterable<SpaceEquipmentDTO> spaceEquipments(){
+        ArrayList<SpaceEquipmentDTO> spaceEquipments = new ArrayList<>();
+        for(SpaceEquipment spaceEquipment : spaceEquipmentRepository.findAll()) {
+            spaceEquipments.add(spaceEquipmentToDTO(spaceEquipment));
+        }
+        return spaceEquipments;
+    }
+
     // Method to sort all locations by their corresponding buildings
     public Iterable<BuildingDTO> locationsByBuilding() {
         ArrayList<BuildingDTO> locationsOfBuildings = new ArrayList<>();
@@ -205,6 +224,26 @@ public class SpaceService {
         return locationsOfBuildings;
     }
 
+    public Iterable<SpaceEquipmentSortedDTO> equipmentBySpace() {
+        ArrayList<SpaceEquipmentSortedDTO> equipments = new ArrayList<>();
+
+        for(Space space : spaceRepository.findAll()) {
+
+            SpaceEquipmentSortedDTO equipment = new SpaceEquipmentSortedDTO();
+            equipment.setSpace(space);
+
+            for(SpaceEquipmentDTO sEqu : spaceEquipments()){
+                if(space.getId() == sEqu.getSpaceId()){
+                    equipment.getEquipment().add(sEqu);
+                }
+            }
+
+            equipments.add(equipment);
+        }
+
+        return equipments;
+    }
+
     /* Save methods ---------------------------------------------------------------------------------- */
     public Space saveSpace(SpaceDTO space) {
         return spaceRepository.save(spaceDTOToSpace(space));
@@ -219,7 +258,7 @@ public class SpaceService {
     }
 
     public SpaceEquipment saveSpaceEquipment(SpaceEquipmentDTO spaceEquipment) {
-        return spaceEquipmentRepository.save(SpaceEquipmentDTOToEquipment(spaceEquipment));
+        return spaceEquipmentRepository.save(spaceEquipmentDTOToEquipment(spaceEquipment));
     }
 
     public Pair<SpaceRequest, SpaceReservation> saveSpaceRequestAndReservation(SpaceRequestInformationDTO spaceRequestInformation, User userData) {
