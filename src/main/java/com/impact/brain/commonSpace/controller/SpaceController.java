@@ -3,17 +3,16 @@ package com.impact.brain.commonSpace.controller;
 import com.impact.brain.commonSpace.dto.BuildingDTO;
 import com.impact.brain.commonSpace.dto.BuildingLocationDTO;
 import com.impact.brain.commonSpace.dto.SpaceDTO;
+import com.impact.brain.commonSpace.dto.SpaceRequestInformationDTO;
 import com.impact.brain.commonSpace.dto.SpaceEquipmentDTO;
 import com.impact.brain.commonSpace.entity.*;
 import com.impact.brain.commonSpace.service.SpaceService;
+import com.impact.brain.user.service.impl.UserService;
+import org.antlr.v4.runtime.misc.Pair;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ResponseStatusException;
-
-import java.util.Optional;
-import java.util.stream.Collectors;
-import java.util.stream.StreamSupport;
 
 
 @RestController
@@ -21,7 +20,10 @@ import java.util.stream.StreamSupport;
 public class SpaceController {
     @Autowired
     SpaceService spaceService;
-  
+
+    @Autowired
+    UserService userService;
+
     @GetMapping("/all")
     public Iterable<Space> getSpaces() { return spaceService.spaces(); }
 
@@ -89,6 +91,15 @@ public class SpaceController {
     public Space updateSpace(@PathVariable int spaceId, @RequestBody SpaceDTO spaceToEdit) {
         try { return spaceService.editSpace(spaceId, spaceToEdit); }
         catch (Exception e){
+            System.out.println(e.getMessage());
+            throw new ResponseStatusException(HttpStatus.CONFLICT);
+        }
+    }
+
+    @PostMapping("/request/space-request&reservation")
+    public Pair<SpaceRequest, SpaceReservation> createSpaceRequest(@RequestBody SpaceRequestInformationDTO spaceRequest) {
+        try { return spaceService.saveSpaceRequestAndReservation(spaceRequest, userService.findById(1)); }
+        catch(Exception e){
             System.out.println(e.getMessage());
             throw new ResponseStatusException(HttpStatus.CONFLICT);
         }
