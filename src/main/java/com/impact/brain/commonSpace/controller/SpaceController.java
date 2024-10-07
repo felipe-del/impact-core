@@ -42,6 +42,12 @@ public class SpaceController {
     @GetMapping("/locations-by-building")
     public Iterable<BuildingDTO> findLocationsByBuilding() { return spaceService.locationsByBuilding(); }
 
+    @GetMapping("/requests")
+    public Iterable<SpaceRequest> findSpaceRequests() { return spaceService.spaceRequests(); }
+
+    @GetMapping("/reservations")
+    public Iterable<SpaceReservation> findReservations() { return spaceService.spaceReservations(); }
+
     @PostMapping("/create")
     public Space createSpace(@RequestBody SpaceDTO space) {
         try { return spaceService.saveSpace(space); }
