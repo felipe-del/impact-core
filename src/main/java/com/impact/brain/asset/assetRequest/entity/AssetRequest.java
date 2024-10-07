@@ -1,6 +1,8 @@
-package com.impact.brain.entity;
+package com.impact.brain.asset.assetRequest.entity;
 
 import com.impact.brain.asset.entity.Asset;
+import com.impact.brain.request.entity.Request;
+import com.impact.brain.request.entity.ResourceRequestStatus;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
@@ -30,5 +32,9 @@ public class AssetRequest {
 
     @Column(name = "expiration_date")
     private LocalDate expirationDate;
+
+    @Lob
+    @Column(name = "reason")
+    private String reason;
 
 }

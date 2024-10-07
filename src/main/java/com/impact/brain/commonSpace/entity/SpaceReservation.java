@@ -1,11 +1,10 @@
-package com.impact.brain.entity;
+package com.impact.brain.commonSpace.entity;
 
-import com.impact.brain.commonSpace.entity.Space;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
 
-import java.time.LocalDate;
+import java.time.Instant;
 
 @Getter
 @Setter
@@ -13,6 +12,7 @@ import java.time.LocalDate;
 @Table(name = "space_reservation")
 public class SpaceReservation {
     @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id", nullable = false)
     private Integer id;
 
@@ -21,9 +21,8 @@ public class SpaceReservation {
     private Space space;
 
     @Column(name = "start_time")
-    private LocalDate startTime;
+    private Instant startTime;
 
     @Column(name = "end_time")
-    private LocalDate endTime;
-
+    private Instant endTime;
 }

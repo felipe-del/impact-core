@@ -3,10 +3,12 @@ package com.impact.brain.products.controller;
 import com.impact.brain.products.dto.ProductCategoryCountDTO;
 import com.impact.brain.products.dto.ProductCategoryDTO;
 import com.impact.brain.products.dto.ProductDTO;
+import com.impact.brain.products.dto.ProductRequestDTO;
 import com.impact.brain.products.entity.*;
 import com.impact.brain.products.service.ProductService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ResponseStatusException;
 
@@ -40,22 +42,27 @@ public class ProductController {
     @PostMapping()
     public void create(@RequestBody ProductCategoryDTO category){
         try{
-            ProductCategory categoryA= new ProductCategory();
-            categoryA.setName(category.getName());
-            categoryA.setCantidadMinima(category.getCantidadMinima());
-
-            Optional<CategoryType> c= productService.findById(category.getCategoryType());
-            c.ifPresent(categoryA::setCategoryType);
-            Optional<UnitOfMeasurement> u= productService.findByIdU(category.getUnit_of_measurement());
-            u.ifPresent(categoryA::setUnitOfMeasurement);
-
-            System.out.println(category.toString());
-            System.out.println(categoryA.toString());
-
+            ProductCategory categoryA= productService.dto2ProductCategory(category);
             productService.saveC(categoryA);
         }catch(Exception e){
             System.out.println(e.getMessage());
             throw new ResponseStatusException(HttpStatus.CONFLICT);
+        }
+    }
+    @GetMapping("/{id}")
+    public Product read(@PathVariable int id){
+        try{
+            return productService.findByIdP(id);
+        }catch(Exception e){
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND);
+        }
+    }
+    @GetMapping("/cat/{id}")
+    public Optional<ProductCategory> readC(@PathVariable int id){
+        try{
+            return productService.findByIdPC(id);
+        }catch(Exception e){
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND);
         }
     }
     @PostMapping("/product")
@@ -110,6 +117,42 @@ public class ProductController {
 
         // Retornar los DTOs al frontend
         return categoryCountDTOs;
+    }
+
+    @PutMapping("/category/{id}")
+    public void updateC(@PathVariable int id, @RequestBody ProductCategoryDTO updatedCategory){
+        try{
+            productService.editCategory(updatedCategory);
+        }catch(Exception e){
+            System.out.println(e.getMessage());
+            throw new ResponseStatusException(HttpStatus.CONFLICT);
+        }
+    }
+
+    @PutMapping("/edit/{id}")
+    public void updateP(@PathVariable int id, @RequestBody ProductDTO updatedProduct) {
+        try {
+            productService.editProduct(updatedProduct);
+        }catch(Exception e){
+            System.out.println(e.getMessage());
+            throw new ResponseStatusException(HttpStatus.CONFLICT);
+        }
+    }
+    @GetMapping("/status")
+    public Iterable<ProductStatus> statusIterable(){
+        return productService.getStatus();
+    }
+
+    /**
+     * Creates a new product request.
+     *
+     * @param productRequestDTO the AssetRequestDTO object to be created.
+     * @return ResponseEntity containing the created AssetRequestDTO object.
+     */
+    @PostMapping("/request")
+    public ResponseEntity<ProductRequestDTO> createProductRequest(@RequestBody ProductRequestDTO productRequestDTO) {
+        System.out.println(productRequestDTO.toString());
+        return ResponseEntity.status(HttpStatus.CREATED).body(productService.save(productRequestDTO));
     }
 
 }

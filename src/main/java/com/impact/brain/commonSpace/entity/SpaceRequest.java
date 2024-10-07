@@ -1,9 +1,12 @@
-package com.impact.brain.entity;
+package com.impact.brain.commonSpace.entity;
 
-import com.impact.brain.commonSpace.entity.Space;
+import com.impact.brain.request.entity.ResourceRequestStatus;
+import com.impact.brain.request.entity.Request;
 import jakarta.persistence.*;
+import jakarta.validation.constraints.Size;
 import lombok.Getter;
 import lombok.Setter;
+import org.hibernate.annotations.ColumnDefault;
 
 @Getter
 @Setter
@@ -25,11 +28,16 @@ public class SpaceRequest {
     @Column(name = "num_people")
     private Integer numPeople;
 
+    @Size(max = 255)
     @Column(name = "event_desc")
-    private Integer eventDesc;
+    private String eventDesc;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "status_id")
     private ResourceRequestStatus status;
+
+    @ColumnDefault("0")
+    @Column(name = "use_equipment")
+    private Boolean useEquipment;
 
 }

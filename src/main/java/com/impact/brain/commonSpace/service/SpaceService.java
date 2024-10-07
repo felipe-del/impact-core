@@ -1,14 +1,24 @@
 package com.impact.brain.commonSpace.service;
 
-import com.impact.brain.commonSpace.dto.BuildingLocationDTO;
-import com.impact.brain.commonSpace.dto.BuildingDTO;
-import com.impact.brain.commonSpace.dto.SpaceDTO;
+import com.impact.brain.brand.entity.Brand;
+import com.impact.brain.brand.repository.BrandRepository;
+import com.impact.brain.commonSpace.dto.*;
 import com.impact.brain.commonSpace.entity.*;
 import com.impact.brain.commonSpace.repository.*;
+import com.impact.brain.user.entity.User;
+import com.impact.brain.request.entity.Request;
+import com.impact.brain.request.entity.RequestStatus;
+import com.impact.brain.request.entity.ResourceRequestStatus;
+import com.impact.brain.request.repository.RequestRepository;
+import com.impact.brain.request.repository.RequestStatusRepository;
+import com.impact.brain.request.repository.ResourceRequestStatusRepository;
+import com.impact.brain.user.repository.UserRepository;
+import org.antlr.v4.runtime.misc.Pair;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.server.ResponseStatusException;
 
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Optional;
 
@@ -16,9 +26,6 @@ import java.util.Optional;
 public class SpaceService {
     @Autowired
     private SpaceRepository spaceRepository;
-
-    @Autowired
-    private SpaceEquipmentRepository spaceEquipmentRepository;
 
     @Autowired
     private SpaceStatusRepository spaceStatusRepository;
@@ -29,11 +36,37 @@ public class SpaceService {
     @Autowired
     private BuildingLocationRepository buildingLocationRepository;
 
+    @Autowired
+    private SpaceEquipmentRepository spaceEquipmentRepository;
+
+    @Autowired
+    private RequestRepository requestRepository;
+
+    @Autowired
+    private RequestStatusRepository requestStatusRepository;
+
+    @Autowired
+    private ResourceRequestStatusRepository resourceRequestStatusRepository;
+
+    @Autowired
+    private SpaceRequestRepository spaceRequestRepository;
+
+    @Autowired
+    private BrandRepository brandRepository;
+
+    @Autowired
+    private SpaceReservationRepository spaceReservationRepository;
+
     /* FindAll() methods to retrieve the entire list of each object type respectively  */
     public Iterable<SpaceEquipment> spaceEquipments() { return spaceEquipmentRepository.findAll(); }
     public Iterable<SpaceStatus> spaceStatuses() { return spaceStatusRepository.findAll(); }
     public Iterable<Building> buildings() { return buildingRepository.findAll(); }
     public Iterable<Space> spaces() { return spaceRepository.findAll(); }
+    public Iterable<Request> requests() { return requestRepository.findAll(); }
+    public Iterable<RequestStatus> requestStatuses() { return requestStatusRepository.findAll(); }
+    public Iterable<ResourceRequestStatus> resourceRequests() { return resourceRequestStatusRepository.findAll(); }
+    public Iterable<SpaceRequest> spaceRequests() { return spaceRequestRepository.findAll(); }
+    public Iterable<SpaceReservation> spaceReservations() { return spaceReservationRepository.findAll(); }
 
     /* Method to show all building locations, the BuildingLocationDTO
     *  is being used to avoid errors from LAZY type fetching in
@@ -84,6 +117,63 @@ public class SpaceService {
         return newSpace;
     }
 
+    private Pair<SpaceRequest, SpaceReservation> spaceRequestInformationToSpaceReqAndRes(SpaceRequestInformationDTO newSpaceRequestData, User userData){
+        SpaceRequest newSpaceRequest = new SpaceRequest();
+        SpaceReservation newSpaceReservation = new SpaceReservation();
+
+        // Request Information
+        newSpaceRequest.setId(0);
+        newSpaceRequest.setRequest(makingRequest(userData));
+        newSpaceRequest.setNumPeople(newSpaceRequestData.getNumPeople());
+        newSpaceRequest.setEventDesc(newSpaceRequestData.getEventDesc());
+        newSpaceRequest.setUseEquipment(newSpaceRequestData.getUseEquipment());
+
+        Optional<ResourceRequestStatus> resourceRequest = resourceRequestStatusById(newSpaceRequestData.getStatusId());
+        resourceRequest.ifPresent(newSpaceRequest::setStatus);
+
+        // Reservation Info
+        newSpaceReservation.setId(0);
+        newSpaceReservation.setStartTime(newSpaceRequestData.getStartTime());
+        newSpaceReservation.setEndTime(newSpaceRequestData.getEndTime());
+
+        // Shared information
+        Optional<Space> space = spaceById(newSpaceRequestData.getSpaceId());
+        space.ifPresent(newSpaceRequest::setSpace);
+        space.ifPresent(newSpaceReservation::setSpace);
+
+        return new Pair<>(newSpaceRequest, newSpaceReservation);
+    }
+
+    public SpaceEquipment SpaceEquipmentDTOToEquipment(SpaceEquipmentDTO dto){
+        SpaceEquipment spaceEquipment = new SpaceEquipment();
+
+        spaceEquipment.setName(dto.getName());
+        spaceEquipment.setQuantity(dto.getQuantity());
+        spaceEquipment.setId(dto.getId());
+
+        Optional<Brand> brand = brandRepository.findById(dto.getBrandId());
+        brand.ifPresent(spaceEquipment::setBrand);
+
+        Space space = spaceRepository.findSpaceById(dto.getSpaceId());
+        if (space != null){ spaceEquipment.setSpace(space); }
+        else throw new ResponseStatusException(HttpStatus.NOT_FOUND);
+
+        return spaceEquipment;
+    }
+
+    /* Method to make requests */
+    private Request makingRequest(User user){
+        Request request = new Request();
+        request.setId(0);
+        request.setDate(LocalDate.now());
+        request.setUser(user);
+
+        Optional<RequestStatus> requestStatus = requestStatusRepository.findById(1);
+        requestStatus.ifPresent(request::setStatus);
+
+        return requestRepository.save(request);
+    }
+
     // --------------------------------------------------------------------------------------------------------------------
 
     public Iterable<BuildingLocationDTO> buildingLocations() {
@@ -128,26 +218,25 @@ public class SpaceService {
         return buildingLocationRepository.save(buildingLocationDTOToBuildingLocation(buildingLocation));
     }
 
-    public void saveSpaceEquipment(SpaceEquipment spaceEquipment) {
-        spaceEquipmentRepository.save(spaceEquipment);
-        System.out.println("Saving spaceEquipment: " + spaceEquipment);
+    public SpaceEquipment saveSpaceEquipment(SpaceEquipmentDTO spaceEquipment) {
+        return spaceEquipmentRepository.save(SpaceEquipmentDTOToEquipment(spaceEquipment));
+    }
+
+    public Pair<SpaceRequest, SpaceReservation> saveSpaceRequestAndReservation(SpaceRequestInformationDTO spaceRequestInformation, User userData) {
+        Pair<SpaceRequest, SpaceReservation> savedRequest = spaceRequestInformationToSpaceReqAndRes(spaceRequestInformation, userData);
+        spaceRequestRepository.save(savedRequest.a);
+        spaceReservationRepository.save(savedRequest.b);
+        return savedRequest;
     }
 
     /* Methods to get objects */
     public Optional<Space> spaceById(int id) { return spaceRepository.findById(id); }
-
-    public Optional<SpaceStatus> spaceStatusById(int id) {
-        return spaceStatusRepository.findById(id);
-    }
-
-    public Optional<Building> buildingById(int id) {
-        return buildingRepository.findById(id);
-    }
-
-    public Optional<BuildingLocation> buildingLocationById(int id) {
-        return buildingLocationRepository.findById(id);
-    }
-
+    public Optional<SpaceStatus> spaceStatusById(int id) { return spaceStatusRepository.findById(id); }
+    public Optional<Building> buildingById(int id) { return buildingRepository.findById(id); }
+    public Optional<BuildingLocation> buildingLocationById(int id) { return buildingLocationRepository.findById(id); }
+    public Optional<Request> requestById(int id) { return requestRepository.findById(id); }
+    public Optional<RequestStatus> requestStatusById(int id) { return requestStatusRepository.findById(id); }
+    public Optional<ResourceRequestStatus> resourceRequestStatusById(int id) { return resourceRequestStatusRepository.findById(id); }
     /* Edit methods */
     public Space editSpace(int spaceId, SpaceDTO newSpaceData){
         Optional<Space> foundSpace = spaceById(spaceId);
