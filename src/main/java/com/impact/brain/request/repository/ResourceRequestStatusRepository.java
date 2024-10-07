@@ -1,6 +1,6 @@
-package com.impact.brain.asset.assetRequest.repository;
+package com.impact.brain.request.repository;
 
-import com.impact.brain.asset.assetRequest.entity.ResourceRequestStatus;
+import com.impact.brain.request.entity.ResourceRequestStatus;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 /**
