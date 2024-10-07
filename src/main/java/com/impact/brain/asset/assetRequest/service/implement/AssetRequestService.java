@@ -3,9 +3,8 @@ package com.impact.brain.asset.assetRequest.service.implement;
 import com.impact.brain.asset.assetRequest.dto.AssetRequestDTO;
 import com.impact.brain.asset.assetRequest.entity.AssetRequest;
 import com.impact.brain.asset.assetRequest.repository.AssetRequestRepository;
-import com.impact.brain.asset.assetRequest.repository.ResourceRequestStatusRepository;
+import com.impact.brain.request.repository.ResourceRequestStatusRepository;
 import com.impact.brain.asset.assetRequest.service.IAssetRequestService;
-import com.impact.brain.asset.entity.AssetStatus;
 import com.impact.brain.asset.repository.AssetRepository;
 import com.impact.brain.asset.repository.AssetStatusRepository;
 import com.impact.brain.request.entity.Request;
@@ -15,7 +14,6 @@ import com.impact.brain.user.service.impl.UserService;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
-import java.util.Date;
 
 /**
  * @author Isaac F. B. C.
