@@ -13,6 +13,7 @@ import java.util.Arrays;
 @Setter
 public class ProductRequestDTO {
     private String categoryName;
+    private int count;
     private int requestId;
     private int productId;
     private int statusId;

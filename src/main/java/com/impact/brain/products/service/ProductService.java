@@ -20,7 +20,6 @@ import com.impact.brain.user.repository.UserRoleRepository;
 import com.impact.brain.user.service.impl.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.annotation.Async;
-
 import java.time.Duration;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
@@ -146,18 +145,42 @@ public class ProductService {
 
 
     public ProductRequestDTO save(ProductRequestDTO productRequestDTO) {
+        // Crear y guardar una nueva Request
         Request r = new Request();
         r.setDate(LocalDate.now());
         r.setUser(userService.findById(1)); // AGARRARLO DE LA SESSION
         r.setStatus(requestStatusRepository.findById(1).get()); // ESTADO POR DEFAULT
         int requestID = requestService.save(r).getId();
+
         // Verificar que el ID de la Request guardada no sea null
-        System.out.println("RequestID: "+requestID);
+        System.out.println("RequestID: " + requestID);
+
+        // Convertir el DTO en la entidad ProductRequest
         ProductRequest ar = toEntity(productRequestDTO);
         ar.setRequest(requestService.findById(requestID));
         ar.setStatus(resourceRequestStatusRepository.findById(1).get()); // ESTADO POR DEFAULT PENDIENTE
+
+        // Obtener la cantidad solicitada de productos
+        int requestedQuantity = productRequestDTO.getCount();
+
+        // Buscar los productos disponibles de la categoría solicitada
+        List<Product> availableProducts = getAvailableProductsByCategory(productRequestDTO.getCategoryName(),requestedQuantity);
+
+        // Verificar si hay suficientes productos disponibles
+        if (availableProducts.size() < requestedQuantity) {
+            throw new IllegalArgumentException("No hay suficientes productos disponibles en esta categoría.");
+        }
+
+        // Cambiar el estado de los productos seleccionados
+        availableProducts.stream().limit(requestedQuantity).forEach(product -> {
+            product.setStatus(productStatusRepository.findById(2).get()); // Cambiar el estado a "reservado" o el estado que corresponda
+            productRepository.save(product); // Guardar el producto con el nuevo estado
+        });
+
+        // Guardar el ProductRequest en la base de datos
         return toDto(productRequestRepository.save(ar));
     }
+
 
     private ProductRequest toEntity(ProductRequestDTO productRequestDTO) {
         ProductRequest pr = new ProductRequest();
@@ -178,6 +201,12 @@ public class ProductService {
         pr.setRequestId(productRequest.getRequest().getId());
         return pr;
     }
+
+    public List<Product> getAvailableProductsByCategory(String categoryName, int limit) {
+        List<Product> products = productRepository.findAvailableProductsByCategory(categoryName);
+        return products.stream().limit(limit).collect(Collectors.toList());
+    }
+
    public List<ProductCategoryCountDTO> getCategoryProductCounts() throws Exception {
         // Obtener todas las categorías
         List<ProductCategory> categories = (List<ProductCategory>) productCategoryRepository.findAll();
@@ -253,6 +282,4 @@ public class ProductService {
             emailSendService.sendMessage(sendRequest, true);
         }
     }
-
-
 }
