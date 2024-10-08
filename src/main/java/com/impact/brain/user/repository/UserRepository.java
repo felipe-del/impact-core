@@ -2,8 +2,10 @@ package com.impact.brain.user.repository;
 
 import com.impact.brain.user.entity.User;
 import com.impact.brain.user.entity.UserRole;
+import com.impact.brain.user.entity.UserState;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
@@ -21,4 +23,7 @@ public interface UserRepository extends JpaRepository<User, Integer> {
     List<User> findAll();
 
     List<User> findByRole(UserRole role);
+
+    @Query("SELECT u FROM User u WHERE u.state.id = :stateId")
+    List<User> findByState(@Param("stateId") int state);
 }
