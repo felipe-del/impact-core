@@ -43,8 +43,6 @@ public class ProductService {
     private ProductStatusRepository productStatusRepository;
     /**Necessary to send emails to administrators*/
     @Autowired
-    private UserService userService;
-    @Autowired
     private EmailSendService emailSendService;
 
     private static final Duration MIN_TIME_BETWEEN_EMAILS = Duration.ofMinutes(5); // Ajusta según tu necesidad
