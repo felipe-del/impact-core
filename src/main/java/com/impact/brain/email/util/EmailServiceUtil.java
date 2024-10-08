@@ -6,6 +6,7 @@ import com.impact.brain.user.entity.User;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 /**
  * @author Isaac F. B. C.
@@ -26,7 +27,7 @@ public class EmailServiceUtil {
         return new SendRequest(user.getEmail(), "Restablecimiento de contraseña", "reset-password-email", metaData);
     }
 
-    public static List<SendRequest> prepareNotificationEmailToAdmin(List<User> users) {
+    public static List<SendRequest> prepareNotificationEmailToAdminAboutNewUser(List<User> users) {
         List<SendRequest> sendRequests = new ArrayList<>();
         for (User user : users) {
             List<MetaData> metaData = new ArrayList<>();
@@ -38,5 +39,27 @@ public class EmailServiceUtil {
         }
         return sendRequests;
     }
+    public static List<SendRequest> prepareNotificationEmailToAdminAboutLowCuantityProduct(List<User> users) {
+        // Asegurarse de que no haya administradores duplicados
+        List<User> distinctUsers = users.stream().distinct().collect(Collectors.toList());
+
+        List<SendRequest> sendRequests = new ArrayList<>();
+        for (User user : distinctUsers) {
+            List<MetaData> metaData = new ArrayList<>();
+            metaData.add(new MetaData("name", user.getName()));
+            metaData.add(new MetaData("email", user.getEmail()));
+
+            SendRequest request = new SendRequest(
+                    user.getEmail(),
+                    "Producto llegó a la cantidad mínima",
+                    "notification-low-cuantity-product",
+                    metaData
+            );
+            sendRequests.add(request);
+        }
+        return sendRequests;
+    }
+
+
 
 }
