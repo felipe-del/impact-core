@@ -25,7 +25,7 @@ public class AssetSubcategory {
     private String description;
 
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "category_id")
     private AssetCategory category;
 

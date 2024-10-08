@@ -51,10 +51,8 @@ public class WebSecurityConfig {
                         .requestMatchers("/supplier/**").permitAll()
                         .requestMatchers("/brand/**").permitAll()
                         .requestMatchers("/asset/**").permitAll()
-                        //.requestMatchers("/user/**").permitAll() // Restrict access to user endpoints to ADMINISTRATOR and MANAGER roles.
                         .requestMatchers("/product/**").permitAll()// Restrict access to product endpoints to ADMINISTRATOR and MANAGER roles.
                         .requestMatchers("/common-space/**").permitAll()// Restrict access to product endpoints to ADMINISTRATOR and MANAGER roles.
-
                 )
                 // Configure exception handling for unauthorized access.
                 .exceptionHandling(exception -> exception

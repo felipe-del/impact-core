@@ -141,14 +141,15 @@ CREATE TABLE space_type (
 );
 
 -- SPACE --
-
+-- Added the attributes open_time and close_time for schedule availibility handling
 CREATE TABLE space (
     id              INT AUTO_INCREMENT PRIMARY KEY,
     name            VARCHAR(100) NOT NULL,
     space_code      INT UNIQUE,
     location_id     INT NOT NULL,
     max_people      INT,
-    type_id         INT NOT NULL,
+    open_time       TIME NOT NULL,
+    close_time      TIME NOT NULL,
     status_id       INT, -- Referencia al estado del espacio
     is_deleted       BOOLEAN DEFAULT FALSE,
     FOREIGN KEY (location_id) REFERENCES building_location(id),
@@ -193,8 +194,8 @@ DROP TABLE space_equipment;
 CREATE TABLE space_reservation (
     id           INT AUTO_INCREMENT PRIMARY KEY,
     space_id     INT,
-    start_time   DATE,
-    end_time	 DATE,
+    start_time   DATETIME,
+    end_time	 DATETIME,
     FOREIGN KEY (space_id) REFERENCES space(id)
 );
 
@@ -207,8 +208,9 @@ CREATE TABLE space_request (
     request_id INT,
     space_id   INT,
     num_people INT,
-    event_desc INT,
+    event_desc VARCHAR(255),
     status_id  INT,
+    use_equipment TINYINT(1) DEFAULT 0,
     UNIQUE KEY (request_id, space_id),
     FOREIGN KEY (request_id) REFERENCES request(id),
     FOREIGN KEY (space_id) REFERENCES space(id),
@@ -327,6 +329,7 @@ CREATE TABLE product_request (
     request_id      INT,
     product_id      INT,
     status_id       INT,
+    reason          TEXT,
     UNIQUE KEY (request_id, product_id),
     FOREIGN KEY (request_id) REFERENCES request(id),
     FOREIGN KEY (product_id) REFERENCES product(id),
@@ -359,6 +362,7 @@ CREATE TABLE asset_request (
     request_id      INT,
     asset_id        INT,
     status_id       INT,
+    reason          TEXT NULL,
     expiration_date DATE,
     UNIQUE KEY (request_id, asset_id),
     FOREIGN KEY (request_id) REFERENCES request(id),

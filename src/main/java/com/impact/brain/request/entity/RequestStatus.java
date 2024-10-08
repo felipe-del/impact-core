@@ -1,4 +1,4 @@
-package com.impact.brain.entity;
+package com.impact.brain.request.entity;
 
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
@@ -9,16 +9,16 @@ import lombok.Setter;
 @Getter
 @Setter
 @Entity
-@Table(name = "resource_request_status")
-public class ResourceRequestStatus {
+@Table(name = "request_status")
+public class RequestStatus {
     @Id
     @Column(name = "id", nullable = false)
     private Integer id;
 
     @Size(max = 50)
     @NotNull
-    @Column(name = "name", nullable = false, length = 50)
-    private String name;
+    @Column(name = "status_name", nullable = false, length = 50)
+    private String statusName;
 
     @Lob
     @Column(name = "description")

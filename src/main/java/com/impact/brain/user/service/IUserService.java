@@ -17,6 +17,7 @@ public interface IUserService {
     User saveUser(User user) throws Exception;
 
     User findByEmail(String email);
+    User findByUsername(String username);
 
     User findById(int id);
     User changePassword(int userId, String newPassword);

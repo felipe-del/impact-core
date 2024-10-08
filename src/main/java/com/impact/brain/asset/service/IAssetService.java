@@ -10,7 +10,7 @@ import com.impact.brain.asset.entity.*;
  * @since 9/14/2024 - 6:22 AM
  */
 public interface IAssetService {
-    Iterable<Asset> all();
+    Iterable<AssetDTO> all();
     Iterable<AssetStatus> allStatus();
     Iterable<AssetCategory> allCategories();
 
