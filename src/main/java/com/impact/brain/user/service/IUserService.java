@@ -2,6 +2,8 @@ package com.impact.brain.user.service;
 
 import com.impact.brain.user.dto.UserDTO;
 import com.impact.brain.user.entity.User;
+import com.impact.brain.user.entity.UserRole;
+import com.impact.brain.user.entity.UserState;
 
 import java.util.List;
 
@@ -20,4 +22,11 @@ public interface IUserService {
     User findById(int id);
     User changePassword(int userId, String newPassword);
     UserDTO mapToUserDTO(User user);
+
+    List<UserDTO> findByState(int userState);
+
+    List<UserRole> findAllRoles();
+
+    void updateUserRole(int userId, String role);
+    void rejectUser(int userId);
 }
