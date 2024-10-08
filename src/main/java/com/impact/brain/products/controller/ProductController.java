@@ -81,35 +81,9 @@ public class ProductController {
     }
 
     @GetMapping("/cat")
-    public Iterable<ProductCategoryCountDTO> getCategoryProductCounts() {
-        // Obtener todas las categorías
-        Iterable<ProductCategory> categories = productService.categories();
-
-        // Crear una lista para almacenar los DTOs
-        ArrayList<ProductCategoryCountDTO> categoryCountDTOs = new ArrayList<>();
-
-        // Recorrer cada categoría para calcular el count y crear el DTO
-        for (ProductCategory category : categories) {
-            Long count = productService.productsCount(category.getId()); // Contar productos por categoría
-
-            // Crear el DTO con los datos necesarios
-            ProductCategoryCountDTO dto = new ProductCategoryCountDTO();
-            dto.setId(category.getId());
-            dto.setName(category.getName());
-            dto.setUnitOfMeasurement(category.getUnitOfMeasurement().getName());
-            dto.setCantidadMinima(category.getCantidadMinima());
-            dto.setAvailableQuantity(count);
-            dto.setProductCategory(category.getCategorieType().getName());
-            if(category.getCantidadMinima() >= count){
-                dto.setStatus("Por solicitar");
-            }else dto.setStatus("Suficiente");
-
-            // Agregar el DTO a la lista
-            categoryCountDTOs.add(dto);
-        }
-
-        // Retornar los DTOs al frontend
-        return categoryCountDTOs;
+    public Iterable<ProductCategoryCountDTO> getCategoryProductCounts() throws Exception {
+        return productService.getCategoryProductCounts();
     }
+
 
 }
