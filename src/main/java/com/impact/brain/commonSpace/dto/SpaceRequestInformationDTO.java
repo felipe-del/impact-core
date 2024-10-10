@@ -11,6 +11,7 @@ public class SpaceRequestInformationDTO {
     private Integer spaceId;      // Information needed for both
     private Integer numPeople;    // Information needed for space request
     private String eventDesc;     // Information needed for space request
+    private String eventObs;      // Information needed for space request
     private Integer statusId;     // Information needed for space request
     private Boolean useEquipment; // Information needed for space request
     private Instant startTime;  // Information needed for space reservation
