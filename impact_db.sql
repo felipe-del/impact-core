@@ -209,6 +209,7 @@ CREATE TABLE space_request (
     space_id   INT,
     num_people INT,
     event_desc VARCHAR(255),
+    event_obs VARCHAR(255),
     status_id  INT,
     use_equipment TINYINT(1) DEFAULT 0,
     UNIQUE KEY (request_id, space_id),

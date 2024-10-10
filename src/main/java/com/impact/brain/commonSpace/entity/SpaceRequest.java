@@ -40,4 +40,8 @@ public class SpaceRequest {
     @Column(name = "use_equipment")
     private Boolean useEquipment;
 
+    @Size(max = 255)
+    @Column(name = "event_obs")
+    private String eventObs;
+
 }
