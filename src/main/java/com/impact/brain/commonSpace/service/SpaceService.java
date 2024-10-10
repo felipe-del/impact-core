@@ -138,6 +138,7 @@ public class SpaceService {
         newSpaceRequest.setRequest(makingRequest(userData));
         newSpaceRequest.setNumPeople(newSpaceRequestData.getNumPeople());
         newSpaceRequest.setEventDesc(newSpaceRequestData.getEventDesc());
+        newSpaceRequest.setEventObs(newSpaceRequestData.getEventObs());
         newSpaceRequest.setUseEquipment(newSpaceRequestData.getUseEquipment());
 
         Optional<ResourceRequestStatus> resourceRequest = resourceRequestStatusById(newSpaceRequestData.getStatusId());
