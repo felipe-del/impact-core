@@ -74,7 +74,20 @@ INSERT INTO request_status (status_name, description) VALUES
 ('Cancelada', 'La solicitud ha sido cancelada y no será procesada.');
 
 
-select * from request_status;
+-- RESOURCE REQUEST STATUS --
+
+CREATE TABLE resource_request_status (
+     id          INT AUTO_INCREMENT PRIMARY KEY,
+     name        VARCHAR(50) NOT NULL UNIQUE,
+     description TEXT
+);
+
+INSERT INTO resource_request_status (name, description) VALUES
+    ('Pendiente', 'El producto está pendiente de ser entregado o procesado.'),
+    ('Emitido', 'El producto ha sido emitido o prestado.'),
+    ('Devuelto', 'El producto ha sido devuelto.'),
+    ('Cancelado', 'La solicitud del producto ha sido cancelada.'),
+    ('Disponible', 'El producto está disponible para solicitar.');
 
 -- REQUEST --
 
@@ -87,7 +100,18 @@ CREATE TABLE request (
     FOREIGN KEY (status_id) REFERENCES request_status(id)
 );
 
--- SUPPLIER -- 
+
+-- Tabla para almacenar tipos de entidad (física o jurídica)
+CREATE TABLE entity_type (
+     id INT AUTO_INCREMENT PRIMARY KEY,
+     type_name VARCHAR(50) NOT NULL
+);
+
+INSERT INTO entity_type (type_name) VALUES
+    ('Física'),
+    ('Jurídica');
+
+-- SUPPLIER --
 
 CREATE TABLE supplier (
     id                     INT AUTO_INCREMENT PRIMARY KEY,
@@ -101,14 +125,20 @@ CREATE TABLE supplier (
     FOREIGN KEY (entity_type_id) REFERENCES entity_type(id)
 );
 
--- CATEGORY -- 
+-- CATEGORY --
 
 CREATE TABLE asset_category (
     id          INT AUTO_INCREMENT PRIMARY KEY,
     name        VARCHAR(100) NOT NULL
 );
 
-DROP TABLE asset_category;
+CREATE TABLE asset_subcategory (
+   id          INT AUTO_INCREMENT PRIMARY KEY,
+   name        VARCHAR(100) NOT NULL,
+   description VARCHAR(255),
+   category_id INT,
+   FOREIGN KEY (category_id) REFERENCES asset_category(id)
+);
 
 -- BRAND -- 
 
@@ -133,13 +163,6 @@ CREATE TABLE building_location (
     FOREIGN KEY (building_id) REFERENCES building(id)
 );
 
--- SPACE TYPE --
-
-CREATE TABLE space_type (
-    id   INT AUTO_INCREMENT PRIMARY KEY,
-    type VARCHAR(50) NOT NULL UNIQUE
-);
-
 -- SPACE --
 -- Added the attributes open_time and close_time for schedule availibility handling
 CREATE TABLE space (
@@ -153,11 +176,8 @@ CREATE TABLE space (
     status_id       INT, -- Referencia al estado del espacio
     is_deleted       BOOLEAN DEFAULT FALSE,
     FOREIGN KEY (location_id) REFERENCES building_location(id),
-    FOREIGN KEY (type_id) REFERENCES space_type(id),
     FOREIGN KEY (status_id) REFERENCES space_status(id) -- Clave foránea para status
 );
-
-DROP TABLE space;
 
 -- SPACE STATUS -- 
 
@@ -187,8 +207,6 @@ CREATE TABLE space_equipment (
     FOREIGN KEY (space_id) REFERENCES space(id)
 );
 
-DROP TABLE space_equipment;
-
 -- SPACE RESERVATION --
 
 CREATE TABLE space_reservation (
@@ -198,8 +216,6 @@ CREATE TABLE space_reservation (
     end_time	 DATETIME,
     FOREIGN KEY (space_id) REFERENCES space(id)
 );
-
-DROP TABLE space_reservation;
 
 -- SPACE REQUEST -- 
 
@@ -218,7 +234,85 @@ CREATE TABLE space_request (
     FOREIGN KEY (status_id) REFERENCES resource_request_status(id)
 );
 
-DROP TABLE space_request;
+-- Location type --
+CREATE TABLE location_type (
+   id INT AUTO_INCREMENT PRIMARY KEY,
+   type_name VARCHAR(100) NOT NULL
+);
+
+-- Location number --
+CREATE TABLE location_number (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    location_type_id INT,
+    location_number INT,
+    FOREIGN KEY (location_type_id) REFERENCES location_type(id)
+);
+
+-- Tabla para almacenar monedas
+CREATE TABLE currency (
+  id INT AUTO_INCREMENT PRIMARY KEY,
+  currency_code VARCHAR(10) NOT NULL,
+  currency_name VARCHAR(50) NOT NULL
+);
+
+INSERT INTO currency (currency_code, currency_name) VALUES
+    ('CRC', 'Colones'),
+    ('USD', 'Dólares');
+
+-- Tabla para almacenar modelos de activos
+CREATE TABLE asset_model (
+     id INT AUTO_INCREMENT PRIMARY KEY,
+     model_name VARCHAR(100) NOT NULL
+);
+
+-- Tabla para almacenar cuentas de proveedores
+CREATE TABLE supplier_account (
+      id INT AUTO_INCREMENT PRIMARY KEY,
+      supplier_id INT,
+      account_number VARCHAR(50) NOT NULL,
+      FOREIGN KEY (supplier_id) REFERENCES supplier(id)
+);
+
+-- ASSET STATUS --
+
+CREATE TABLE asset_status (
+      id INT AUTO_INCREMENT,
+      name VARCHAR(50) NOT NULL UNIQUE,
+      description TEXT,
+      CONSTRAINT PRIMARY KEY (id)
+);
+
+INSERT INTO asset_status (name, description) VALUES
+     ('Disponible', 'El activo está disponible para su uso.'),
+     ('En Mantenimiento', 'El activo está en mantenimiento.'),
+     ('Prestado', 'El activo ha sido prestado a alguien.'),
+     ('Fuera de Servicio', 'El activo ya no está operativo o en uso.');
+
+-- ASSET --
+CREATE TABLE asset (
+       id                 INT AUTO_INCREMENT PRIMARY KEY,
+       purchase_date      DATE,
+       value              DECIMAL(10, 2),
+       responsible_id     INT,
+       supplier_id        INT,
+       subcategory_id     INT,
+       brand_id           INT,
+       status_id          INT,
+       is_deleted         BOOLEAN DEFAULT FALSE,
+       asset_series       VARCHAR(50),
+       plate_number       VARCHAR(50),
+       asset_model_id     INT,
+       currency_id        INT,
+       location_number_id INT,
+       FOREIGN KEY (responsible_id) REFERENCES user(id),
+       FOREIGN KEY (supplier_id) REFERENCES supplier(id),
+       FOREIGN KEY (subcategory_id) REFERENCES asset_subcategory(id),
+       FOREIGN KEY (brand_id) REFERENCES brand(id),
+       FOREIGN KEY (status_id) REFERENCES asset_status(id),
+       FOREIGN KEY (currency_id) REFERENCES currency(id),
+       FOREIGN KEY (asset_model_id) REFERENCES asset_model(id),
+       FOREIGN KEY (location_number_id) REFERENCES location_number(id)
+);
 
 -- INVOICE --
 
@@ -230,8 +324,6 @@ CREATE TABLE invoices (
     warranty_expiration_date DATE,
     FOREIGN KEY (asset_id) REFERENCES asset(id)
 );
-
-drop table invoices;
 
 -- CATEGORY TYPE --
 
@@ -275,8 +367,19 @@ CREATE TABLE product_category (
     FOREIGN KEY (unit_of_measurement) REFERENCES unit_of_measurement(id)
 );
 
-DROP TABLE product_type;
+-- PRODCUT STATUS --
 
+CREATE TABLE product_status(
+   id INT AUTO_INCREMENT,
+   name VARCHAR(50) NOT NULL UNIQUE,
+   description TEXT,
+   CONSTRAINT PRIMARY KEY (id)
+);
+
+INSERT INTO product_status (name, description) VALUES
+('Disponible', 'El producto está disponible para solicitar.'),
+('Pendiente', 'El producto está pendiente de ser entregado o procesado.'),
+('Prestado', 'El producto ha sido entregado en préstamo.');
 
 -- PRODUCT -- 
 
@@ -289,39 +392,6 @@ CREATE TABLE product (
     CONSTRAINT FOREIGN KEY (status) REFERENCES product_status(id),
     CONSTRAINT FOREIGN KEY (category_id) REFERENCES product_category(id)
 );
-
-drop table product;
-
--- PRODCUT STATUS -- 
-
-CREATE TABLE product_status(
-    id INT AUTO_INCREMENT,
-    name VARCHAR(50) NOT NULL UNIQUE,
-    description TEXT, 
-    CONSTRAINT PRIMARY KEY (id)
-);
-
-INSERT INTO product_status (name, description) VALUES 
-('Disponible', 'El producto está disponible para solicitar.'),
-('Pendiente', 'El producto está pendiente de ser entregado o procesado.'),
-('Prestado', 'El producto ha sido entregado en préstamo.');
-
-
--- RESOURCE REQUEST STATUS -- 
-
-CREATE TABLE resource_request_status (
-    id          INT AUTO_INCREMENT PRIMARY KEY,
-    name        VARCHAR(50) NOT NULL UNIQUE,
-    description TEXT
-);
-
-INSERT INTO resource_request_status (name, description) VALUES 
-('Pendiente', 'El producto está pendiente de ser entregado o procesado.'),
-('Emitido', 'El producto ha sido emitido o prestado.'),
-('Devuelto', 'El producto ha sido devuelto.'),
-('Cancelado', 'La solicitud del producto ha sido cancelada.'),
-('Disponible', 'El producto está disponible para solicitar.');
-
 
 -- PRODUCTO REQUEST -- 
 
@@ -337,26 +407,7 @@ CREATE TABLE product_request (
     FOREIGN KEY (status_id) REFERENCES resource_request_status(id)
 );
 
-drop table product_request;
-
--- ASSET STATUS --
-
-CREATE TABLE asset_status (
-    id INT AUTO_INCREMENT,
-    name VARCHAR(50) NOT NULL UNIQUE,
-    description TEXT, 
-    CONSTRAINT PRIMARY KEY (id)
-);
-
-INSERT INTO asset_status (name, description) VALUES 
-('Disponible', 'El activo está disponible para su uso.'),
-('En Mantenimiento', 'El activo está en mantenimiento.'),
-('Prestado', 'El activo ha sido prestado a alguien.'),
-('Fuera de Servicio', 'El activo ya no está operativo o en uso.');
-
-
-
--- ASSET_REQUEST -- 
+-- ASSET_REQUEST --
 
 CREATE TABLE asset_request (
     id              INT AUTO_INCREMENT PRIMARY KEY,
@@ -370,8 +421,6 @@ CREATE TABLE asset_request (
     FOREIGN KEY (asset_id) REFERENCES asset(id),
     FOREIGN KEY (status_id) REFERENCES resource_request_status(id)
 );
-
-drop table asset_request;
 
 -- TRANSACTION TYPE -- 
 
@@ -400,8 +449,6 @@ CREATE TABLE asset_movements (
     FOREIGN KEY (transaction_id) REFERENCES transaction_type(id)
 );
 
-drop table asset_movements;
-
 -- PRODUCT MOVEMENTS --
 
 CREATE TABLE product_movements(
@@ -413,8 +460,6 @@ CREATE TABLE product_movements(
    FOREIGN KEY (transaction_id) REFERENCES transaction_type(id)
 );
 
-drop table product_movements;
-
 -- SPACE MOVEMENTS --
 
 CREATE TABLE space_movements(
@@ -425,110 +470,3 @@ CREATE TABLE space_movements(
    FOREIGN KEY (reserved_space_id) REFERENCES space_reservation(id),
    FOREIGN KEY (transaction_id) REFERENCES transaction_type(id)
 );
-
-
-drop table space_movements;
-
-
--------------------------
-
-
--- Tabla para almacenar tipos de entidad (física o jurídica)
-CREATE TABLE entity_type (
-    id INT AUTO_INCREMENT PRIMARY KEY,
-    type_name VARCHAR(50) NOT NULL
-);
-
-INSERT INTO entity_type (type_name) VALUES 
-('Física'),
-('Jurídica');
-
--- Tabla para almacenar monedas
-CREATE TABLE currency (
-    id INT AUTO_INCREMENT PRIMARY KEY,
-    currency_code VARCHAR(10) NOT NULL,
-    currency_name VARCHAR(50) NOT NULL
-);
-
-INSERT INTO currency (currency_code, currency_name) VALUES 
-('CRC', 'Colones'),
-('USD', 'Dólares');
-
--- Tabla para almacenar modelos de activos
-CREATE TABLE asset_model (
-    id INT AUTO_INCREMENT PRIMARY KEY,
-    model_name VARCHAR(100) NOT NULL
-);
-
--- Tabla para almacenar cuentas de proveedores
-CREATE TABLE supplier_account (
-    id INT AUTO_INCREMENT PRIMARY KEY,
-    supplier_id INT,
-    account_number VARCHAR(50) NOT NULL,
-    FOREIGN KEY (supplier_id) REFERENCES supplier(id)
-);
-
-
--- NUEVO ACTIVO 
-CREATE TABLE asset (
-    id                 INT AUTO_INCREMENT PRIMARY KEY,
-    purchase_date      DATE,
-    value              DECIMAL(10, 2),
-    responsible_id     INT,
-    supplier_id        INT,
-    subcategory_id     INT,
-    brand_id           INT,
-    status_id          INT,
-    is_deleted         BOOLEAN DEFAULT FALSE,
-    asset_series       VARCHAR(50),
-    plate_number       VARCHAR(50),
-    asset_model_id     INT,
-    currency_id        INT,
-    location_number_id INT,  
-    FOREIGN KEY (responsible_id) REFERENCES user(id),
-    FOREIGN KEY (supplier_id) REFERENCES supplier(id),
-    FOREIGN KEY (subcategory_id) REFERENCES asset_subcategory(id),
-    FOREIGN KEY (brand_id) REFERENCES brand(id),
-    FOREIGN KEY (status_id) REFERENCES asset_status(id),
-    FOREIGN KEY (currency_id) REFERENCES currency(id),
-    FOREIGN KEY (asset_model_id) REFERENCES asset_model(id),
-    FOREIGN KEY (location_number_id) REFERENCES location_number(id)  
-);
-
-
-ALTER TABLE asset
-ADD COLUMN location_number_id INT,
-ADD FOREIGN KEY (location_number_id) REFERENCES location_number(id);
-
-
-CREATE TABLE location_type (
-id INT AUTO_INCREMENT PRIMARY KEY,
-type_name VARCHAR(100) NOT NULL
-);
-
-CREATE TABLE location_number (
-id INT AUTO_INCREMENT PRIMARY KEY,
-location_type_id INT,
-location_number INT,
-FOREIGN KEY (location_type_id) REFERENCES location_type(id)
-);
-
-
--- NUEVO
-
-CREATE TABLE asset_category (
-    id          INT AUTO_INCREMENT PRIMARY KEY,
-    name        VARCHAR(100) NOT NULL
-);
-
-CREATE TABLE asset_subcategory (
-    id          INT AUTO_INCREMENT PRIMARY KEY,
-    name        VARCHAR(100) NOT NULL,
-    description VARCHAR(255),
-    category_id INT,
-    FOREIGN KEY (category_id) REFERENCES asset_category(id)
-);
-drop table asset_subcategory;
-select * from asset_subcategory;
-drop table asset_category;
-
