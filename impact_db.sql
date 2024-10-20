@@ -470,3 +470,22 @@ CREATE TABLE space_movements(
    FOREIGN KEY (reserved_space_id) REFERENCES space_reservation(id),
    FOREIGN KEY (transaction_id) REFERENCES transaction_type(id)
 );
+
+
+
+--- ALTERS 
+
+ALTER TABLE asset
+ADD UNIQUE (plate_number); 
+			
+ALTER TABLE supplier
+ADD CONSTRAINT unique_id_number UNIQUE (id_number);
+
+ALTER TABLE brand ADD CONSTRAINT unique_brand_name UNIQUE (name);
+
+ALTER TABLE asset_category ADD CONSTRAINT unique_asset_category_name UNIQUE (name);
+
+ALTER TABLE asset_model ADD CONSTRAINT uc_model_name UNIQUE (model_name);
+
+ALTER TABLE asset_subcategory ADD CONSTRAINT uc_subcategory_name UNIQUE (name);
+
