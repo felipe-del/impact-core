@@ -160,7 +160,8 @@ CREATE TABLE building_location (
     id          INT AUTO_INCREMENT PRIMARY KEY,
     building_id INT NOT NULL,
     floor       VARCHAR(50) NOT NULL,
-    FOREIGN KEY (building_id) REFERENCES building(id)
+    FOREIGN KEY (building_id) REFERENCES building(id),
+    UNIQUE (building_id, floor)
 );
 
 -- SPACE --
@@ -473,7 +474,7 @@ CREATE TABLE space_movements(
 
 
 
---- ALTERS 
+-- ALTERS
 
 ALTER TABLE asset
 ADD UNIQUE (plate_number); 
@@ -489,3 +490,7 @@ ALTER TABLE asset_model ADD CONSTRAINT uc_model_name UNIQUE (model_name);
 
 ALTER TABLE asset_subcategory ADD CONSTRAINT uc_subcategory_name UNIQUE (name);
 
+
+-- Alter for building_location
+ALTER TABLE building_location
+    ADD CONSTRAINT unique_building_floor UNIQUE (building_id, floor);
