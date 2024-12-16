@@ -27,6 +27,22 @@ VALUES ('Activo', 'El usuario está activo y puede iniciar sesión'),
        ('Inactivo', 'El usuario no puede acceder al sistema'),
        ('Suspendido', 'El usuario está temporalmente suspendido');
 
+CREATE TABLE IF NOT EXISTS user_jwt_token
+(
+    id          INT AUTO_INCREMENT PRIMARY KEY,
+    user_id     INT          NOT NULL,
+    token       VARCHAR(255) NOT NULL,
+    expiry_date TIMESTAMP    NOT NULL,
+    created_at  TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    FOREIGN KEY (user_id) REFERENCES user (id)
+);
+
+(
+    id          INT AUTO_INCREMENT PRIMARY KEY,
+    name        VARCHAR(50) NOT NULL UNIQUE,
+    description TEXT
+);
+
 CREATE TABLE user
 (
     id       INT AUTO_INCREMENT PRIMARY KEY,
