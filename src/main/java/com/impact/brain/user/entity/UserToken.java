@@ -1,4 +1,4 @@
-package com.impact.brain.entity;
+package com.impact.brain.user.entity;
 
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;

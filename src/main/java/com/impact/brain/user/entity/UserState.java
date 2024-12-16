@@ -1,4 +1,4 @@
-package com.impact.brain.entity;
+package com.impact.brain.user.entity;
 
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
@@ -9,8 +9,8 @@ import lombok.Setter;
 @Getter
 @Setter
 @Entity
-@Table(name = "user_role")
-public class UserRole {
+@Table(name = "user_state")
+public class UserState {
     @Id
     @Column(name = "id", nullable = false)
     private Integer id;

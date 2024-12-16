@@ -25,7 +25,6 @@ import org.springframework.security.web.authentication.HttpStatusEntryPoint;
 @Configuration
 @EnableWebSecurity
 public class SecurityConfig {
-
     /**
      * Configures security settings for HTTP requests.
      * <p>

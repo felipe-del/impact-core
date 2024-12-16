@@ -1,5 +1,6 @@
 package com.impact.brain.entity;
 
+import com.impact.brain.user.entity.User;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.Size;
 import lombok.Getter;
@@ -26,7 +27,7 @@ public class Asset {
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "responsible_id")
-    private com.impact.brain.entity.User responsible;
+    private User responsible;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "supplier_id")

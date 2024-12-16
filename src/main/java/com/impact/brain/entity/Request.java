@@ -1,5 +1,6 @@
 package com.impact.brain.entity;
 
+import com.impact.brain.user.entity.User;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
@@ -17,7 +18,7 @@ public class Request {
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id")
-    private com.impact.brain.entity.User user;
+    private User user;
 
     @Column(name = "date")
     private LocalDate date;

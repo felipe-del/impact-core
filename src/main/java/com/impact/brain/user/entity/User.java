@@ -1,4 +1,4 @@
-package com.impact.brain.entity;
+package com.impact.brain.user.entity;
 
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
@@ -32,10 +32,10 @@ public class User {
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "role_id")
-    private com.impact.brain.entity.UserRole role;
+    private UserRole role;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "state_id")
-    private com.impact.brain.entity.UserState state;
+    private UserState state;
 
 }
