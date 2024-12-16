@@ -1,4 +1,4 @@
-package com.impact.brain.configuration.cors;
+package com.impact.brain.configuration.security.cors;
 
 
 import org.springframework.context.annotation.Configuration;

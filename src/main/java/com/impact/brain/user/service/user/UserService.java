@@ -1,8 +1,6 @@
-package com.impact.brain.user.service;
+package com.impact.brain.user.service.user;
 
 import com.impact.brain.user.entity.User;
-
-import java.util.Optional;
 
 public interface UserService {
     User findByEmail(String email);
