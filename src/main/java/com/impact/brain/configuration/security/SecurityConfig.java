@@ -1,15 +1,19 @@
 package com.impact.brain.configuration.security;
 
+import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpStatus;
+import org.springframework.security.authentication.AuthenticationProvider;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
+import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.HttpStatusEntryPoint;
+import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
 /**
  * Configuration class for setting up web security for the application.
@@ -24,42 +28,30 @@ import org.springframework.security.web.authentication.HttpStatusEntryPoint;
  */
 @Configuration
 @EnableWebSecurity
+@RequiredArgsConstructor
 public class SecurityConfig {
-    /**
-     * Configures security settings for HTTP requests.
-     * <p>
-     * This method sets up authorization rules for different URL patterns, configures exception handling
-     * for unauthorized access, disables CSRF protection, and applies CORS settings using the provided* </p>
-     *
-     * @param httpSecurity the {@link HttpSecurity} object used to configure HTTP security.
-     * @return a {@link SecurityFilterChain} instance with the configured security settings.
-     * @throws Exception if an error occurs while configuring security.
-     */
+    //private final AuthenticationProvider authProvider;
+
     @Bean
-    public SecurityFilterChain securityFilterChain(HttpSecurity httpSecurity) throws Exception {
-        httpSecurity
+    public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
+        return http
                 .authorizeHttpRequests(authorize -> authorize
                         .requestMatchers("/**").permitAll()
+                        .anyRequest().authenticated()
                 )
+                .sessionManagement(sessionManager ->
+                        sessionManager
+                                .sessionCreationPolicy(SessionCreationPolicy.STATELESS))
+                //.authenticationProvider(authProvider)
+                //.addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class)
                 .exceptionHandling(exception -> exception
                         .authenticationEntryPoint(new HttpStatusEntryPoint(HttpStatus.UNAUTHORIZED))
                 )
-                .csrf(AbstractHttpConfigurer::disable);
-
-        return httpSecurity.build();
+                .csrf(AbstractHttpConfigurer::disable)
+                .build();
     }
-
-    /**
-     * Provides a {@link PasswordEncoder} bean for encoding passwords.
-     * <p>
-     * This method returns an instance of {@link BCryptPasswordEncoder} for password encoding. It uses
-     * the BCrypt hashing algorithm to securely encode passwords.
-     * </p>
-     *
-     * @return a {@link PasswordEncoder} instance.
-     */
     @Bean
     public PasswordEncoder passwordEncoder() {
-        return new BCryptPasswordEncoder();
+        return new BCryptPasswordEncoder(); // Return an instance of BCryptPasswordEncoder for password encoding.
     }
 }
