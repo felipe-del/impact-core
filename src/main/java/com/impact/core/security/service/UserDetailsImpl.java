@@ -1,7 +1,6 @@
 package com.impact.core.security.service;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import lombok.Getter;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -15,6 +14,7 @@ import java.util.Objects;
 
 public class UserDetailsImpl implements UserDetails {
 
+    @Serial
     private static final long serialVersionUID = 1L;
 
     private final Integer id;
@@ -39,8 +39,6 @@ public class UserDetailsImpl implements UserDetails {
 
     public static UserDetailsImpl build(User user) {
         GrantedAuthority authority = new SimpleGrantedAuthority(user.getRole().getName().name());
-
-        System.out.println("Authorities: " + Collections.singletonList(authority));
 
         return new UserDetailsImpl(
                 user.getId(),
