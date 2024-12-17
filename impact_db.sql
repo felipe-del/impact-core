@@ -11,9 +11,9 @@ CREATE TABLE user_role
 );
 
 INSERT INTO user_role (name, description)
-VALUES ('Administrador', 'TODO'),
-       ('Gestor', 'TODO'),
-       ('Docente', 'TODO');
+VALUES ('ROLE_ADMINISTRATOR', 'TODO'),
+       ('ROLE_MANAGER', 'TODO'),
+       ('ROLE_TEACHER', 'TODO');
 
 CREATE TABLE user_state
 (
