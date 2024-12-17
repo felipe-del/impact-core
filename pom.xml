@@ -9,11 +9,11 @@
         <relativePath/> <!-- lookup parent from repository -->
     </parent>
     <groupId>com.impact</groupId>
-    <artifactId>impact-brain</artifactId>
+    <artifactId>impact-core</artifactId>
     <version>0.0.1-SNAPSHOT</version>
     <packaging>war</packaging>
-    <name>impact-brain</name>
-    <description>impact-brain</description>
+    <name>impact-core</name>
+    <description>impact-core</description>
     <url/>
     <licenses>
         <license/>
