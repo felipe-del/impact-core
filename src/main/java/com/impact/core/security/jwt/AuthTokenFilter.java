@@ -28,10 +28,6 @@ public class AuthTokenFilter extends OncePerRequestFilter {
 
     private static final Logger logger = LoggerFactory.getLogger(AuthTokenFilter.class);
 
-    private final String HEADER = "Authorization";
-
-    private final String PREFIX = "Bearer ";
-
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain)
             throws ServletException, IOException {
@@ -59,6 +55,8 @@ public class AuthTokenFilter extends OncePerRequestFilter {
     }
 
     private String parseJwt(HttpServletRequest request) {
+
+        String HEADER = "Authorization";
         String headerAuth = request.getHeader(HEADER);
 
         if (headerAuth == null) {
@@ -66,6 +64,7 @@ public class AuthTokenFilter extends OncePerRequestFilter {
             return null;
         }
 
+        String PREFIX = "Bearer ";
         if (StringUtils.hasText(headerAuth) && headerAuth.startsWith(PREFIX)) {
             return headerAuth.substring(7);
         }
