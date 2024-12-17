@@ -12,7 +12,8 @@ public class UserService {
     private final UserRepository userRepository;
 
     public User findByEmail(String email) {
-        return userRepository.findByEmail(email).orElseThrow(() -> new UsernameNotFoundException("No existe usuario con email: " + email));
+        return userRepository.findByEmail(email)
+                .orElseThrow(() -> new UsernameNotFoundException("No existe usuario con email: " + email));
     }
 
     public Boolean existsByEmail(String email) {
