@@ -1,6 +1,6 @@
 package com.impact.core.entities;
 
-import com.impact.core.user.entity.User;
+import com.impact.core.module.user.entity.User;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
