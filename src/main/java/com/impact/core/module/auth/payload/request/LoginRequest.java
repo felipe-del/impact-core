@@ -13,7 +13,7 @@ import lombok.Setter;
 @AllArgsConstructor
 public class LoginRequest {
     @Email(message = "El email no es válido")
-    @NotBlank
+    @NotBlank(message = "El email no puede estar vacío")
     private String email;
 
     @NotBlank(message = "La contraseña no puede estar vacía")
