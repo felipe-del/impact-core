@@ -25,6 +25,6 @@ public class RegisterRequest {
     private Integer state;
 
     @NotBlank(message = "La contraseña no puede estar vacía")
-    @Size(min = 6, max = 40)
+    @Size(min = 6, max = 40, message = "La contraseña debe tener entre 6 y 40 caracteres")
     private String password;
 }
