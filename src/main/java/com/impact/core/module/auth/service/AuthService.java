@@ -3,7 +3,7 @@ package com.impact.core.module.auth.service;
 import com.impact.core.module.auth.payload.request.LoginRequest;
 import com.impact.core.module.auth.payload.request.RegisterRequest;
 import com.impact.core.module.auth.payload.response.JwtResponse;
-import com.impact.core.module.auth.payload.response.MessageResponse;
+import com.impact.core.expection.payload.SuccessMessageResponse;
 import com.impact.core.module.user.entity.ERole;
 import com.impact.core.module.user.entity.User;
 import com.impact.core.module.user.entity.UserRole;
@@ -52,12 +52,12 @@ public class AuthService {
                 roles);
     }
 
-    public ResponseEntity<MessageResponse> register(RegisterRequest registerRequest) {
+    public ResponseEntity<SuccessMessageResponse> register(RegisterRequest registerRequest) {
         System.out.println("registerRequest = " + registerRequest);
         if (userService.existsByEmail(registerRequest.getEmail())) {
             return ResponseEntity
                     .badRequest()
-                    .body(new MessageResponse("Error: El email ya está en uso!"));
+                    .body(new SuccessMessageResponse("Error: El email ya está en uso!"));
         }
 
         User user = User.builder()
@@ -71,7 +71,7 @@ public class AuthService {
 
         userService.save(user);
 
-        return ResponseEntity.ok(new MessageResponse("Usuario registrado correctamente!"));
+        return ResponseEntity.ok(new SuccessMessageResponse("Usuario registrado correctamente!"));
     }
 
     private UserRole getUserRole(String role) {
