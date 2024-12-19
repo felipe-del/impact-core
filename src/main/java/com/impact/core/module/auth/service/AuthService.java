@@ -1,5 +1,6 @@
 package com.impact.core.module.auth.service;
 
+import com.impact.core.expection.customException.ConflictException;
 import com.impact.core.module.auth.payload.request.LoginRequest;
 import com.impact.core.module.auth.payload.request.RegisterRequest;
 import com.impact.core.module.auth.payload.response.JwtResponse;
@@ -52,12 +53,10 @@ public class AuthService {
                 roles);
     }
 
-    public ResponseEntity<SuccessMessageResponse> register(RegisterRequest registerRequest) {
-        System.out.println("registerRequest = " + registerRequest);
+    public User register(RegisterRequest registerRequest) {
+
         if (userService.existsByEmail(registerRequest.getEmail())) {
-            return ResponseEntity
-                    .badRequest()
-                    .body(new SuccessMessageResponse("Error: El email ya está en uso!"));
+            throw new ConflictException("El email ya está en uso.");
         }
 
         User user = User.builder()
@@ -69,9 +68,7 @@ public class AuthService {
                 .state(null)
                 .build();
 
-        userService.save(user);
-
-        return ResponseEntity.ok(new SuccessMessageResponse("Usuario registrado correctamente!"));
+        return userService.save(user);
     }
 
     private UserRole getUserRole(String role) {
