@@ -1,5 +1,6 @@
 package com.impact.core.security;
 
+import com.impact.core.security.exceptionHandling.AccessDeniedHandlerJwt;
 import com.impact.core.security.jwt.AuthEntryPointJwt;
 import com.impact.core.security.jwt.AuthTokenFilter;
 import com.impact.core.security.service.UserDetailsServiceImpl;
@@ -26,6 +27,9 @@ public class WebSecurityConfig {
 
     @Autowired
     private AuthEntryPointJwt unauthorizedHandler;
+
+    @Autowired
+    private AccessDeniedHandlerJwt accessDeniedHandlerJwt;
 
     @Bean
     public AuthTokenFilter authenticationJwtTokenFilter() {
@@ -55,8 +59,10 @@ public class WebSecurityConfig {
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
         http.csrf(AbstractHttpConfigurer::disable)
-                .exceptionHandling(exception ->
-                        exception.authenticationEntryPoint(unauthorizedHandler))
+                .exceptionHandling(exception -> exception
+                        .authenticationEntryPoint(unauthorizedHandler) // Handler 401 Unauthorized
+                        .accessDeniedHandler(accessDeniedHandlerJwt) // Handler 403 Forbidden
+                )
                 .sessionManagement(session ->
                         session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .authorizeHttpRequests(auth -> auth
