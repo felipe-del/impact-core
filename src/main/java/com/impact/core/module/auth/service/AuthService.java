@@ -1,19 +1,24 @@
 package com.impact.core.module.auth.service;
 
 import com.impact.core.expection.customException.ConflictException;
+import com.impact.core.expection.customException.UnauthorizedException;
+import com.impact.core.module.auditLog.listener.AuditLogListener;
 import com.impact.core.module.auth.payload.request.LoginRequest;
 import com.impact.core.module.auth.payload.request.RegisterRequest;
 import com.impact.core.module.auth.payload.response.JwtResponse;
-import com.impact.core.expection.payload.SuccessMessageResponse;
-import com.impact.core.module.user.entity.ERole;
-import com.impact.core.module.user.entity.User;
-import com.impact.core.module.user.entity.UserRole;
+import com.impact.core.module.mail.factory.MailFactoryService;
+import com.impact.core.module.mail.payload.ComposedMail;
+import com.impact.core.module.mail.service.MailService;
+import com.impact.core.module.user.dto.UserDTO;
+import com.impact.core.module.user.entity.*;
+import com.impact.core.module.user.enun.EUserRole;
+import com.impact.core.module.user.enun.EUserState;
 import com.impact.core.module.user.service.UserRoleService;
 import com.impact.core.module.user.service.UserService;
+import com.impact.core.module.user.service.UserStateService;
 import com.impact.core.security.jwt.JwtUtils;
 import com.impact.core.security.service.UserDetailsImpl;
 import lombok.RequiredArgsConstructor;
-import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
@@ -28,9 +33,15 @@ import java.util.stream.Collectors;
 @Service("authService")
 @RequiredArgsConstructor
 public class AuthService {
+    // Authentication
     private final AuthenticationManager authenticationManager;
+    // User service
     private final UserService userService;
     private final UserRoleService userRoleService;
+    private final UserStateService userStateService;
+    // Mail service
+    private final MailService mailService;
+    // Security
     private final PasswordEncoder encoder;
     private final JwtUtils jwtUtils;
 
@@ -40,8 +51,14 @@ public class AuthService {
 
         SecurityContextHolder.getContext().setAuthentication(authentication);
         String jwt = jwtUtils.generateJwtToken(authentication);
-
         UserDetailsImpl userDetails = (UserDetailsImpl) authentication.getPrincipal();
+        User user = userService.findByEmail(userDetails.getEmail());;
+
+        EUserState userState = user.getState().getName();
+        if (userState.equals(EUserState.STATE_INACTIVE) || userState.equals(EUserState.STATE_SUSPENDED)) {
+            throw new UnauthorizedException("El usuario " + user.getName() + " no está activo.");
+        }
+
         List<String> roles = userDetails.getAuthorities().stream()
                 .map(GrantedAuthority::getAuthority)
                 .collect(Collectors.toList());
@@ -53,7 +70,7 @@ public class AuthService {
                 roles);
     }
 
-    public User register(RegisterRequest registerRequest) {
+    public UserDTO register(RegisterRequest registerRequest) {
 
         if (userService.existsByEmail(registerRequest.getEmail())) {
             throw new ConflictException("El email ya está en uso.");
@@ -65,18 +82,48 @@ public class AuthService {
                 .email(registerRequest.getEmail())
                 .password(encoder.encode(registerRequest.getPassword()))
                 .role(getUserRole(registerRequest.getRole()))
-                .state(null)
+                .state(getUserState(registerRequest.getState()))
                 .build();
 
-        return userService.save(user);
+        User savedUser = userService.save(user);
+
+        ComposedMail welcomeEmail = MailFactoryService.createWelcomeEmail(savedUser);
+        mailService.sendComposedEmail(welcomeEmail);
+
+        return userService.toDTO(savedUser);
     }
 
     private UserRole getUserRole(String role) {
         return switch (role.toLowerCase()) {
-            case "admin" -> userRoleService.findByName(ERole.ROLE_ADMINISTRATOR);
-            case "manager" -> userRoleService.findByName(ERole.ROLE_MANAGER);
-            default -> userRoleService.findByName(ERole.ROLE_TEACHER);
+            case "admin" -> userRoleService.findByName(EUserRole.ROLE_ADMINISTRATOR);
+            case "manager" -> userRoleService.findByName(EUserRole.ROLE_MANAGER);
+            default -> userRoleService.findByName(EUserRole.ROLE_TEACHER);
         };
     }
+
+    private UserState getUserState(String state) {
+        return switch (state.toLowerCase()) {
+            case "active" -> userStateService.findByName(EUserState.STATE_ACTIVE);
+            case "suspend" -> userStateService.findByName(EUserState.STATE_SUSPENDED);
+            default -> userStateService.findByName(EUserState.STATE_INACTIVE);
+        };
+    }
+
+    public UserDTO getUserSession() {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+
+        if (authentication.getPrincipal() == null) {
+            throw new UnauthorizedException("No hay usuario autenticado.");
+        }
+
+        UserDetailsImpl userDetails = (UserDetailsImpl) authentication.getPrincipal();
+        User user = userService.findById(userDetails.getId());
+
+        return userService.toDTO(user);
+    }
+
+    public void logout() {
+    }
+
 
 }
