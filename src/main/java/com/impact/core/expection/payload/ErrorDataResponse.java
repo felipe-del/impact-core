@@ -9,7 +9,7 @@ import lombok.NoArgsConstructor;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class ErrorData {
+public class ErrorDataResponse {
     private int status; // Código de estado HTTP (401, 403, etc.)
     private String error; // Nombre del error (Forbidden, Unauthorized, etc.)
     private String message; // Descripción del error
