@@ -1,5 +1,7 @@
 package com.impact.core.module.user.service;
 
+import com.impact.core.module.auditLog.listener.AuditLogListener;
+import com.impact.core.module.user.dto.UserDTO;
 import com.impact.core.module.user.entity.User;
 import com.impact.core.module.user.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
@@ -23,4 +25,22 @@ public class UserService {
     public User save(User user) {
         return userRepository.save(user);
     }
+
+    public User findById(Integer id) {
+        return userRepository.findById(id)
+                .orElseThrow(() -> new UsernameNotFoundException("No existe usuario con id: " + id));
+    }
+
+    // MAPPER METHODS
+
+    public UserDTO toDTO(User user) {
+        return UserDTO.builder()
+                .id(user.getId())
+                .name(user.getName())
+                .email(user.getEmail())
+                .role(user.getRole().getName().toString())
+                .stateName(user.getState().getName().toString())
+                .build();
+    }
+
 }
