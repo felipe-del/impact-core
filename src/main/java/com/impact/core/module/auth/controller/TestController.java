@@ -18,6 +18,7 @@ public class TestController {
     private final UserRoleService userRoleService;
 
     @GetMapping("/all")
+    @PreAuthorize("isAuthenticated()")
     public List<UserRole> allAccess() {
         return userRoleService.findAll();
     }
