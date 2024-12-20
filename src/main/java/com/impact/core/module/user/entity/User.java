@@ -1,7 +1,7 @@
 package com.impact.core.module.user.entity;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.impact.core.entities.UserState;
+import com.impact.core.module.auditLog.listener.AuditLogListener;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
@@ -14,6 +14,7 @@ import lombok.*;
 @Table(name = "user")
 @NoArgsConstructor
 @AllArgsConstructor
+@EntityListeners(AuditLogListener.class)
 public class User {
     @Id
     @Column(name = "id", nullable = false)
