@@ -17,4 +17,6 @@ public class ComposedMail {
     private String template;
 
     private List<MetaData> metaData;
+
+    private List<String> imageNames;
 }
