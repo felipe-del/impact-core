@@ -23,25 +23,41 @@ CREATE TABLE user_state
 );
 
 INSERT INTO user_state (name, description)
-VALUES ('Activo', 'El usuario está activo y puede iniciar sesión'),
-       ('Inactivo', 'El usuario no puede acceder al sistema'),
-       ('Suspendido', 'El usuario está temporalmente suspendido');
+VALUES ('STATE_ACTIVE', 'El usuario está activo y puede iniciar sesión'),
+       ('STATE_INACTIVE', 'El usuario no puede acceder al sistema'),
+       ('STATE_SUSPENDED', 'El usuario está temporalmente suspendido');
 
 CREATE TABLE IF NOT EXISTS user_jwt_token
 (
-    id          INT AUTO_INCREMENT PRIMARY KEY,
-    user_id     INT          NOT NULL,
-    token       VARCHAR(255) NOT NULL,
-    expiry_date TIMESTAMP    NOT NULL,
-    created_at  TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-    FOREIGN KEY (user_id) REFERENCES user (id)
-);
+    id
+    INT
+    AUTO_INCREMENT
+    PRIMARY
+    KEY,
+    user_id
+    INT
+    NOT
+    NULL,
+    token
+    VARCHAR
+(
+    255
+) NOT NULL,
+    expiry_date TIMESTAMP NOT NULL,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    FOREIGN KEY
+(
+    user_id
+) REFERENCES user
+(
+    id
+)
+    );
 
 (
-    id          INT AUTO_INCREMENT PRIMARY KEY,
-    name        VARCHAR(50) NOT NULL UNIQUE,
-    description TEXT
-);
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    name VARCHAR (50) NOT NULL UNIQUE,
+    description TEXT);
 
 CREATE TABLE user
 (
@@ -62,6 +78,17 @@ CREATE TABLE user_token
     token       VARCHAR(255) NOT NULL,
     expiry_date TIMESTAMP    NOT NULL,
     created_at  TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    FOREIGN KEY (user_id) REFERENCES user (id)
+);
+
+CREATE TABLE audit_log
+(
+    id          INT AUTO_INCREMENT PRIMARY KEY,
+    entity_name VARCHAR(50) NOT NULL,
+    action      VARCHAR(50) NOT NULL,
+    details     TEXT,
+    timestamp   TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    user_id     INT,
     FOREIGN KEY (user_id) REFERENCES user (id)
 );
 
