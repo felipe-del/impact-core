@@ -2,16 +2,17 @@ package com.impact.core.module.mail.service;
 
 import com.impact.core.expection.customException.InternalServerErrorException;
 import com.impact.core.module.mail.payload.ComposedMail;
-import com.impact.core.module.mail.payload.MetaData;
 import com.impact.core.module.mail.payload.request.BasicMailRequest;
 import jakarta.mail.MessagingException;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.mail.SimpleMailMessage;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.MimeMessageHelper;
 import org.springframework.mail.javamail.MimeMessagePreparator;
+import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.NotAcceptableStatusException;
 import org.thymeleaf.TemplateEngine;
@@ -19,9 +20,9 @@ import org.thymeleaf.context.Context;
 import org.thymeleaf.exceptions.TemplateInputException;
 
 import java.util.List;
-import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+@Slf4j
 @Service
 @RequiredArgsConstructor
 public class MailService {
@@ -32,9 +33,11 @@ public class MailService {
     @Value("${impact.mail.sender}")
     private String EMAIL_SENDER;
 
-    private static final Pattern EMAIL_PATTERN = Pattern.compile("^[_A-Za-z0-9-\\+]+(\\.[_A-Za-z0-9-]+)*@[A-Za-z0-9-]+(\\.[A-Za-z0-9]+)*(\\.[A-Za-z]{2,})$");
+    private static final Pattern EMAIL_PATTERN = Pattern.compile("^[_A-Za-z0-9-+]+(\\.[_A-Za-z0-9-]+)*@[A-Za-z0-9-]+(\\.[A-Za-z0-9]+)*(\\.[A-Za-z]{2,})$");
 
+    // SENDING EMAILS METHODS
 
+    @Async
     public void sendSimpleEmail(BasicMailRequest mailDetails) {
 
         if (!validated(mailDetails.getTo())) {
@@ -47,8 +50,10 @@ public class MailService {
         mailMessage.setFrom(EMAIL_SENDER);
 
         mailSender.send(mailMessage);
+        logEmailSent(mailDetails.getTo());
     }
 
+    @Async
     public void sendComposedEmail(ComposedMail composedMail) {
 
         if (!validated(composedMail.getTo())) {
@@ -64,7 +69,10 @@ public class MailService {
             addImagesToEmail(helper, composedMail.getImageNames());
         };
         mailSender.send(preparation);
+        logEmailSent(composedMail.getTo());
     }
+
+    // COMPLEMENTS METHODS
 
     private Boolean validated(String email) {
         return EMAIL_PATTERN.matcher(email).matches();
@@ -94,6 +102,10 @@ public class MailService {
                 System.out.println("Error al adjuntar la imagen: " + e.getMessage());
             }
         });
+    }
+
+    private void logEmailSent(String emailRecipient) {
+        log.info("The IMPACT email module just sent one to " + emailRecipient);
     }
 
     // If you want to print the mail properties
