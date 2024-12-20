@@ -1,5 +1,6 @@
-package com.impact.core.entities;
+package com.impact.core.module.user.entity;
 
+import com.impact.core.module.user.enun.EUserState;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
@@ -17,8 +18,9 @@ public class UserState {
 
     @Size(max = 50)
     @NotNull
+    @Enumerated(EnumType.STRING)
     @Column(name = "name", nullable = false, length = 50)
-    private String name;
+    private EUserState name;
 
     @Lob
     @Column(name = "description")
