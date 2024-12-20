@@ -19,12 +19,13 @@ public class TestMailController {
     private final MailService mailService;
 
     @GetMapping
-    public ResponseEntity<ApiResponse<Map<String, String> >> sendSimpleMessage(@Valid @RequestBody BasicMailRequest loginRequest) {
+    public ResponseEntity<ApiResponse<Map<String, String>>> sendSimpleMessage(
+            @Valid @RequestBody BasicMailRequest loginRequest) {
         mailService.sendSimpleEmail(loginRequest);
         Map<String, String> response = Map.of(
                 "emisor", "IMPACT SYSTEM",
                 "receptor", loginRequest.getTo());
-        return ResponseEntity.ok(ApiResponse.<Map<String, String> >builder()
+        return ResponseEntity.ok(ApiResponse.<Map<String, String>>builder()
                 .message("Correo enviado exitosamente")
                 .data(response)
                 .build());
