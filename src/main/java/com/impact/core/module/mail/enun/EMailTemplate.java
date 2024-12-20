@@ -1,4 +1,4 @@
-package com.impact.core.module.mail.service;
+package com.impact.core.module.mail.enun;
 
 public enum EMailTemplate {
     WELCOME_EMAIL("new_user_welcome_email_template");
