@@ -1,7 +1,7 @@
 package com.impact.core.security.exceptionHandling;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.impact.core.expection.payload.ErrorData;
+import com.impact.core.expection.payload.ErrorDataResponse;
 import com.impact.core.util.ApiResponse;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
@@ -29,16 +29,16 @@ public class AccessDeniedHandlerJwt implements AccessDeniedHandler {
         response.setContentType(MediaType.APPLICATION_JSON_VALUE);
         response.setStatus(HttpServletResponse.SC_FORBIDDEN);
 
-        ErrorData errorData = ErrorData.builder()
+        ErrorDataResponse errorDataResponse = ErrorDataResponse.builder()
                 .status(HttpServletResponse.SC_FORBIDDEN)
                 .error("Forbidden")
                 .message("No tienes permisos para acceder a este recurso.")
                 .path(request.getServletPath())
                 .build();
 
-        ApiResponse<ErrorData> apiResponse = ApiResponse.<ErrorData>builder()
+        ApiResponse<ErrorDataResponse> apiResponse = ApiResponse.<ErrorDataResponse>builder()
                 .message("Acceso prohibido")
-                .data(errorData)
+                .data(errorDataResponse)
                 .build();
 
         final ObjectMapper mapper = new ObjectMapper();
