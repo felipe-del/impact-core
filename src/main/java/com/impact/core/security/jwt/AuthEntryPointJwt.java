@@ -1,7 +1,7 @@
 package com.impact.core.security.jwt;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.impact.core.expection.payload.ErrorData;
+import com.impact.core.expection.payload.ErrorDataResponse;
 import com.impact.core.util.ApiResponse;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
@@ -28,16 +28,16 @@ public class AuthEntryPointJwt implements AuthenticationEntryPoint {
         response.setContentType(MediaType.APPLICATION_JSON_VALUE);
         response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
 
-        ErrorData errorData = ErrorData.builder()
+        ErrorDataResponse errorDataResponse = ErrorDataResponse.builder()
                 .status(HttpServletResponse.SC_UNAUTHORIZED)
                 .error("Unauthorized")
                 .message(authException.getMessage())
                 .path(request.getServletPath())
                 .build();
 
-        ApiResponse<ErrorData> apiResponse = ApiResponse.<ErrorData>builder()
+        ApiResponse<ErrorDataResponse> apiResponse = ApiResponse.<ErrorDataResponse>builder()
                 .message("No autorizado")
-                .data(errorData)
+                .data(errorDataResponse)
                 .build();
 
         final ObjectMapper mapper = new ObjectMapper();
