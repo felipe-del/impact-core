@@ -1,8 +1,6 @@
 package com.impact.core.module.mail.service;
 
-import com.impact.core.expection.payload.ErrorMessageResponse;
-import com.impact.core.expection.payload.MessageResponse;
-import com.impact.core.expection.payload.SuccessMessageResponse;
+import com.impact.core.expection.customException.InternalServerErrorException;
 import com.impact.core.module.mail.payload.ComposedMail;
 import com.impact.core.module.mail.payload.MetaData;
 import com.impact.core.module.mail.payload.request.BasicMailRequest;
@@ -20,6 +18,7 @@ import org.thymeleaf.TemplateEngine;
 import org.thymeleaf.context.Context;
 import org.thymeleaf.exceptions.TemplateInputException;
 
+import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -28,15 +27,18 @@ import java.util.regex.Pattern;
 public class MailService {
 
     private final JavaMailSender mailSender;
-
     private final TemplateEngine templateEngine;
 
     @Value("${impact.mail.sender}")
     private String EMAIL_SENDER;
 
-    public MessageResponse sendSimpleEmail(BasicMailRequest mailDetails) {
+    private static final Pattern EMAIL_PATTERN = Pattern.compile("^[_A-Za-z0-9-\\+]+(\\.[_A-Za-z0-9-]+)*@[A-Za-z0-9-]+(\\.[A-Za-z0-9]+)*(\\.[A-Za-z]{2,})$");
+
+
+    public void sendSimpleEmail(BasicMailRequest mailDetails) {
+
         if (!validated(mailDetails.getTo())) {
-            return new ErrorMessageResponse(500, "El correo " + mailDetails.getTo() + " no es válido", "EMAIL IMPACT MODULE");
+            throw  new IllegalArgumentException("El correo " + mailDetails.getTo() + " no es válido.");
         }
         SimpleMailMessage mailMessage = new SimpleMailMessage();
         mailMessage.setTo(mailDetails.getTo());
@@ -45,13 +47,12 @@ public class MailService {
         mailMessage.setFrom(EMAIL_SENDER);
 
         mailSender.send(mailMessage);
-        return new SuccessMessageResponse("Correo emitido a " + mailDetails.getTo());
     }
 
-    public MessageResponse sendComposedEmail(ComposedMail composedMail) {
-        System.out.println("Sending email to: " + composedMail.getTo());
+    public void sendComposedEmail(ComposedMail composedMail) {
+
         if (!validated(composedMail.getTo())) {
-            return new ErrorMessageResponse(500, "El correo " + composedMail.getTo() + " no es válido", "EMAIL IMPACT MODULE");
+            throw  new IllegalArgumentException("El correo " + composedMail.getTo() + " no es válido.");
         }
         String messageContent = buildMessage(composedMail);
         MimeMessagePreparator preparation = mimeMessage -> {
@@ -60,43 +61,39 @@ public class MailService {
             helper.setTo(composedMail.getTo());
             helper.setSubject(composedMail.getSubject());
             helper.setText(messageContent, true);
-            addImageToEmail(helper);
+            addImagesToEmail(helper, composedMail.getImageNames());
         };
         mailSender.send(preparation);
-        return new SuccessMessageResponse("Correo emitido a " + composedMail.getTo());
     }
 
     private Boolean validated(String email) {
-        // Validate format of email
-        Pattern pattern = Pattern.compile("^[_A-Za-z0-9-\\+]+(\\.[_A-Za-z0-9-]+)*@[A-Za-z0-9-]+(\\.[A-Za-z0-9]+)*(\\.[A-Za-z]{2,})$");
-        Matcher matcher = pattern.matcher(email);
-        return matcher.find();
+        return EMAIL_PATTERN.matcher(email).matches();
     }
 
     private String buildMessage(ComposedMail composedMail) throws NotAcceptableStatusException {
         try {
             Context context = new Context();
-            // Agregar variables al contexto de Thymeleaf
-            for (MetaData meta : composedMail.getMetaData()) {
-                context.setVariable(meta.getKey(), meta.getValue());
-            }
-
-            // Procesar la plantilla Thymeleaf
+            composedMail.getMetaData()
+                    .forEach(meta -> context.setVariable(meta.getKey(), meta.getValue()));
             return templateEngine.process(composedMail.getTemplate(), context);
         } catch (TemplateInputException e) {
             throw new NotAcceptableStatusException("Error al procesar la plantilla Thymeleaf: " + e.getMessage());
         } catch (Exception e) {
-            e.printStackTrace();
-            return null;
+            throw new InternalServerErrorException("Error al construir el mensaje: " + e.getMessage());
         }
     }
 
-    private void addImageToEmail(MimeMessageHelper helper) {
-        try {
-            helper.addInline("UCR_CIMPA_LOGO", new ClassPathResource("images/UCR_CIMPA_LOGO.png"));
-        } catch (MessagingException e) {
-            System.out.println("Error al agregar la imagen al correo: " + e.getMessage());
+    private void addImagesToEmail(MimeMessageHelper helper, List<String> imageNames) {
+        if (imageNames == null || imageNames.isEmpty()) {
+            return;
         }
+        imageNames.forEach(imageName -> {
+            try {
+                helper.addInline(imageName, new ClassPathResource("images/" + imageName));
+            } catch (MessagingException e) {
+                System.out.println("Error al adjuntar la imagen: " + e.getMessage());
+            }
+        });
     }
 
     // If you want to print the mail properties
