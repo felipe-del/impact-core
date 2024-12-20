@@ -2,7 +2,8 @@ package com.impact.core.expection;
 
 import com.impact.core.expection.customException.ConflictException;
 import com.impact.core.expection.customException.ResourceNotFoundException;
-import com.impact.core.expection.payload.ErrorData;
+import com.impact.core.expection.customException.UnauthorizedException;
+import com.impact.core.expection.payload.ErrorDataResponse;
 import com.impact.core.util.ApiResponse;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -36,23 +37,40 @@ public class GlobalExceptionHandler {
         return new ResponseEntity<>(response, HttpStatus.BAD_REQUEST);
     }
 
-    @ExceptionHandler(ResourceNotFoundException.class)
-    public ResponseEntity<ApiResponse<ErrorData>> handleResourceNotFound(ResourceNotFoundException ex, WebRequest request) {
-        return handleException(HttpStatus.NOT_FOUND, ex.getMessage(), "Recurso no encontrado", request);
-    }
+    // BAD REQUEST
 
     @ExceptionHandler(ConflictException.class)
-    public ResponseEntity<ApiResponse<ErrorData>> handleConflict(ConflictException ex, WebRequest request) {
+    public ResponseEntity<ApiResponse<ErrorDataResponse>> handleConflict(ConflictException ex, WebRequest request) {
         return handleException(HttpStatus.CONFLICT, ex.getMessage(), "Conflicto", request);
     }
 
-    ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+    // INTERNAL SERVER ERROR
 
-    private ResponseEntity<ApiResponse<ErrorData>> handleException(HttpStatus httpStatus, String message, String userMessage, WebRequest request) {
+    @ExceptionHandler(ResourceNotFoundException.class)
+    public ResponseEntity<ApiResponse<ErrorDataResponse>> handleResourceNotFound(ResourceNotFoundException ex, WebRequest request) {
+        return handleException(HttpStatus.NOT_FOUND, ex.getMessage(), "Recurso no encontrado", request);
+    }
+
+    // SERVICE UNAVAILABLE
+
+    @ExceptionHandler(UnauthorizedException.class)
+    public ResponseEntity<ApiResponse<ErrorDataResponse>> handleUnauthorized(UnauthorizedException ex, WebRequest request) {
+        return handleException(HttpStatus.UNAUTHORIZED, ex.getMessage(), "No autorizado", request);
+    }
+
+    @ExceptionHandler(IllegalArgumentException.class)
+    public ResponseEntity<ApiResponse<ErrorDataResponse>> handleIllegalArgument(IllegalArgumentException ex, WebRequest request) {
+        return handleException(HttpStatus.BAD_REQUEST, ex.getMessage(), "Argumento no válido", request);
+    }
+
+
+    /// /////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+    private ResponseEntity<ApiResponse<ErrorDataResponse>> handleException(HttpStatus httpStatus, String message, String userMessage, WebRequest request) {
         String path = getPath(request);
 
         // Build the error data
-        ErrorData errorData = ErrorData.builder()
+        ErrorDataResponse errorDataResponse = ErrorDataResponse.builder()
                 .status(httpStatus.value())
                 .error(httpStatus.getReasonPhrase())
                 .message(message)
@@ -60,9 +78,9 @@ public class GlobalExceptionHandler {
                 .build();
 
         // Build the response
-        ApiResponse<ErrorData> response = ApiResponse.<ErrorData>builder()
+        ApiResponse<ErrorDataResponse> response = ApiResponse.<ErrorDataResponse>builder()
                 .message(userMessage)
-                .data(errorData)
+                .data(errorDataResponse)
                 .build();
 
         // Return the response
