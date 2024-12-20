@@ -13,7 +13,7 @@ public class BasicMailRequest {
     @Email(message = "El destinatario debe ser un correo electrónico válido")
     private String to;
 
-    @NotBlank(message = "El asunto no puede estar vacío")
+    @NotBlank(message = "El asunto del correo no puede estar vacío")
     private String subject;
 
     private String message;
