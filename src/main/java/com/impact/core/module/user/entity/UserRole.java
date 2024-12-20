@@ -1,5 +1,6 @@
 package com.impact.core.module.user.entity;
 
+import com.impact.core.module.user.enun.EUserRole;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
@@ -19,7 +20,7 @@ public class UserRole {
     @NotNull
     @Enumerated(EnumType.STRING)
     @Column(name = "name", nullable = false, length = 50)
-    private ERole name;
+    private EUserRole name;
 
     @Lob
     @Column(name = "description")
