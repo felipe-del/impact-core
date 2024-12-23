@@ -32,7 +32,7 @@ public class AccessDeniedHandlerJwt implements AccessDeniedHandler {
         ErrorDataResponse errorDataResponse = ErrorDataResponse.builder()
                 .status(HttpServletResponse.SC_FORBIDDEN)
                 .error("Forbidden")
-                .message("No tienes permisos para acceder a este recurso.")
+                .message(accessDeniedException.getMessage())
                 .path(request.getServletPath())
                 .build();
 
