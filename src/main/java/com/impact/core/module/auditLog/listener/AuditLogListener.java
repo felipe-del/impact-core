@@ -1,17 +1,9 @@
 package com.impact.core.module.auditLog.listener;
 
-import com.impact.core.expection.customException.UnauthorizedException;
 import com.impact.core.module.auditLog.service.AuditService;
-import com.impact.core.module.user.entity.User;
-import com.impact.core.module.user.service.UserService;
-import com.impact.core.security.service.UserDetailsImpl;
 import jakarta.persistence.*;
 import lombok.RequiredArgsConstructor;
-import lombok.Setter;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.authentication.AuthenticationManager;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Component;
 
 @Component
