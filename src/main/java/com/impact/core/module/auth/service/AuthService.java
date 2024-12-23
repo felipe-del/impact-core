@@ -4,6 +4,7 @@ import com.impact.core.expection.customException.ConflictException;
 import com.impact.core.expection.customException.UnauthorizedException;
 import com.impact.core.module.auditLog.listener.AuditLogListener;
 import com.impact.core.module.auth.payload.request.LoginRequest;
+import com.impact.core.module.auth.payload.request.LogoutRequest;
 import com.impact.core.module.auth.payload.request.RegisterRequest;
 import com.impact.core.module.auth.payload.response.JwtResponse;
 import com.impact.core.module.mail.factory.MailFactoryService;
@@ -50,9 +51,11 @@ public class AuthService {
                 new UsernamePasswordAuthenticationToken(loginRequest.getEmail(), loginRequest.getPassword()));
 
         SecurityContextHolder.getContext().setAuthentication(authentication);
+
         String jwt = jwtUtils.generateJwtToken(authentication);
+
         UserDetailsImpl userDetails = (UserDetailsImpl) authentication.getPrincipal();
-        User user = userService.findByEmail(userDetails.getEmail());;
+        User user = userService.findByEmail(userDetails.getEmail());
 
         EUserState userState = user.getState().getName();
         if (userState.equals(EUserState.STATE_INACTIVE) || userState.equals(EUserState.STATE_SUSPENDED)) {
@@ -122,7 +125,9 @@ public class AuthService {
         return userService.toDTO(user);
     }
 
-    public void logout() {
+    public void logout(LogoutRequest logoutRequest) {
+        SecurityContextHolder.clearContext();
+        jwtUtils.invalidateJwtToken(logoutRequest.getJwtToken());
     }
 
 
