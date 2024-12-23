@@ -12,9 +12,12 @@ import org.springframework.stereotype.Component;
 
 import java.security.Key;
 import java.util.Date;
+import java.util.Set;
+import java.util.concurrent.ConcurrentHashMap;
 
 @Component
 public class JwtUtils {
+
     private static final Logger logger = LoggerFactory.getLogger(JwtUtils.class);
 
     @Value("${impact.jwt.secret}")
@@ -22,6 +25,8 @@ public class JwtUtils {
 
     @Value("${impact.jwt.expirationMs}")
     private int jwtExpirationMs;
+
+    private final Set<String> blacklist = ConcurrentHashMap.newKeySet();
 
     public String generateJwtToken(Authentication authentication) {
 
@@ -45,6 +50,11 @@ public class JwtUtils {
     }
 
     public boolean validateJwtToken(String authToken) {
+        if (isBlacklisted(authToken)) {
+            logger.error("JWT token is blacklisted.");
+            return false;
+        }
+
         try {
             Jwts.parserBuilder().setSigningKey(key()).build().parse(authToken);
             return true;
@@ -59,5 +69,15 @@ public class JwtUtils {
         }
 
         return false;
+    }
+
+    public boolean isBlacklisted(String token) {
+        return blacklist.contains(token);
+    }
+
+    public void invalidateJwtToken(String token) {
+        blacklist.add(token);
+        String username = getUserNameFromJwtToken(token);
+        logger.info("Token invalidated for user: {}", username);
     }
 }
