@@ -1,4 +1,4 @@
-package com.impact.core.module.asset.entity;
+package com.impact.core.entities;
 
 import com.impact.core.module.user.entity.User;
 import jakarta.persistence.*;
