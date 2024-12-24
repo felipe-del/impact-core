@@ -1,6 +1,6 @@
 package com.impact.core.module.user.service;
 
-import com.impact.core.module.auditLog.listener.AuditLogListener;
+import com.impact.core.expection.customException.ResourceNotFoundException;
 import com.impact.core.module.user.dto.UserDTO;
 import com.impact.core.module.user.entity.User;
 import com.impact.core.module.user.repository.UserRepository;
@@ -13,9 +13,15 @@ import org.springframework.stereotype.Service;
 public class UserService {
     private final UserRepository userRepository;
 
-    public User findByEmail(String email) {
+
+    public User findImpactUser(String email) { // Use only in login and authentication
         return userRepository.findByEmail(email)
                 .orElseThrow(() -> new UsernameNotFoundException("No existe usuario con email: " + email));
+    }
+
+    public User findByEmail(String email) {
+        return userRepository.findByEmail(email)
+                .orElseThrow(() -> new ResourceNotFoundException("No existe usuario con email: " + email));
     }
 
     public Boolean existsByEmail(String email) {
@@ -28,7 +34,7 @@ public class UserService {
 
     public User findById(Integer id) {
         return userRepository.findById(id)
-                .orElseThrow(() -> new UsernameNotFoundException("No existe usuario con id: " + id));
+                .orElseThrow(() -> new ResourceNotFoundException("No existe usuario con id: " + id));
     }
 
     // MAPPER METHODS
@@ -38,7 +44,7 @@ public class UserService {
                 .id(user.getId())
                 .name(user.getName())
                 .email(user.getEmail())
-                .role(user.getRole().getName().toString())
+                .roleName(user.getRole().getName().toString())
                 .stateName(user.getState().getName().toString())
                 .build();
     }
