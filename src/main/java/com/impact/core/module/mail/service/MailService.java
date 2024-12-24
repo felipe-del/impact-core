@@ -72,7 +72,7 @@ public class MailService {
         logEmailSent(composedMail.getTo());
     }
 
-    // COMPLEMENTS METHODS
+    // PRIVATE METHODS
 
     private Boolean validated(String email) {
         return EMAIL_PATTERN.matcher(email).matches();
@@ -105,7 +105,7 @@ public class MailService {
     }
 
     private void logEmailSent(String emailRecipient) {
-        log.info("The IMPACT email module just sent one to " + emailRecipient);
+        log.info("The IMPACT email module just sent one to {}", emailRecipient);
     }
 
     // If you want to print the mail properties
