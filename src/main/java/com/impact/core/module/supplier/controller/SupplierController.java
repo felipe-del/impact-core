@@ -21,12 +21,9 @@ public class SupplierController {
     public final SupplierService supplierService;
 
     @GetMapping
-    @PreAuthorize("isAuthenticated()")
+    @PreAuthorize("hasRole('ADMINISTRATOR') or hasRole('MANAGER')")
     public ResponseEntity<ApiResponse<List<SupplierResponse>>> getAllSuppliers() {
-        List<Supplier> suppliers = supplierService.findAll();
-        List<SupplierResponse> supplierResponses = suppliers.stream()
-                .map(supplierService::toDTO)
-                .collect(Collectors.toList());
+        List<SupplierResponse> supplierResponses = supplierService.findAll();
 
         return ResponseEntity.ok(ApiResponse.<List<SupplierResponse>>builder()
                 .message("Lista de proveedores.")
@@ -35,10 +32,9 @@ public class SupplierController {
     }
 
     @PostMapping
-    @PreAuthorize("isAuthenticated()")
+    @PreAuthorize("hasRole('ADMINISTRATOR') or hasRole('MANAGER')")
     public ResponseEntity<ApiResponse<SupplierResponse>> saveSupplier(@Valid @RequestBody SupplierRequest supplierRequest) {
-        Supplier supplier = supplierService.save(supplierRequest);
-        SupplierResponse supplierResponse = supplierService.toDTO(supplier);
+        SupplierResponse supplierResponse = supplierService.save(supplierRequest);
 
         return ResponseEntity.ok(ApiResponse.<SupplierResponse>builder()
                 .message("Proveedor guardado.")
@@ -47,10 +43,9 @@ public class SupplierController {
     }
 
     @PutMapping("/{id}")
-    @PreAuthorize("isAuthenticated()")
+    @PreAuthorize("hasRole('ADMINISTRATOR') or hasRole('MANAGER')")
     public ResponseEntity<ApiResponse<SupplierResponse>> updateSupplier(@PathVariable Integer id, @Valid @RequestBody SupplierRequest supplierRequest) {
-        Supplier supplier = supplierService.update(id, supplierRequest);
-        SupplierResponse supplierResponse = supplierService.toDTO(supplier);
+        SupplierResponse supplierResponse = supplierService.update(id, supplierRequest);
 
         return ResponseEntity.ok(ApiResponse.<SupplierResponse>builder()
                 .message("Proveedor actualizado.")
@@ -59,10 +54,9 @@ public class SupplierController {
     }
 
     @DeleteMapping("/{id}")
-    @PreAuthorize("isAuthenticated()")
+    @PreAuthorize("hasRole('ADMINISTRATOR') or hasRole('MANAGER')")
     public ResponseEntity<ApiResponse<SupplierResponse>> deleteSupplier(@PathVariable Integer id) {
-        Supplier supplier = supplierService.delete(id);
-        SupplierResponse supplierResponse = supplierService.toDTO(supplier);
+        SupplierResponse supplierResponse = supplierService.delete(id);
 
         return ResponseEntity.ok(ApiResponse.<SupplierResponse>builder()
                 .message("Proveedor eliminado.")
