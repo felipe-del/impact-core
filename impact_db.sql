@@ -149,7 +149,7 @@ CREATE TABLE supplier
     address        TEXT,
     entity_type_id INT,
     client_contact VARCHAR(100),
-    id_number      VARCHAR(50),
+    id_number      VARCHAR(50) UNIQUE NOT NULL,
     FOREIGN KEY (entity_type_id) REFERENCES entity_type (id)
 );
 
@@ -473,9 +473,6 @@ CREATE TABLE space_movements
 
 ALTER TABLE asset
     ADD UNIQUE (plate_number);
-
-ALTER TABLE supplier
-    ADD CONSTRAINT unique_id_number UNIQUE (id_number);
 
 ALTER TABLE brand
     ADD CONSTRAINT unique_brand_name UNIQUE (name);
