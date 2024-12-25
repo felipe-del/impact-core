@@ -23,7 +23,7 @@ import java.util.List;
 import java.util.regex.Pattern;
 
 @Slf4j
-@Service
+@Service("mailService")
 @RequiredArgsConstructor
 public class MailService {
 
