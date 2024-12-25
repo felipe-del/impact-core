@@ -59,7 +59,7 @@ public class AuthController {
     }
 
     @GetMapping("/forgot-password")
-    public ResponseEntity<ApiResponse<Void>> forgotPassword(@RequestBody ForgotPasswordRequest forgotPasswordRequest) {
+    public ResponseEntity<ApiResponse<Void>> forgotPassword(@Valid @RequestBody ForgotPasswordRequest forgotPasswordRequest) {
         authService.forgotPassword(forgotPasswordRequest);
 
         return ResponseEntity.ok(ApiResponse.<Void>builder()
