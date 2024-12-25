@@ -13,7 +13,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.Map;
 
 @RestController
-@RequestMapping("/api/mail")
+@RequestMapping("/api/test/mail")
 @RequiredArgsConstructor
 public class TestMailController {
     private final MailService mailService;
@@ -31,8 +31,8 @@ public class TestMailController {
                 .build());
     }
 
-    @PostMapping("/testSendMail")
-    public ResponseEntity<ApiResponse<String>> testSendMail() {
+    @PostMapping("/sendMail")
+    public ResponseEntity<ApiResponse<String>> sendMail() {
         mailService.sendComposedEmail(MailFactoryService.createWelcomeEmail(
                 User.builder()
                         .email("isaacfelibrenes1904@gmail.com")
