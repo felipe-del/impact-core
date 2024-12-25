@@ -10,6 +10,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Service("supplierService")
 @RequiredArgsConstructor
@@ -17,22 +18,24 @@ public class SupplierService {
     public final SupplierRepository supplierRepository;
     public final SupplierMapper supplierMapper;
 
-    public Supplier save(SupplierRequest supplierRequest) {
-        Supplier supplier = toEntity(supplierRequest);
-        return supplierRepository.save(supplier);
+    public SupplierResponse save(SupplierRequest supplierRequest) {
+        Supplier supplier = supplierMapper.toEntity(supplierRequest);
+        Supplier savedSupplier = supplierRepository.save(supplier);
+        return supplierMapper.toDTO(savedSupplier);
     }
 
-    public Supplier update(Integer id, SupplierRequest supplierRequest) {
+    public SupplierResponse update(Integer id, SupplierRequest supplierRequest) {
         Supplier supplier = this.findById(id);
-        Supplier updatedSupplier = toEntity(supplierRequest);
+        Supplier updatedSupplier = supplierMapper.toEntity(supplierRequest);
         updatedSupplier.setId(supplier.getId());
-        return supplierRepository.save(updatedSupplier);
+        Supplier savedSupplier = supplierRepository.save(updatedSupplier);
+        return supplierMapper.toDTO(savedSupplier);
     }
 
-    public Supplier delete(Integer id) {
+    public SupplierResponse delete(Integer id) {
         Supplier supplier = this.findById(id);
         supplierRepository.delete(supplier);
-        return supplier;
+        return supplierMapper.toDTO(supplier);
     }
 
     public Supplier findById(Integer id) {
@@ -40,18 +43,11 @@ public class SupplierService {
                 () -> new ResourceNotFoundException("Proveedor no encontrado."));
     }
 
-    public List<Supplier> findAll() {
-        return supplierRepository.findAll();
-    }
-
-    // MAPPER METHODS
-
-    public Supplier toEntity(SupplierRequest supplierRequest) {
-        return supplierMapper.toEntity(supplierRequest);
-    }
-
-    public SupplierResponse toDTO(Supplier supplier) {
-        return supplierMapper.toDTO(supplier);
+    public List<SupplierResponse> findAll() {
+        List<Supplier> list = supplierRepository.findAll();
+        return list.stream()
+                .map(supplierMapper::toDTO)
+                .collect(Collectors.toList());
     }
 
 }
