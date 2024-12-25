@@ -1,5 +1,6 @@
 package com.impact.core.entities;
 
+import com.impact.core.module.supplier.entity.Supplier;
 import com.impact.core.module.user.entity.User;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.Size;
@@ -31,7 +32,7 @@ public class Asset {
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "supplier_id")
-    private com.impact.core.entities.Supplier supplier;
+    private Supplier supplier;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "subcategory_id")
