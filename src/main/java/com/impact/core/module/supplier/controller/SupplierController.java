@@ -1,18 +1,17 @@
 package com.impact.core.module.supplier.controller;
 
 import com.impact.core.module.supplier.payload.request.SupplierRequest;
-import com.impact.core.module.supplier.entity.Supplier;
 import com.impact.core.module.supplier.payload.response.SupplierResponse;
 import com.impact.core.module.supplier.service.SupplierService;
 import com.impact.core.util.ApiResponse;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
-import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping("/api/supplier")
@@ -36,7 +35,7 @@ public class SupplierController {
     public ResponseEntity<ApiResponse<SupplierResponse>> saveSupplier(@Valid @RequestBody SupplierRequest supplierRequest) {
         SupplierResponse supplierResponse = supplierService.save(supplierRequest);
 
-        return ResponseEntity.ok(ApiResponse.<SupplierResponse>builder()
+        return ResponseEntity.status(HttpStatus.CREATED).body(ApiResponse.<SupplierResponse>builder()
                 .message("Proveedor guardado.")
                 .data(supplierResponse)
                 .build());
