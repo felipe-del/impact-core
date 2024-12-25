@@ -10,7 +10,6 @@ import lombok.*;
 @NoArgsConstructor
 @AllArgsConstructor
 public class SupplierRequest {
-    private Integer id;
     @NotBlank(message = "El nombre es requerido")
     private String name;
     @NotBlank(message = "El teléfono es requerido")
