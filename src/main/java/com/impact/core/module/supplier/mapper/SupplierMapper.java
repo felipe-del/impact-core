@@ -34,7 +34,7 @@ public class SupplierMapper {
                 .phone(supplier.getPhone())
                 .email(supplier.getEmail())
                 .address(supplier.getAddress())
-                .entityTypeName(supplier.getEntityType().getTypeName().name())
+                .entityTypeName(supplier.getEntityType().getTypeName().toString())
                 .clientContact(supplier.getClientContact())
                 .idNumber(supplier.getIdNumber())
                 .build();
