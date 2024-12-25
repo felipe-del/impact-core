@@ -5,6 +5,8 @@ import com.impact.core.expection.customException.ResourceNotFoundException;
 import com.impact.core.expection.customException.UnauthorizedException;
 import com.impact.core.expection.payload.ErrorDataResponse;
 import com.impact.core.util.ApiResponse;
+import jakarta.persistence.PersistenceException;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.BindingResult;
@@ -14,6 +16,7 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.context.request.WebRequest;
 
+import java.sql.SQLIntegrityConstraintViolationException;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -63,8 +66,18 @@ public class GlobalExceptionHandler {
         return handleException(HttpStatus.BAD_REQUEST, ex.getMessage(), "Argumento no válido", request);
     }
 
+    // JPQL EXCEPTION
 
-    /// /////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+    @ExceptionHandler({DataIntegrityViolationException.class, SQLIntegrityConstraintViolationException.class})
+    public ResponseEntity<ApiResponse<ErrorDataResponse>> handleDataIntegrityViolation(DataIntegrityViolationException ex, WebRequest request) {
+        Throwable rootCause = ex.getRootCause();
+        String detailedMessage = (rootCause != null) ? rootCause.getMessage() : ex.getMessage();
+
+        String userMessage = "Hubo un conflicto al procesar la solicitud. Asegúrese de que los datos enviados no violen restricciones de integridad.";
+        return handleException(HttpStatus.CONFLICT, detailedMessage, userMessage, request);
+    }
+
+    ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
     private ResponseEntity<ApiResponse<ErrorDataResponse>> handleException(HttpStatus httpStatus, String message, String userMessage, WebRequest request) {
         String path = getPath(request);
