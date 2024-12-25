@@ -17,4 +17,5 @@ public class EntityTypeService {
         return entityTypeRepository.findByTypeName(name)
                 .orElseThrow(() -> new ResourceNotFoundException("Tipo de entidad " + name + " no encontrada."));
     }
+
 }
