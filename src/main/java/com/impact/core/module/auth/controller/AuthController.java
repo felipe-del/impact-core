@@ -7,6 +7,7 @@ import com.impact.core.module.user.dto.UserDTO;
 import com.impact.core.util.ApiResponse;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
@@ -31,7 +32,7 @@ public class AuthController {
     public ResponseEntity<ApiResponse<UserDTO>> register(@Valid @RequestBody RegisterRequest registerRequest) {
         UserDTO userDTO = authService.register(registerRequest);
 
-        return ResponseEntity.ok(ApiResponse.<UserDTO>builder()
+        return ResponseEntity.status(HttpStatus.CREATED).body(ApiResponse.<UserDTO>builder()
                 .message("Usuario registrado.")
                 .data(userDTO)
                 .build());
