@@ -15,12 +15,13 @@ public class SupplierMapper {
     public final EntityTypeService entityTypeService;
 
     public Supplier toEntity(SupplierRequest supplierRequest) {
+        EntityType entityType = getEntityType(supplierRequest.getEntityTypeName());
         return Supplier.builder()
                 .name(supplierRequest.getName())
                 .phone(supplierRequest.getPhone())
                 .email(supplierRequest.getEmail())
                 .address(supplierRequest.getAddress())
-                .entityType(getEntityType(supplierRequest.getEntityTypeName()))
+                .entityType(entityType)
                 .clientContact(supplierRequest.getClientContact())
                 .idNumber(supplierRequest.getIdNumber())
                 .build();
