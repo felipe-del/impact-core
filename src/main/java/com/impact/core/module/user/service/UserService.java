@@ -1,7 +1,7 @@
 package com.impact.core.module.user.service;
 
 import com.impact.core.expection.customException.ResourceNotFoundException;
-import com.impact.core.module.user.dto.UserDTO;
+import com.impact.core.module.user.payload.UserResponse;
 import com.impact.core.module.user.entity.User;
 import com.impact.core.module.user.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
@@ -39,8 +39,8 @@ public class UserService {
 
     // MAPPER METHODS
 
-    public UserDTO toDTO(User user) {
-        return UserDTO.builder()
+    public UserResponse toDTO(User user) {
+        return UserResponse.builder()
                 .id(user.getId())
                 .name(user.getName())
                 .email(user.getEmail())
