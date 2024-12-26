@@ -7,7 +7,7 @@ import com.impact.core.module.auth.payload.response.JwtResponse;
 import com.impact.core.module.mail.factory.MailFactoryService;
 import com.impact.core.module.mail.payload.ComposedMail;
 import com.impact.core.module.mail.service.MailService;
-import com.impact.core.module.user.dto.UserDTO;
+import com.impact.core.module.user.payload.UserResponse;
 import com.impact.core.module.user.entity.*;
 import com.impact.core.module.user.enun.EUserRole;
 import com.impact.core.module.user.enun.EUserState;
@@ -72,7 +72,7 @@ public class AuthService {
                 roles);
     }
 
-    public UserDTO register(RegisterRequest registerRequest) {
+    public UserResponse register(RegisterRequest registerRequest) {
 
         if (userService.existsByEmail(registerRequest.getEmail())) {
             throw new ConflictException("El email ya está en uso.");
@@ -98,7 +98,7 @@ public class AuthService {
 
 
 
-    public UserDTO getUserSession() {
+    public UserResponse getUserSession() {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
 
         if (authentication.getPrincipal() == null) {
@@ -138,7 +138,7 @@ public class AuthService {
         userTokenService.delete(userToken);
     }
 
-    public UserDTO changeUserState(ChangeUserStateRequest changeUserStateRequest) {
+    public UserResponse changeUserState(ChangeUserStateRequest changeUserStateRequest) {
         String email = changeUserStateRequest.getEmail();
         String state = changeUserStateRequest.getState();
 
@@ -151,7 +151,7 @@ public class AuthService {
         return userService.toDTO(savedUser);
     }
 
-    public UserDTO changeUserRole(ChangeUserRoleRequest changeUserRoleRequest) {
+    public UserResponse changeUserRole(ChangeUserRoleRequest changeUserRoleRequest) {
         String email = changeUserRoleRequest.getEmail();
         String role = changeUserRoleRequest.getRole();
 
