@@ -3,6 +3,7 @@ package com.impact.core.entities;
 import com.impact.core.module.assetModel.entity.AssetModel;
 import com.impact.core.module.assetSubcategory.entity.AssetSubcategory;
 import com.impact.core.module.brand.entity.Brand;
+import com.impact.core.module.locationNumber.entity.LocationNumber;
 import com.impact.core.module.supplier.entity.Supplier;
 import com.impact.core.module.user.entity.User;
 import jakarta.persistence.*;
@@ -71,6 +72,6 @@ public class Asset {
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "location_number_id")
-    private com.impact.core.entities.LocationNumber locationNumber;
+    private LocationNumber locationNumber;
 
 }
