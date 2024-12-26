@@ -3,7 +3,7 @@ package com.impact.core.module.auth.controller;
 import com.impact.core.module.auth.payload.request.*;
 import com.impact.core.module.auth.payload.response.JwtResponse;
 import com.impact.core.module.auth.service.AuthService;
-import com.impact.core.module.user.dto.UserDTO;
+import com.impact.core.module.user.payload.UserResponse;
 import com.impact.core.util.ApiResponse;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -29,21 +29,21 @@ public class AuthController {
     }
 
     @PostMapping("/register")
-    public ResponseEntity<ApiResponse<UserDTO>> register(@Valid @RequestBody RegisterRequest registerRequest) {
-        UserDTO userDTO = authService.register(registerRequest);
+    public ResponseEntity<ApiResponse<UserResponse>> register(@Valid @RequestBody RegisterRequest registerRequest) {
+        UserResponse userResponse = authService.register(registerRequest);
 
-        return ResponseEntity.status(HttpStatus.CREATED).body(ApiResponse.<UserDTO>builder()
+        return ResponseEntity.status(HttpStatus.CREATED).body(ApiResponse.<UserResponse>builder()
                 .message("Usuario registrado.")
-                .data(userDTO)
+                .data(userResponse)
                 .build());
     }
 
     @GetMapping("/user-session")
     @PreAuthorize("isAuthenticated()")
-    public ResponseEntity<ApiResponse<UserDTO>> getUserSession() {
-        UserDTO dto = authService.getUserSession();
+    public ResponseEntity<ApiResponse<UserResponse>> getUserSession() {
+        UserResponse dto = authService.getUserSession();
 
-        return ResponseEntity.ok(ApiResponse.<UserDTO>builder()
+        return ResponseEntity.ok(ApiResponse.<UserResponse>builder()
                 .message("Usuario de la sesión obtenido.")
                 .data(dto)
                 .build());
@@ -79,23 +79,23 @@ public class AuthController {
 
     @PostMapping("/change-user-state")
     @PreAuthorize("hasRole('ADMINISTRATOR')")
-    public ResponseEntity<ApiResponse<UserDTO>> changeUserState(@Valid @RequestBody ChangeUserStateRequest changeUserStateRequest) {
-        UserDTO userDTO = authService.changeUserState(changeUserStateRequest);
+    public ResponseEntity<ApiResponse<UserResponse>> changeUserState(@Valid @RequestBody ChangeUserStateRequest changeUserStateRequest) {
+        UserResponse userResponse = authService.changeUserState(changeUserStateRequest);
 
-        return ResponseEntity.ok(ApiResponse.<UserDTO>builder()
-                .message("Estado del usuario cambiado a '" + userDTO.getStateName() + "'.")
-                .data(userDTO)
+        return ResponseEntity.ok(ApiResponse.<UserResponse>builder()
+                .message("Estado del usuario cambiado a '" + userResponse.getStateName() + "'.")
+                .data(userResponse)
                 .build());
     }
 
     @PostMapping("/change-user-role")
     @PreAuthorize("hasRole('ADMINISTRATOR')")
-    public ResponseEntity<ApiResponse<UserDTO>> changeUserRole(@Valid @RequestBody ChangeUserRoleRequest changeUserRoleRequest) {
-        UserDTO userDTO = authService.changeUserRole(changeUserRoleRequest);
+    public ResponseEntity<ApiResponse<UserResponse>> changeUserRole(@Valid @RequestBody ChangeUserRoleRequest changeUserRoleRequest) {
+        UserResponse userResponse = authService.changeUserRole(changeUserRoleRequest);
 
-        return ResponseEntity.ok(ApiResponse.<UserDTO>builder()
-                .message("Rol del usuario cambiado a '" + userDTO.getRoleName() + "'.")
-                .data(userDTO)
+        return ResponseEntity.ok(ApiResponse.<UserResponse>builder()
+                .message("Rol del usuario cambiado a '" + userResponse.getRoleName() + "'.")
+                .data(userResponse)
                 .build());
     }
 }
