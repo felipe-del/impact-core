@@ -1,5 +1,6 @@
 package com.impact.core.entities;
 
+import com.impact.core.module.assetModel.entity.AssetModel;
 import com.impact.core.module.assetSubcategory.entity.AssetSubcategory;
 import com.impact.core.module.brand.entity.Brand;
 import com.impact.core.module.supplier.entity.Supplier;
@@ -62,7 +63,7 @@ public class Asset {
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "asset_model_id")
-    private com.impact.core.entities.AssetModel assetModel;
+    private AssetModel assetModel;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "currency_id")
