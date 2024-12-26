@@ -148,6 +148,9 @@ CREATE TABLE brand
     name VARCHAR(100) NOT NULL
 );
 
+ALTER TABLE brand
+    ADD CONSTRAINT unique_brand_name UNIQUE (name);
+
 CREATE TABLE building
 (
     id   INT AUTO_INCREMENT PRIMARY KEY,
@@ -162,6 +165,9 @@ CREATE TABLE building_location
     FOREIGN KEY (building_id) REFERENCES building (id),
     UNIQUE (building_id, floor)
 );
+
+ALTER TABLE building_location
+    ADD CONSTRAINT unique_building_floor UNIQUE (building_id, floor);
 
 CREATE TABLE space
 (
@@ -233,6 +239,9 @@ CREATE TABLE location_type
     type_name VARCHAR(100) NOT NULL
 );
 
+ALTER TABLE location_type
+    ADD CONSTRAINT unique_location_type_name UNIQUE (type_name);
+
 CREATE TABLE location_number
 (
     id               INT AUTO_INCREMENT PRIMARY KEY,
@@ -257,6 +266,9 @@ CREATE TABLE asset_model
     id         INT AUTO_INCREMENT PRIMARY KEY,
     model_name VARCHAR(100) NOT NULL
 );
+
+ALTER TABLE asset_model
+    ADD CONSTRAINT uc_model_name UNIQUE (model_name);
 
 CREATE TABLE supplier_account
 (
@@ -305,6 +317,9 @@ CREATE TABLE asset
     FOREIGN KEY (asset_model_id) REFERENCES asset_model (id),
     FOREIGN KEY (location_number_id) REFERENCES location_number (id)
 );
+
+ALTER TABLE asset
+    ADD UNIQUE (plate_number);
 
 CREATE TABLE invoices
 (
@@ -445,14 +460,8 @@ CREATE TABLE space_movements
     FOREIGN KEY (transaction_id) REFERENCES transaction_type (id)
 );
 
-ALTER TABLE asset
-    ADD UNIQUE (plate_number);
 
-ALTER TABLE brand
-    ADD CONSTRAINT unique_brand_name UNIQUE (name);
 
-ALTER TABLE asset_model
-    ADD CONSTRAINT uc_model_name UNIQUE (model_name);
 
-ALTER TABLE building_location
-    ADD CONSTRAINT unique_building_floor UNIQUE (building_id, floor);
+
+
