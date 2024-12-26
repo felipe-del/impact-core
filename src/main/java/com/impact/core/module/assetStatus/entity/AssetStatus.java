@@ -1,4 +1,4 @@
-package com.impact.core.entities;
+package com.impact.core.module.assetStatus.entity;
 
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
