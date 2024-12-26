@@ -1,4 +1,4 @@
-package com.impact.core.module.user.dto;
+package com.impact.core.module.user.payload;
 
 import lombok.*;
 
@@ -7,7 +7,7 @@ import lombok.*;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class UserDTO {
+public class UserResponse {
     private Integer id;
     private String name;
     private String email;
