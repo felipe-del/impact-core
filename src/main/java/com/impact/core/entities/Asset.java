@@ -1,6 +1,7 @@
 package com.impact.core.entities;
 
 import com.impact.core.module.assetModel.entity.AssetModel;
+import com.impact.core.module.assetStatus.entity.AssetStatus;
 import com.impact.core.module.assetSubcategory.entity.AssetSubcategory;
 import com.impact.core.module.brand.entity.Brand;
 import com.impact.core.module.currency.entity.Currency;
@@ -49,7 +50,7 @@ public class Asset {
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "status_id")
-    private com.impact.core.entities.AssetStatus status;
+    private AssetStatus status;
 
     @ColumnDefault("0")
     @Column(name = "is_deleted")
