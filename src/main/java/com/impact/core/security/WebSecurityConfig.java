@@ -73,6 +73,7 @@ public class WebSecurityConfig {
                         .requestMatchers("/api/asset-category/**").authenticated()
                         .requestMatchers("/api/asset-sub-category/**").authenticated()
                         .requestMatchers("/api/brand/**").authenticated()
+                        .requestMatchers("/api/asset-model/**").authenticated()
 
                         .requestMatchers("/api/test/auth/**").permitAll()
                         .requestMatchers("/api/test/mail/**").permitAll()
