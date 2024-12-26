@@ -6,6 +6,6 @@ public enum ECurrency {
 
     @Override
     public String toString() {
-        return this.name().replaceFirst("CURRENCY", "");
+        return this.name().replaceFirst("CURRENCY_", "");
     }
 }
