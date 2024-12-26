@@ -250,6 +250,9 @@ CREATE TABLE location_number
     FOREIGN KEY (location_type_id) REFERENCES location_type (id)
 );
 
+ALTER TABLE location_number
+    ADD CONSTRAINT unique_location_number UNIQUE (location_type_id, location_number);
+
 CREATE TABLE currency
 (
     id            INT AUTO_INCREMENT PRIMARY KEY,
@@ -320,6 +323,8 @@ CREATE TABLE asset
 
 ALTER TABLE asset
     ADD UNIQUE (plate_number);
+
+ALTER
 
 CREATE TABLE invoices
 (
