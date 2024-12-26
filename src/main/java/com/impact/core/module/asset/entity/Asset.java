@@ -1,4 +1,4 @@
-package com.impact.core.entities;
+package com.impact.core.module.asset.entity;
 
 import com.impact.core.module.assetModel.entity.AssetModel;
 import com.impact.core.module.assetStatus.entity.AssetStatus;
@@ -10,8 +10,7 @@ import com.impact.core.module.supplier.entity.Supplier;
 import com.impact.core.module.user.entity.User;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.Size;
-import lombok.Getter;
-import lombok.Setter;
+import lombok.*;
 import org.hibernate.annotations.ColumnDefault;
 
 import java.math.BigDecimal;
@@ -19,11 +18,15 @@ import java.time.LocalDate;
 
 @Getter
 @Setter
+@Builder
 @Entity
 @Table(name = "asset")
+@NoArgsConstructor
+@AllArgsConstructor
 public class Asset {
     @Id
     @Column(name = "id", nullable = false)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
 
     @Column(name = "purchase_date")
