@@ -1,5 +1,6 @@
 package com.impact.core.entities;
 
+import com.impact.core.module.assetSubcategory.entity.AssetSubcategory;
 import com.impact.core.module.supplier.entity.Supplier;
 import com.impact.core.module.user.entity.User;
 import jakarta.persistence.*;
@@ -36,7 +37,7 @@ public class Asset {
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "subcategory_id")
-    private com.impact.core.entities.AssetSubcategory subcategory;
+    private AssetSubcategory subcategory;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "brand_id")
