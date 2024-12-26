@@ -27,38 +27,6 @@ VALUES ('STATE_ACTIVE', 'El usuario está activo y puede iniciar sesión'),
        ('STATE_INACTIVE', 'El usuario no puede acceder al sistema'),
        ('STATE_SUSPENDED', 'El usuario está temporalmente suspendido');
 
-CREATE TABLE IF NOT EXISTS user_jwt_token
-(
-    id
-    INT
-    AUTO_INCREMENT
-    PRIMARY
-    KEY,
-    user_id
-    INT
-    NOT
-    NULL,
-    token
-    VARCHAR
-(
-    255
-) NOT NULL,
-    expiry_date TIMESTAMP NOT NULL,
-    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-    FOREIGN KEY
-(
-    user_id
-) REFERENCES user
-(
-    id
-)
-    );
-
-(
-    id INT AUTO_INCREMENT PRIMARY KEY,
-    name VARCHAR (50) NOT NULL UNIQUE,
-    description TEXT);
-
 CREATE TABLE user
 (
     id       INT AUTO_INCREMENT PRIMARY KEY,
@@ -156,17 +124,23 @@ CREATE TABLE supplier
 CREATE TABLE asset_category
 (
     id   INT AUTO_INCREMENT PRIMARY KEY,
-    name VARCHAR(100) NOT NULL
+    name VARCHAR(100) NOT NULL UNIQUE
 );
+
+ALTER TABLE asset_category
+    ADD CONSTRAINT unique_asset_category_name UNIQUE (name);
 
 CREATE TABLE asset_subcategory
 (
     id          INT AUTO_INCREMENT PRIMARY KEY,
-    name        VARCHAR(100) NOT NULL,
+    name        VARCHAR(100) NOT NULL UNIQUE,
     description VARCHAR(255),
     category_id INT,
     FOREIGN KEY (category_id) REFERENCES asset_category (id)
 );
+
+ALTER TABLE asset_subcategory
+    ADD CONSTRAINT uc_subcategory_name UNIQUE (name);
 
 CREATE TABLE brand
 (
@@ -477,14 +451,8 @@ ALTER TABLE asset
 ALTER TABLE brand
     ADD CONSTRAINT unique_brand_name UNIQUE (name);
 
-ALTER TABLE asset_category
-    ADD CONSTRAINT unique_asset_category_name UNIQUE (name);
-
 ALTER TABLE asset_model
     ADD CONSTRAINT uc_model_name UNIQUE (model_name);
-
-ALTER TABLE asset_subcategory
-    ADD CONSTRAINT uc_subcategory_name UNIQUE (name);
 
 ALTER TABLE building_location
     ADD CONSTRAINT unique_building_floor UNIQUE (building_id, floor);
