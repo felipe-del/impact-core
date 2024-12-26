@@ -20,7 +20,7 @@ public class BrandController {
     public final BrandService brandService;
 
     @GetMapping
-    @PreAuthorize("hasRole('ADMINISTRATOR') or hasRole('MANAGER') or hasRole('USER')")
+    @PreAuthorize("hasRole('ADMINISTRATOR') or hasRole('MANAGER')")
     public ResponseEntity<ApiResponse<List<BrandResponse>>> getAllBrands() {
         List<BrandResponse> brandResponses = brandService.findAll();
 
