@@ -1,5 +1,6 @@
 package com.impact.core.module.assetStatus.entity;
 
+import com.impact.core.module.assetStatus.enun.EAssetStatus;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
@@ -18,7 +19,8 @@ public class AssetStatus {
     @Size(max = 50)
     @NotNull
     @Column(name = "name", nullable = false, length = 50)
-    private String name;
+    @Enumerated(EnumType.STRING)
+    private EAssetStatus name;
 
     @Lob
     @Column(name = "description")
