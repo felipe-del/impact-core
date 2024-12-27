@@ -8,6 +8,6 @@ public enum EAssetStatus {
 
     @Override
     public String toString() {
-        return name().replace("ASSET_STATUS_", " ");
+        return name().replace("ASSET_STATUS_", "");
     }
 }
