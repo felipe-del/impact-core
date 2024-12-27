@@ -78,6 +78,8 @@ public class WebSecurityConfig {
                         .requestMatchers("/api/location-type/**").authenticated()
                         .requestMatchers("/api/currency/**").authenticated()
                         .requestMatchers("/api/asset-status/**").authenticated()
+                        .requestMatchers("/api/building/**").authenticated()
+                        .requestMatchers("/api/building-location/**").authenticated()
 
                         .requestMatchers("/api/test/auth/**").permitAll()
                         .requestMatchers("/api/test/mail/**").permitAll()
