@@ -8,4 +8,6 @@ import lombok.*;
 @NoArgsConstructor
 @AllArgsConstructor
 public class BuildingResponse {
+    int id;
+    String name;
 }
