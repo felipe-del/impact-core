@@ -24,7 +24,7 @@ public class BuildingController {
     public ResponseEntity<ApiResponse<List<BuildingResponse>>> getAllBuildings() {
         List<BuildingResponse> buildingResponses = buildingService.findAll();
 
-        return ResponseEntity.status(HttpStatus.OK).body(ApiResponse.<List<BuildingResponse>>builder()
+        return ResponseEntity.ok(ApiResponse.<List<BuildingResponse>>builder()
                 .message("Lista de edificios")
                 .data(buildingResponses)
                 .build());
@@ -46,7 +46,7 @@ public class BuildingController {
     public ResponseEntity<ApiResponse<BuildingResponse>> updateBuilding(@PathVariable Integer id, @Valid @RequestBody BuildingRequest buildingRequest) {
         BuildingResponse buildingResponse = buildingService.update(id, buildingRequest);
 
-        return ResponseEntity.status(HttpStatus.OK).body(ApiResponse.<BuildingResponse>builder()
+        return ResponseEntity.ok(ApiResponse.<BuildingResponse>builder()
                 .message("Edificio actualizado exitosamente")
                 .data(buildingResponse)
                 .build());
@@ -57,7 +57,7 @@ public class BuildingController {
     public ResponseEntity<ApiResponse<BuildingResponse>> deleteBuilding(@PathVariable Integer id) {
         BuildingResponse buildingResponse = buildingService.delete(id);
 
-        return ResponseEntity.status(HttpStatus.OK).body(ApiResponse.<BuildingResponse>builder()
+        return ResponseEntity.ok(ApiResponse.<BuildingResponse>builder()
                 .message("Edificio eliminado exitosamente")
                 .data(buildingResponse)
                 .build());
