@@ -1,18 +1,21 @@
-package com.impact.core.entities;
+package com.impact.core.module.buildingLocation.entity;
 
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
-import lombok.Getter;
-import lombok.Setter;
+import lombok.*;
 
 @Getter
 @Setter
+@Builder
 @Entity
 @Table(name = "building_location")
+@NoArgsConstructor
+@AllArgsConstructor
 public class BuildingLocation {
     @Id
     @Column(name = "id", nullable = false)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
 
     @NotNull
