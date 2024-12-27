@@ -17,7 +17,6 @@ public class BuildingLocationService {
     public final BuildingLocationRepository buildingLocationRepository;
     public final BuildingLocationMapper buildingLocationMapper;
 
-
     public BuildingLocationResponse save(BuildingLocationRequest buildingLocationRequest) {
         BuildingLocation buildingLocation = buildingLocationMapper.toEntity(buildingLocationRequest);
         BuildingLocation savedBuildingLocation = buildingLocationRepository.save(buildingLocation);
