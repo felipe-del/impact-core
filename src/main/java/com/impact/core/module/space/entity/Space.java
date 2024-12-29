@@ -1,20 +1,22 @@
-package com.impact.core.entities;
+package com.impact.core.module.space.entity;
 
 import com.impact.core.module.buildingLocation.entity.BuildingLocation;
 import com.impact.core.module.spaceStatus.entity.SpaceStatus;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
-import lombok.Getter;
-import lombok.Setter;
+import lombok.*;
 import org.hibernate.annotations.ColumnDefault;
 
 import java.time.LocalTime;
 
 @Getter
 @Setter
+@Builder
 @Entity
 @Table(name = "space")
+@NoArgsConstructor
+@AllArgsConstructor
 public class Space {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
