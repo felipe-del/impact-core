@@ -37,7 +37,7 @@ public class BuildingLocationService {
         return buildingLocationMapper.toDTO(buildingLocation);
     }
 
-    public BuildingLocation findById(Integer id) {
+    public BuildingLocation findById(int id) {
         return buildingLocationRepository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("La ubicación del edificio con el id : " + id + " no se existe."));
     }
