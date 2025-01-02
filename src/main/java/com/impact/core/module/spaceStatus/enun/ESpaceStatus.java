@@ -4,7 +4,8 @@ public enum ESpaceStatus {
     SPACE_STATUS_AVAILABLE,
     SPACE_STATUS_LOANED,
     SPACE_STATUS_IN_MAINTENANCE,
-    SPACE_STATUS_OUT_OF_SERVICE;
+    SPACE_STATUS_OUT_OF_SERVICE,
+    SPACE_STATUS_EARRING;
 
     @Override
     public String toString() {
