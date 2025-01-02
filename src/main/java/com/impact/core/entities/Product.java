@@ -1,6 +1,7 @@
 package com.impact.core.entities;
 
 import com.impact.core.module.productCategory.entity.ProductCategory;
+import com.impact.core.module.productStatus.entity.ProductStatus;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
@@ -28,6 +29,6 @@ public class Product {
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "status")
-    private com.impact.core.entities.ProductStatus status;
+    private ProductStatus status;
 
 }
