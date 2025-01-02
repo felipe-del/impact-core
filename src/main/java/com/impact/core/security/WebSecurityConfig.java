@@ -82,6 +82,9 @@ public class WebSecurityConfig {
                         .requestMatchers("/api/building-location/**").authenticated()
                         .requestMatchers("/api/space-status/**").authenticated()
                         .requestMatchers("/api/space/**").authenticated()
+                        .requestMatchers("/api/category-type").authenticated()
+                        .requestMatchers("/api/product-category").authenticated()
+                        .requestMatchers("/api/unit-of-measurement").authenticated()
 
                         .requestMatchers("/api/test/auth/**").permitAll()
                         .requestMatchers("/api/test/mail/**").permitAll()
