@@ -363,8 +363,8 @@ VALUES ('Paquete', 'PQT'),
 CREATE TABLE product_category
 (
     id                  INT AUTO_INCREMENT PRIMARY KEY,
-    name                VARCHAR(100),
-    cantidad_minima     INT NOT NULL,
+    name                VARCHAR(100) NOT NULL UNIQUE,
+    minimum_quantity     INT NOT NULL,
     category_type       INT,
     unit_of_measurement INT,
     FOREIGN KEY (category_type) REFERENCES category_type (id),
