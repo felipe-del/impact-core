@@ -4,7 +4,8 @@ public enum EAssetStatus {
     ASSET_STATUS_AVAILABLE,
     ASSET_STATUS_IN_MAINTENANCE,
     ASSET_STATUS_LOANED,
-    ASSET_STATUS_OUT_OF_SERVICE;
+    ASSET_STATUS_OUT_OF_SERVICE,
+    ASSET_STATUS_EARRING;
 
     @Override
     public String toString() {
