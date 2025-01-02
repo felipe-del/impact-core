@@ -380,9 +380,9 @@ CREATE TABLE product_status
 );
 
 INSERT INTO product_status (name, description)
-VALUES ('Disponible', 'El producto está disponible para solicitar.'),
-       ('Pendiente', 'El producto está pendiente de ser entregado o procesado.'),
-       ('Prestado', 'El producto ha sido entregado en préstamo.');
+VALUES ('PRODUCT_STATUS_AVAILABLE', 'El producto está disponible para solicitar.'),
+       ('PRODUCT_STATUS_EARRING', 'El producto está pendiente de ser entregado o procesado.'),
+       ('PRODUCT_STATUS_LOANED', 'El producto ha sido entregado en préstamo.');
 
 CREATE TABLE product
 (
