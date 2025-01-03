@@ -1,12 +1,15 @@
 package com.impact.core.module.user.service;
 
 import com.impact.core.expection.customException.ResourceNotFoundException;
+import com.impact.core.module.user.enun.EUserRole;
 import com.impact.core.module.user.payload.UserResponse;
 import com.impact.core.module.user.entity.User;
 import com.impact.core.module.user.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
+
+import java.util.List;
 
 @Service("userService")
 @RequiredArgsConstructor
@@ -35,6 +38,10 @@ public class UserService {
     public User findById(Integer id) {
         return userRepository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("No existe usuario con id: " + id));
+    }
+
+    public List<User> getAllAdmins() {
+        return userRepository.findByRole_Name(EUserRole.ROLE_ADMINISTRATOR);
     }
 
     // MAPPER METHODS
