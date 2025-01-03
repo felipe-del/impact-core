@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500&display=swap" rel="stylesheet">
+  <style>
+    /* Estilos comunes */
+    body {
+      font-family: 'Roboto', sans-serif;
+      margin: 0;
+      padding: 0;
+      background-color: #f0f0f0;
+    }
+    .email-container {
+      max-width: 600px;
+      margin: auto;
+      background-color: #ffffff;
+      padding: 20px;
+      border-radius: 8px;
+      box-shadow: 0 0 15px rgba(0, 0, 0, 0.1);
+    }
+    .header {
+      background-color: #002855;
+      color: #ffffff;
+      padding: 15px 20px;
+      border-radius: 8px 8px 0 0;
+      text-align: center;
+    }
+    .header h1 {
+      margin: 0;
+      font-size: 22px;
+      font-weight: 500;
+    }
+    .content {
+      padding: 20px;
+    }
+    .content p {
+      font-size: 16px;
+      color: #333333;
+      line-height: 1.6;
+    }
+    .footer {
+      text-align: center;
+      padding: 10px 20px;
+      color: #555555;
+      font-size: 14px;
+      border-top: 1px solid #dddddd;
+      margin-top: 20px;
+    }
+    .img {
+      margin: 20px auto;
+      display: block;
+    }
+  </style>
+</head>
+<body>
+<div class="email-container">
+  <div class="header">
+    <h1 th:text="${emailTitle}"></h1> <!-- Título del correo, dinámico -->
+  </div>
+  <div class="content">
+    <p>Hola <span th:text="${userName}"></span>,</p> <!-- Nombre dinámico -->
+    <div th:utext="${emailContent}"></div> <!-- Contenido dinámico -->
+  </div>
+  <div class="footer">
+    <p>&copy; 2024 IMPACT. Todos los derechos reservados.</p>
+  </div>
+  <footer>
+    <img class="img" src="cid:UCR_CIMPA_LOGO.png" alt="UCR CIMPA Logo" style="max-width: 500px; height: auto; vertical-align: middle;" />
+  </footer>
+</div>
+</body>
+</html>
