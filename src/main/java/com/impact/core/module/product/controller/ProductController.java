@@ -1,7 +1,7 @@
 package com.impact.core.module.product.controller;
 
-import com.impact.core.module.product.payload.request.ProductRequest;
-import com.impact.core.module.product.payload.response.ProductResponse;
+import com.impact.core.module.product.payload.request.ProductRequestDTO;
+import com.impact.core.module.product.payload.response.ProductResponseDTO;
 import com.impact.core.module.product.service.ProductService;
 import com.impact.core.util.ApiResponse;
 import jakarta.validation.Valid;
@@ -21,45 +21,45 @@ public class ProductController {
 
     @GetMapping
     @PreAuthorize("hasRole('ADMINISTRATOR') or hasRole('MANAGER')")
-    public ResponseEntity<ApiResponse<List<ProductResponse>>> getAllProducts() {
-        List<ProductResponse> productResponses = productService.findAll();
+    public ResponseEntity<ApiResponse<List<ProductResponseDTO>>> getAllProducts() {
+        List<ProductResponseDTO> productResponsDTOS = productService.findAll();
 
-        return ResponseEntity.ok(ApiResponse.<List<ProductResponse>>builder()
+        return ResponseEntity.ok(ApiResponse.<List<ProductResponseDTO>>builder()
                 .message("Lista de productos.")
-                .data(productResponses)
+                .data(productResponsDTOS)
                 .build());
     }
 
     @PostMapping
     @PreAuthorize("hasRole('ADMINISTRATOR') or hasRole('MANAGER')")
-    public ResponseEntity<ApiResponse<ProductResponse>> saveProduct(@Valid @RequestBody ProductRequest productRequest) {
-        ProductResponse productResponse = productService.save(productRequest);
+    public ResponseEntity<ApiResponse<ProductResponseDTO>> saveProduct(@Valid @RequestBody ProductRequestDTO productRequestDTO) {
+        ProductResponseDTO productResponseDTO = productService.save(productRequestDTO);
 
-        return ResponseEntity.status(HttpStatus.CREATED).body(ApiResponse.<ProductResponse>builder()
+        return ResponseEntity.status(HttpStatus.CREATED).body(ApiResponse.<ProductResponseDTO>builder()
                 .message("Producto guardado correctamente.")
-                .data(productResponse)
+                .data(productResponseDTO)
                 .build());
     }
 
     @PutMapping("/{id}")
     @PreAuthorize("hasRole('ADMINISTRATOR') or hasRole('MANAGER')")
-    public ResponseEntity<ApiResponse<ProductResponse>> updateProduct(@PathVariable int id, @Valid @RequestBody ProductRequest productRequest) {
-        ProductResponse productResponse = productService.update(id, productRequest);
+    public ResponseEntity<ApiResponse<ProductResponseDTO>> updateProduct(@PathVariable int id, @Valid @RequestBody ProductRequestDTO productRequestDTO) {
+        ProductResponseDTO productResponseDTO = productService.update(id, productRequestDTO);
 
-        return ResponseEntity.ok(ApiResponse.<ProductResponse>builder()
+        return ResponseEntity.ok(ApiResponse.<ProductResponseDTO>builder()
                 .message("Producto actualizado correctamente.")
-                .data(productResponse)
+                .data(productResponseDTO)
                 .build());
     }
 
     @DeleteMapping("/{id}")
     @PreAuthorize("hasRole('ADMINISTRATOR') or hasRole('MANAGER')")
-    public ResponseEntity<ApiResponse<ProductResponse>> deleteProduct(@PathVariable int id) {
-        ProductResponse productResponse = productService.delete(id);
+    public ResponseEntity<ApiResponse<ProductResponseDTO>> deleteProduct(@PathVariable int id) {
+        ProductResponseDTO productResponseDTO = productService.delete(id);
 
-        return ResponseEntity.ok(ApiResponse.<ProductResponse>builder()
+        return ResponseEntity.ok(ApiResponse.<ProductResponseDTO>builder()
                 .message("Producto eliminado correctamente.")
-                .data(productResponse)
+                .data(productResponseDTO)
                 .build());
     }
 
