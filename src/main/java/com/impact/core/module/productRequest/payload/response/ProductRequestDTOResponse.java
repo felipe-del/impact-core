@@ -16,4 +16,5 @@ public class ProductRequestDTOResponse {
     private ResourceRequestStatusResponse status;
     private String reason;
     private UserResponse user;
+    private String createdAt;
 }
