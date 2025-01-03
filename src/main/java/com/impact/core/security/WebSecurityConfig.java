@@ -86,6 +86,7 @@ public class WebSecurityConfig {
                         .requestMatchers("/api/product-category").authenticated()
                         .requestMatchers("/api/unit-of-measurement").authenticated()
                         .requestMatchers("/api/product-status").authenticated()
+                        .requestMatchers("/api/product").authenticated()
 
                         .requestMatchers("/api/test/auth/**").permitAll()
                         .requestMatchers("/api/test/mail/**").permitAll()
