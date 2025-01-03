@@ -381,6 +381,7 @@ CREATE TABLE product_request
     status_id  INT,
     reason     TEXT,
     user_id    int  null,
+    created_at   DATETIME DEFAULT CURRENT_TIMESTAMP,
     FOREIGN KEY (product_id) REFERENCES product (id),
     FOREIGN KEY (status_id) REFERENCES resource_request_status (id),
     FOREIGN KEY (user_id) REFERENCES user (id),
