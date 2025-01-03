@@ -2,6 +2,9 @@ package com.impact.core.module.productRequest.service;
 
 import com.impact.core.expection.customException.ResourceNotFoundException;
 import com.impact.core.expection.customException.UnauthorizedException;
+import com.impact.core.module.mail.factory.MailFactoryService;
+import com.impact.core.module.mail.payload.ComposedMail;
+import com.impact.core.module.mail.service.MailService;
 import com.impact.core.module.productRequest.entity.ProductRequest;
 import com.impact.core.module.productRequest.mapper.ProductRequestMapper;
 import com.impact.core.module.productRequest.payload.request.ProductRequestDTORequest;
@@ -22,12 +25,17 @@ public class ProductRequestService {
     public final ProductRequestRepository productRequestRepository;
     public final ProductRequestMapper productRequestMapper;
     public final UserService userService;
+    public final MailService mailService;
 
     public ProductRequestDTOResponse save(UserDetailsImpl userDetails, ProductRequestDTORequest productRequestDTORequest) {
         ProductRequest productRequest = productRequestMapper.toEntity(productRequestDTORequest);
         User user = userService.findById(userDetails.getId());
         productRequest.setUser(user);
         ProductRequest productRequestSaved = productRequestRepository.save(productRequest);
+
+        ComposedMail composedMail = MailFactoryService.createRequestSentEmail(productRequestSaved);
+        mailService.sendComposedEmail(composedMail);
+
         return productRequestMapper.toDTO(productRequestSaved);
     }
 
