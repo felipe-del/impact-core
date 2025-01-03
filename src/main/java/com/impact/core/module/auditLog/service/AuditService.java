@@ -20,7 +20,7 @@ public class AuditService {
                 .entityName(entityName)
                 .action(action)
                 .details(details)
-                .timestamp(Instant.now())
+                .timestamp(Instant.now()) // TODO: do this in entity
                 .user(user)
                 .build();
 
