@@ -1,8 +1,8 @@
 package com.impact.core.module.product.mapper;
 
 import com.impact.core.module.product.entity.Product;
-import com.impact.core.module.product.payload.request.ProductRequest;
-import com.impact.core.module.product.payload.response.ProductResponse;
+import com.impact.core.module.product.payload.request.ProductRequestDTO;
+import com.impact.core.module.product.payload.response.ProductResponseDTO;
 import com.impact.core.module.productCategory.mapper.ProductCategoryMapper;
 import com.impact.core.module.productCategory.service.ProductCategoryService;
 import com.impact.core.module.productStatus.entity.ProductStatus;
@@ -21,18 +21,18 @@ public class ProductMapper {
     public final ProductCategoryMapper productCategoryMapper;
     public final ProductStatusMapper productStatusMapper;
 
-    public Product toEntity(ProductRequest productRequest) {
+    public Product toEntity(ProductRequestDTO productRequestDTO) {
         return Product.builder()
-                .name(productRequest.getName())
-                .purchaseDate(productRequest.getPurchaseDate())
-                .expiryDate(productRequest.getExpiryDate())
-                .category(productCategoryService.findById(productRequest.getCategoryId()))
-                .status(this.getProductStatus(productRequest.getStatusName()))
+                .name(productRequestDTO.getName())
+                .purchaseDate(productRequestDTO.getPurchaseDate())
+                .expiryDate(productRequestDTO.getExpiryDate())
+                .category(productCategoryService.findById(productRequestDTO.getCategoryId()))
+                .status(this.getProductStatus(productRequestDTO.getStatusName()))
                 .build();
     }
 
-    public ProductResponse toDTO(Product product) {
-        return ProductResponse.builder()
+    public ProductResponseDTO toDTO(Product product) {
+        return ProductResponseDTO.builder()
                 .id(product.getId())
                 .name(product.getName())
                 .purchaseDate(product.getPurchaseDate())
