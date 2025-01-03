@@ -21,7 +21,7 @@ public class TestMailController {
     @GetMapping
     public ResponseEntity<ApiResponse<Map<String, String>>> sendSimpleMessage(
             @Valid @RequestBody BasicMailRequest loginRequest) {
-        mailService.sendSimpleEmail(loginRequest);
+        mailService.sendBasicEmail(loginRequest);
         Map<String, String> response = Map.of(
                 "emisor", "IMPACT SYSTEM",
                 "receptor", loginRequest.getTo());
