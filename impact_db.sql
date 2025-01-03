@@ -326,8 +326,6 @@ CREATE TABLE asset
 ALTER TABLE asset
     ADD UNIQUE (plate_number);
 
-ALTER
-
 CREATE TABLE invoices
 (
     id                       INT AUTO_INCREMENT PRIMARY KEY,
