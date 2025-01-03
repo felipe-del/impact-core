@@ -13,7 +13,7 @@ import java.time.LocalDate;
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
-public class ProductRequest {
+public class ProductRequestDTO {
 
     @NotBlank(message = "El nombre del producto es requerido.")
     private String name;
