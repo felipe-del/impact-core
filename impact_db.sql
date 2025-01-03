@@ -435,37 +435,10 @@ VALUES ('Crear', 'Representa la creación de un nuevo registro o entidad.'),
        ('Actualizar', 'Representa la actualización o modificación de un registro existente.'),
        ('Eliminar', 'Representa la eliminación de un registro o entidad.');
 
-CREATE TABLE asset_movements
-(
-    id             INT AUTO_INCREMENT PRIMARY KEY,
-    asset_id       INT,
-    transaction_id INT,
-    date           DATE,
-    FOREIGN KEY (asset_id) REFERENCES asset (id),
-    FOREIGN KEY (transaction_id) REFERENCES transaction_type (id)
-);
 
-CREATE TABLE product_movements
-(
-    id             INT AUTO_INCREMENT PRIMARY KEY,
-    product_id     INT,
-    transaction_id INT,
-    date           DATE,
-    FOREIGN KEY (product_id) REFERENCES product (id),
-    FOREIGN KEY (transaction_id) REFERENCES transaction_type (id)
-);
-
-CREATE TABLE space_movements
-(
-    id                INT AUTO_INCREMENT PRIMARY KEY,
-    reserved_space_id INT,
-    transaction_id    INT,
-    date              DATE,
-    FOREIGN KEY (reserved_space_id) REFERENCES space_reservation (id),
-    FOREIGN KEY (transaction_id) REFERENCES transaction_type (id)
-);
-
-
+-- IMPORTANT NOTE: WE DECIDED TO CHANGE THE WAY WE KEEP TRACK OF THE MOVEMENTS IN THE DATABASE
+-- WE IMPLEMENTED THE AUDIT LOG TABLE TO KEEP TRACK OF ALL THE CHANGES MADE IN THE DATABASE
+-- so we don't need the following tables asset_movements, product_movements, space_movements
 
 
 
