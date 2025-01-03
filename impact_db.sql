@@ -105,8 +105,8 @@ CREATE TABLE entity_type
 );
 
 INSERT INTO entity_type (type_name)
-VALUES ('Física'),
-       ('Jurídica');
+VALUES ('TYPE_PHYSICAL'),
+       ('TYPE_LEGAL');
 
 CREATE TABLE supplier
 (
@@ -192,10 +192,11 @@ CREATE TABLE space_status
 );
 
 INSERT INTO space_status (name, description)
-VALUES ('Disponible', 'El espacio está disponible para su uso.'),
-       ('Ocupado', 'El espacio está actualmente ocupado.'),
-       ('En Mantenimiento', 'El espacio está en mantenimiento y no está disponible para su uso.'),
-       ('Fuera de Servicio', 'El espacio ya no está disponible o no está operativo.');
+VALUES ('SPACE_STATUS_AVAILABLE', 'El espacio está disponible para su uso.'),
+       ('SPACE_STATUS_LOANED', 'El espacio está actualmente ocupado.'),
+       ('SPACE_STATUS_IN_MAINTENANCE', 'El espacio está en mantenimiento y no está disponible para su uso.'),
+       ('SPACE_STATUS_OUT_OF_SERVICE', 'El espacio ya no está disponible o no está operativo.'),
+       ('SPACE_STATUS_OUT_OF_EARRING', 'El espacio está pendiente de ser entregado o procesado.');
 
 CREATE TABLE space_equipment
 (
@@ -290,10 +291,11 @@ CREATE TABLE asset_status
 );
 
 INSERT INTO asset_status (name, description)
-VALUES ('Disponible', 'El activo está disponible para su uso.'),
-       ('En Mantenimiento', 'El activo está en mantenimiento.'),
-       ('Prestado', 'El activo ha sido prestado a alguien.'),
-       ('Fuera de Servicio', 'El activo ya no está operativo o en uso.');
+VALUES ('ASSET_STATUS_AVAILABLE', 'El activo está disponible para su uso.'),
+       ('ASSET_STATUS_IN_MAINTENANCE', 'El activo está en mantenimiento.'),
+       ('ASSET_STATUS_LOANED', 'El activo ha sido prestado a alguien.'),
+       ('ASSET_STATUS_OUT_OF_SERVICE', 'El activo ya no está operativo o en uso.'),
+       ('ASSET_STATUS_EARRING', 'El activo está pendiente de ser entregado o procesado.');
 
 CREATE TABLE asset
 (
@@ -421,19 +423,6 @@ CREATE TABLE asset_request
     FOREIGN KEY (asset_id) REFERENCES asset (id),
     FOREIGN KEY (status_id) REFERENCES resource_request_status (id)
 );
-
-CREATE TABLE transaction_type
-(
-    id          INT AUTO_INCREMENT PRIMARY KEY,
-    type_name   VARCHAR(50) NOT NULL UNIQUE,
-    description TEXT
-);
-
-INSERT INTO transaction_type (type_name, description)
-VALUES ('Crear', 'Representa la creación de un nuevo registro o entidad.'),
-       ('Leer', 'Representa la recuperación de información o datos.'),
-       ('Actualizar', 'Representa la actualización o modificación de un registro existente.'),
-       ('Eliminar', 'Representa la eliminación de un registro o entidad.');
 
 
 -- IMPORTANT NOTE: WE DECIDED TO CHANGE THE WAY WE KEEP TRACK OF THE MOVEMENTS IN THE DATABASE
