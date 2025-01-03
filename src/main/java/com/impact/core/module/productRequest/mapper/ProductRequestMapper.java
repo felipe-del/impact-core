@@ -43,6 +43,7 @@ public class ProductRequestMapper {
                 .status(resourceRequestStatusResponse)
                 .reason(productRequest.getReason())
                 .user(userService.toDTO(productRequest.getUser()))
+                .createdAt(productRequest.getCreatedAt().toString())
                 .build();
     }
 
