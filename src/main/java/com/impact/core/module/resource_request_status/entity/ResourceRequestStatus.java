@@ -1,5 +1,6 @@
-package com.impact.core.entities;
+package com.impact.core.module.resource_request_status.entity;
 
+import com.impact.core.module.resource_request_status.enun.EResourceRequestStatus;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
@@ -18,7 +19,8 @@ public class ResourceRequestStatus {
     @Size(max = 50)
     @NotNull
     @Column(name = "name", nullable = false, length = 50)
-    private String name;
+    @Enumerated(EnumType.STRING)
+    private EResourceRequestStatus name;
 
     @Lob
     @Column(name = "description")
