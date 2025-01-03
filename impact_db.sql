@@ -389,6 +389,7 @@ VALUES ('PRODUCT_STATUS_AVAILABLE', 'El producto está disponible para solicitar
 CREATE TABLE product
 (
     id            INT AUTO_INCREMENT PRIMARY KEY,
+    name          VARCHAR(100) NOT NULL UNIQUE,
     purchase_date DATE,
     expiry_date   DATE,
     category_id   INT,
