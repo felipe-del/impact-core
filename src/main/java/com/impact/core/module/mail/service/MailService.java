@@ -3,6 +3,8 @@ package com.impact.core.module.mail.service;
 import com.impact.core.expection.customException.InternalServerErrorException;
 import com.impact.core.module.mail.payload.ComposedMail;
 import com.impact.core.module.mail.payload.request.BasicMailRequest;
+import com.impact.core.module.user.entity.User;
+import com.impact.core.module.user.service.UserService;
 import jakarta.mail.MessagingException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -29,6 +31,7 @@ public class MailService {
 
     private final JavaMailSender mailSender;
     private final TemplateEngine templateEngine;
+    private final UserService userService;
 
     @Value("${impact.mail.sender}")
     private String EMAIL_SENDER;
@@ -38,8 +41,7 @@ public class MailService {
     // SENDING EMAILS METHODS
 
     @Async
-    public void sendSimpleEmail(BasicMailRequest mailDetails) {
-
+    public void sendBasicEmail(BasicMailRequest mailDetails) {
         if (!validated(mailDetails.getTo())) {
             throw  new IllegalArgumentException("El correo " + mailDetails.getTo() + " no es válido.");
         }
@@ -55,9 +57,10 @@ public class MailService {
 
     @Async
     public void sendComposedEmail(ComposedMail composedMail) {
-
-        if (!validated(composedMail.getTo())) {
-            throw  new IllegalArgumentException("El correo " + composedMail.getTo() + " no es válido.");
+        String emailRecipient = composedMail.getTo();
+        if (!validated(emailRecipient)) {
+            logInvalidEmail(emailRecipient);
+            throw  new IllegalArgumentException("El correo " + emailRecipient + " no es válido.");
         }
         String messageContent = buildMessage(composedMail);
         MimeMessagePreparator preparation = mimeMessage -> {
@@ -69,7 +72,29 @@ public class MailService {
             addImagesToEmail(helper, composedMail.getImageNames());
         };
         mailSender.send(preparation);
-        logEmailSent(composedMail.getTo());
+        logEmailSent(emailRecipient);
+    }
+
+    @Async
+    public void sendComposedEmailToAllAdmins(ComposedMail composedMail) {
+        List<User> admins = userService.getAllAdmins();
+        for (User admin : admins) {
+            String emailRecipient = admin.getEmail();
+            if (!validated(emailRecipient)) {
+                logInvalidEmail(emailRecipient);
+            }
+            String messageContent = buildMessage(composedMail);
+            MimeMessagePreparator preparation = mimeMessage -> {
+                MimeMessageHelper helper = new MimeMessageHelper(mimeMessage, true);
+                helper.setFrom(EMAIL_SENDER);
+                helper.setTo(emailRecipient);
+                helper.setSubject(composedMail.getSubject());
+                helper.setText(messageContent, true);
+                addImagesToEmail(helper, composedMail.getImageNames());
+            };
+            mailSender.send(preparation);
+            logEmailSent(emailRecipient);
+        }
     }
 
     // PRIVATE METHODS
@@ -106,6 +131,10 @@ public class MailService {
 
     private void logEmailSent(String emailRecipient) {
         log.info("The IMPACT email module just sent one to {}", emailRecipient);
+    }
+
+    private void logInvalidEmail(String email) {
+        log.error("The email {} is not valid", email);
     }
 
     // If you want to print the mail properties
