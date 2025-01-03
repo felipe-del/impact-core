@@ -60,19 +60,8 @@ CREATE TABLE audit_log
     FOREIGN KEY (user_id) REFERENCES user (id)
 );
 
-CREATE TABLE request_status
-(
-    id          INT AUTO_INCREMENT PRIMARY KEY,
-    status_name VARCHAR(50) NOT NULL UNIQUE,
-    description TEXT
-);
-
-INSERT INTO request_status (status_name, description)
-VALUES ('Pendiente', 'La solicitud está pendiente de revisión.'),
-       ('Aprobada', 'La solicitud ha sido aprobada.'),
-       ('Rechazada', 'La solicitud ha sido rechazada.'),
-       ('Completada', 'La solicitud ha sido completada y todas las tareas asociadas han finalizado.'),
-       ('Cancelada', 'La solicitud ha sido cancelada y no será procesada.');
+-- NOT NECESSARY
+-- CREATE TABLE request_status
 
 CREATE TABLE resource_request_status
 (
@@ -88,15 +77,8 @@ VALUES ('Pendiente', 'Está pendiente de ser entregado o procesado.'),
        ('Cancelado', 'Ha sido cancelada.'),
        ('Disponible', 'Está disponible para solicitar.');
 
-CREATE TABLE request
-(
-    id        INT AUTO_INCREMENT PRIMARY KEY,
-    user_id   INT,
-    date      DATE,
-    status_id INT,
-    FOREIGN KEY (user_id) REFERENCES user (id),
-    FOREIGN KEY (status_id) REFERENCES request_status (id)
-);
+-- NOT NECESSARY
+-- CREATE TABLE request
 
 CREATE TABLE entity_type
 (
@@ -221,15 +203,12 @@ CREATE TABLE space_reservation
 CREATE TABLE space_request
 (
     id            INT AUTO_INCREMENT PRIMARY KEY,
-    request_id    INT,
     space_id      INT,
     num_people    INT,
     event_desc    VARCHAR(255),
     event_obs     VARCHAR(255),
     status_id     INT,
     use_equipment TINYINT(1) DEFAULT 0,
-    UNIQUE KEY (request_id, space_id),
-    FOREIGN KEY (request_id) REFERENCES request (id),
     FOREIGN KEY (space_id) REFERENCES space (id),
     FOREIGN KEY (status_id) REFERENCES resource_request_status (id)
 );
@@ -399,12 +378,9 @@ CREATE TABLE product
 CREATE TABLE product_request
 (
     id         INT AUTO_INCREMENT PRIMARY KEY,
-    request_id INT,
     product_id INT,
     status_id  INT,
     reason     TEXT,
-    UNIQUE KEY (request_id, product_id),
-    FOREIGN KEY (request_id) REFERENCES request (id),
     FOREIGN KEY (product_id) REFERENCES product (id),
     FOREIGN KEY (status_id) REFERENCES resource_request_status (id)
 );
@@ -412,13 +388,10 @@ CREATE TABLE product_request
 CREATE TABLE asset_request
 (
     id              INT AUTO_INCREMENT PRIMARY KEY,
-    request_id      INT,
     asset_id        INT,
     status_id       INT,
     reason          TEXT NULL,
     expiration_date DATE,
-    UNIQUE KEY (request_id, asset_id),
-    FOREIGN KEY (request_id) REFERENCES request (id),
     FOREIGN KEY (asset_id) REFERENCES asset (id),
     FOREIGN KEY (status_id) REFERENCES resource_request_status (id)
 );
