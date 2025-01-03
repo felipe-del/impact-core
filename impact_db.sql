@@ -71,11 +71,10 @@ CREATE TABLE resource_request_status
 );
 
 INSERT INTO resource_request_status (name, description)
-VALUES ('Pendiente', 'Está pendiente de ser entregado o procesado.'),
-       ('Emitido', 'Ha sido emitido o prestado.'),
-       ('Devuelto', 'Ha sido devuelto.'),
-       ('Cancelado', 'Ha sido cancelada.'),
-       ('Disponible', 'Está disponible para solicitar.');
+VALUES ('RESOURCE_REQUEST_STATUS_EARRING', 'Está pendiente de ser aprobado.'),
+       ('RESOURCE_REQUEST_STATUS_ACCEPTED', 'Ha sido aceptado.'),
+       ('RESOURCE_REQUEST_STATUS_RETURNED', 'Ha sido devuelto.'),
+       ('RESOURCE_REQUEST_STATUS_CANCELED', 'Ha sido cancelada.');
 
 -- NOT NECESSARY
 -- CREATE TABLE request
@@ -381,8 +380,11 @@ CREATE TABLE product_request
     product_id INT,
     status_id  INT,
     reason     TEXT,
+    user_id    int  null,
     FOREIGN KEY (product_id) REFERENCES product (id),
-    FOREIGN KEY (status_id) REFERENCES resource_request_status (id)
+    FOREIGN KEY (status_id) REFERENCES resource_request_status (id),
+    FOREIGN KEY (user_id) REFERENCES user (id),
+    CONSTRAINT unique_product_user UNIQUE (product_id, user_id)
 );
 
 CREATE TABLE asset_request
