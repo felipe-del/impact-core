@@ -16,8 +16,8 @@ public class MyUserMapper { // I CALL IT MY USER MAPPER BECAUSE I HAVE A USER MA
                 .id(user.getId())
                 .name(user.getName())
                 .email(user.getEmail())
-                .roleName(userRoleMapper.toDTO(user.getRole()))
-                .stateName(userStateMapper.toDTO(user.getState()))
+                .userRoleResponse(userRoleMapper.toDTO(user.getRole()))
+                .userStateResponse(userStateMapper.toDTO(user.getState()))
                 .build();
     }
 }
