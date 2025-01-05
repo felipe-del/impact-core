@@ -4,7 +4,7 @@ import com.impact.core.expection.customException.ConflictException;
 import com.impact.core.expection.customException.UnauthorizedException;
 import com.impact.core.module.auth.payload.request.*;
 import com.impact.core.module.auth.payload.response.JwtResponse;
-import com.impact.core.module.mail.factory.MailFactoryService;
+import com.impact.core.module.mail.factory.MailFactory;
 import com.impact.core.module.mail.payload.ComposedMail;
 import com.impact.core.module.mail.service.MailService;
 import com.impact.core.module.user.payload.UserResponse;
@@ -90,7 +90,7 @@ public class AuthService {
 
         User savedUser = userService.save(user);
 
-        ComposedMail welcomeEmail = MailFactoryService.createWelcomeEmail(savedUser);
+        ComposedMail welcomeEmail = MailFactory.createWelcomeEmail(savedUser);
         mailService.sendComposedEmail(welcomeEmail);
 
         return userService.toDTO(savedUser);
@@ -119,7 +119,7 @@ public class AuthService {
     public void forgotPassword(ForgotPasswordRequest forgotPasswordRequest) {
         User user = userService.findByEmail(forgotPasswordRequest.getEmail());
         UserToken userToken = userTokenService.generateAndSaveTokenForUser(user);
-        ComposedMail forgotPasswordEmail = MailFactoryService.createForgotPasswordEmail(userToken);
+        ComposedMail forgotPasswordEmail = MailFactory.createForgotPasswordEmail(userToken);
         mailService.sendComposedEmail(forgotPasswordEmail);
     }
 
