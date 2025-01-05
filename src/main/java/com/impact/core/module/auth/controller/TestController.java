@@ -17,6 +17,11 @@ public class TestController {
 
     private final UserRoleService userRoleService;
 
+    @GetMapping("/all")
+    public String allAccess() {
+        return "Public Content.";
+    }
+
     @GetMapping("/manager-admin")
     @PreAuthorize("hasRole('MANAGER') or hasRole('ADMINISTRATOR')")
     public String userAccess() {
