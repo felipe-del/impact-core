@@ -67,7 +67,9 @@ public class WebSecurityConfig {
                         session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .authorizeHttpRequests(auth -> auth
                         .requestMatchers("/api/auth/**").permitAll()
-                        // ASSET BIG MODULE
+                        .requestMatchers("/api/user-role/**").authenticated()
+                        .requestMatchers("/api/user-state/**").authenticated()
+                        .requestMatchers("/api/user/**").authenticated()
                         .requestMatchers("/api/supplier/**").authenticated()
                         .requestMatchers("/api/entity-type/**").authenticated()
                         .requestMatchers("/api/asset-category/**").authenticated()
