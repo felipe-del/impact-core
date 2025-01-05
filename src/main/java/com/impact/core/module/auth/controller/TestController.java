@@ -17,12 +17,6 @@ public class TestController {
 
     private final UserRoleService userRoleService;
 
-    @GetMapping("/all")
-    @PreAuthorize("isAuthenticated()")
-    public List<UserRole> allAccess() {
-        return userRoleService.findAll();
-    }
-
     @GetMapping("/manager-admin")
     @PreAuthorize("hasRole('MANAGER') or hasRole('ADMINISTRATOR')")
     public String userAccess() {
