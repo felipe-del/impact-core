@@ -28,39 +28,32 @@ public class MailFactory {
         String emailContent = """
                 Se ha cambiado su rol de usuario a: <strong>%s</strong> por el administrador: <strong>%s</strong>.
                 """.formatted(user.getRole().getName().toString(), adminName);
-
         List<MetaData> metaData = List.of(
                 new MetaData("emailTitle", "Cambio de rol de usuario"),
                 new MetaData("userName", user.getName()),
                 new MetaData("emailContent", emailContent));
-
         return createEmail(user.getEmail(), "Cambio de rol de usuario",
                 EMailTemplate.GENERIC_EMAIL, metaData, List.of(IMPACT_LOGO_IMAGE));
-
     }
 
     public static ComposedMail createChangeUserStateEmail(String adminName, User user) {
         String emailContent = """
                 Se ha cambiado su estado de usuario a: <strong>%s</strong> por el administrador: <strong>%s</strong>.
                 """.formatted(user.getState().getName().toString(), adminName);
-
         List<MetaData> metaData = List.of(
                 new MetaData("emailTitle", "Cambio de estado de usuario"),
                 new MetaData("userName", user.getName()),
                 new MetaData("emailContent", emailContent));
-
         return createEmail(user.getEmail(), "Cambio de estado de usuario",
                 EMailTemplate.GENERIC_EMAIL, metaData, List.of(IMPACT_LOGO_IMAGE));
     }
 
     public static ComposedMail createWelcomeEmail(User user) {
-        String emailContent = "Gracias por registrarte en IMPACT. Esperamos que disfrutes de nuestra plataforma.";
-
+        String emailContent = "Gracias por registrarte en <strong>IMPACT<strong>. Esperamos que disfrutes de nuestra plataforma.";
         List<MetaData> metaData = List.of(
                 new MetaData("emailTitle", "Bienvenido a IMPACT"),
                 new MetaData("userName", user.getName()),
                 new MetaData("emailContent", emailContent));
-
         return createEmail(user.getEmail(), "Bienvenido a IMPACT",
                 EMailTemplate.GENERIC_EMAIL, metaData, List.of(IMPACT_LOGO_IMAGE));
     }
@@ -68,14 +61,12 @@ public class MailFactory {
     public static ComposedMail createForgotPasswordEmail(UserToken userToken) {
         String emailContent = """
                 Hemos recibido una solicitud para restablecer la contraseña de tu cuenta. <br>
-                Por favor, utiliza el siguiente token para restablecer tu contraseña: <strong>%s</strong>
+                Por favor, utiliza el siguiente token para restablecer tu contraseña: <strong> %s </strong>
                 """.formatted(userToken.getToken());
-
         List<MetaData> metaData = List.of(
                 new MetaData("emailTitle", "Token de restablecimiento"),
                 new MetaData("userName", userToken.getUser().getName()),
                 new MetaData("emailContent", emailContent));
-
         return createEmail(userToken.getUser().getEmail(), "Restablecer contraseña",
                 EMailTemplate.GENERIC_EMAIL, metaData, List.of(IMPACT_LOGO_IMAGE));
     }
@@ -91,7 +82,6 @@ public class MailFactory {
                 Por favor, espere a que se procese su solicitud.
                 """.formatted(productRequest.getProduct().getName(), productRequest.getReason(),
                 productRequest.getStatus().getName(), productRequest.getCreatedAt().toString());
-
         List<MetaData> metaData = List.of(
                 new MetaData("emailTitle", "Solicitud de producto realizada"),
                 new MetaData("userName", productRequest.getUser().getName()),
@@ -100,6 +90,7 @@ public class MailFactory {
         return createEmail(productRequest.getUser().getEmail(), "Solicitud de producto realizada",
                 EMailTemplate.GENERIC_EMAIL, metaData, List.of(IMPACT_LOGO_IMAGE));
     }
+
     public static ComposedMail createAdminReviewRequest(ProductRequest productRequest) {
         String emailContent = """
                 Se ha recibido una nueva solicitud de producto que requiere su revisión: <br>
@@ -114,12 +105,10 @@ public class MailFactory {
                 """.formatted(productRequest.getUser().getName(), productRequest.getUser().getEmail(),
                 productRequest.getProduct().getName(), productRequest.getReason(),
                 productRequest.getStatus().getName(), productRequest.getCreatedAt().toString());
-
         List<MetaData> metaData = List.of(
                 new MetaData("emailTitle", "Revision de solicitud"),
                 new MetaData("userName", "Usuario Administrador"),
                 new MetaData("emailContent", emailContent));
-
         return createEmail(productRequest.getUser().getEmail(), "Revision de solicitud",
                 EMailTemplate.GENERIC_EMAIL, metaData, List.of(IMPACT_LOGO_IMAGE));
     }
