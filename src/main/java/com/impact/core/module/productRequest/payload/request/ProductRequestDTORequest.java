@@ -12,8 +12,6 @@ import lombok.*;
 public class ProductRequestDTORequest {
     @NotNull(message = "El id del producto es requerido")
     private int productId;
-    @NotBlank(message = "El nombre del estado es requerido")
-    private String statusName;
     @NotBlank(message = "La razón es requerida")
     private String reason;
 }
