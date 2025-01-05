@@ -4,12 +4,14 @@ import com.impact.core.module.auth.payload.request.*;
 import com.impact.core.module.auth.payload.response.JwtResponse;
 import com.impact.core.module.auth.service.AuthService;
 import com.impact.core.module.user.payload.response.UserResponse;
+import com.impact.core.security.service.UserDetailsImpl;
 import com.impact.core.util.ApiResponse;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
@@ -79,8 +81,11 @@ public class AuthController {
 
     @PostMapping("/change-user-state/{id}")
     @PreAuthorize("hasRole('ADMINISTRATOR')")
-    public ResponseEntity<ApiResponse<UserResponse>> changeUserState(@PathVariable int id, @Valid @RequestBody ChangeUserStateRequest changeUserStateRequest) {
-        UserResponse userResponse = authService.changeUserState(id, changeUserStateRequest);
+    public ResponseEntity<ApiResponse<UserResponse>> changeUserState(
+            @PathVariable int id,
+            @Valid @RequestBody ChangeUserStateRequest changeUserStateRequest,
+            @AuthenticationPrincipal UserDetailsImpl userDetails) {
+        UserResponse userResponse = authService.changeUserState(id, changeUserStateRequest, userDetails);
 
         return ResponseEntity.ok(ApiResponse.<UserResponse>builder()
                 .message("Estado del usuario cambiado a '" + userResponse.getStateName() + "'.")
