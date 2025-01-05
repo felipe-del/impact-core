@@ -92,9 +92,19 @@ public class WebSecurityConfig {
                         .requestMatchers("/api/resource-request-status").authenticated()
                         .requestMatchers("/api/product-request").authenticated()
                         .requestMatchers("/api/auditLog").authenticated()
-
+                        // TESTING API
                         .requestMatchers("/api/test/auth/**").permitAll()
                         .requestMatchers("/api/test/mail/**").permitAll()
+                        // SWAGGER API
+                        .requestMatchers(
+                                "/swagger-ui/**",
+                                "/swagger-ui.html",
+                                "/v3/api-docs/**",
+                                "/webjars/**",
+                                "/v2/api-docs/**",
+                                "/configuration/ui",
+                                "/configuration/security").permitAll()
+                        // ANOTHER API
                         .anyRequest().authenticated()
                 );
 
