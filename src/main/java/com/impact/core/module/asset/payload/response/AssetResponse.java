@@ -1,7 +1,6 @@
 package com.impact.core.module.asset.payload.response;
 
 import com.impact.core.module.assetModel.payload.response.AssetModelResponse;
-import com.impact.core.module.assetStatus.entity.AssetStatus;
 import com.impact.core.module.assetStatus.payload.response.AssetStatusResponse;
 import com.impact.core.module.assetSubcategory.payload.response.AssetCategoryResponse;
 import com.impact.core.module.assetSubcategory.payload.response.AssetSubcategoryResponse;
@@ -9,7 +8,7 @@ import com.impact.core.module.brand.payload.response.BrandResponse;
 import com.impact.core.module.currency.payload.response.CurrencyResponse;
 import com.impact.core.module.locationNumber.payload.response.LocationNumberResponse;
 import com.impact.core.module.supplier.payload.response.SupplierResponse;
-import com.impact.core.module.user.payload.UserResponse;
+import com.impact.core.module.user.payload.response.UserResponse;
 import lombok.*;
 
 import java.math.BigDecimal;
