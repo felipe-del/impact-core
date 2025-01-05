@@ -1,8 +1,7 @@
 package com.impact.core.module.productRequest.service;
 
 import com.impact.core.expection.customException.ResourceNotFoundException;
-import com.impact.core.expection.customException.UnauthorizedException;
-import com.impact.core.module.mail.factory.MailFactoryService;
+import com.impact.core.module.mail.factory.MailFactory;
 import com.impact.core.module.mail.payload.ComposedMail;
 import com.impact.core.module.mail.service.MailService;
 import com.impact.core.module.productRequest.entity.ProductRequest;
@@ -33,8 +32,10 @@ public class ProductRequestService {
         productRequest.setUser(user);
         ProductRequest productRequestSaved = productRequestRepository.save(productRequest);
 
-        ComposedMail composedMail = MailFactoryService.createRequestSentEmail(productRequestSaved);
+        ComposedMail composedMail = MailFactory.createProductRequestEmail(productRequestSaved);
         mailService.sendComposedEmail(composedMail);
+        ComposedMail composedMailToAdmin = MailFactory.createAdminReviewRequest(productRequestSaved);
+        mailService.sendComposedEmailToAllAdmins(composedMailToAdmin);
 
         return productRequestMapper.toDTO(productRequestSaved);
     }
