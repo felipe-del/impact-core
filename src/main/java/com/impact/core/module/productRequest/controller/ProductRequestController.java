@@ -22,7 +22,7 @@ public class ProductRequestController {
     public final ProductRequestService productRequestService;
 
     @GetMapping
-    @PreAuthorize("hasRole('ADMINISTRATOR') or hasRole('MANAGER')")
+    @PreAuthorize("hasRole('ADMINISTRATOR') or hasRole('MANAGER') or hasRole('TEACHER')")
     public ResponseEntity<ApiResponse<List<ProductRequestDTOResponse>>> getAllProductRequests() {
         List<ProductRequestDTOResponse> productRequestDTOResponses = productRequestService.findAll();
 
@@ -33,7 +33,7 @@ public class ProductRequestController {
     }
 
     @PostMapping
-    @PreAuthorize("hasRole('ADMINISTRATOR') or hasRole('MANAGER')")
+    @PreAuthorize("hasRole('ADMINISTRATOR') or hasRole('MANAGER') or hasRole('TEACHER')")
     public ResponseEntity<ApiResponse<ProductRequestDTOResponse>> saveProductRequest(
             @AuthenticationPrincipal UserDetailsImpl userDetails,
             @Valid @RequestBody ProductRequestDTORequest productRequestDTORequest) {
@@ -46,7 +46,7 @@ public class ProductRequestController {
     }
 
     @PutMapping("/{id}")
-    @PreAuthorize("hasRole('ADMINISTRATOR') or hasRole('MANAGER')")
+    @PreAuthorize("hasRole('ADMINISTRATOR') or hasRole('MANAGER') or hasRole('TEACHER')")
     public ResponseEntity<ApiResponse<ProductRequestDTOResponse>> updateProductRequest(@PathVariable int id, @Valid @RequestBody ProductRequestDTORequest productRequestDTORequest) {
         ProductRequestDTOResponse ProductRequestDTOResponse = productRequestService.update(id, productRequestDTORequest);
 
@@ -57,7 +57,7 @@ public class ProductRequestController {
     }
 
     @DeleteMapping("/{id}")
-    @PreAuthorize("hasRole('ADMINISTRATOR') or hasRole('MANAGER')")
+    @PreAuthorize("hasRole('ADMINISTRATOR') or hasRole('MANAGER') or hasRole('TEACHER')")
     public ResponseEntity<ApiResponse<ProductRequestDTOResponse>> deleteProductRequest(@PathVariable int id) {
         ProductRequestDTOResponse ProductRequestDTOResponse = productRequestService.delete(id);
 
