@@ -11,6 +11,7 @@ import com.impact.core.module.resource_request_status.enun.EResourceRequestStatu
 import com.impact.core.module.resource_request_status.mapper.ResourceRequestStatusMapper;
 import com.impact.core.module.resource_request_status.payload.response.ResourceRequestStatusResponse;
 import com.impact.core.module.resource_request_status.service.ResourceRequestStatusService;
+import com.impact.core.module.user.mapper.MyUserMapper;
 import com.impact.core.module.user.service.UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
@@ -23,7 +24,7 @@ public class ProductRequestMapper {
     public final ProductMapper productMapper;
     public final ResourceRequestStatusService resourceRequestStatusService;
     public final ResourceRequestStatusMapper resourceRequestStatusMapper;
-    public final UserService userService;
+    public final MyUserMapper myUserMapper;
 
     public ProductRequest toEntity(ProductRequestDTORequest productRequestDTORequest) {
         return ProductRequest.builder()
@@ -42,7 +43,7 @@ public class ProductRequestMapper {
                 .product(productResponseDTO)
                 .status(resourceRequestStatusResponse)
                 .reason(productRequest.getReason())
-                .user(userService.toDTO(productRequest.getUser()))
+                .user(myUserMapper.toDTO(productRequest.getUser()))
                 .createdAt(productRequest.getCreatedAt().toString())
                 .build();
     }
