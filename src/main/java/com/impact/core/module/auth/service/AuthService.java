@@ -7,7 +7,8 @@ import com.impact.core.module.auth.payload.response.JwtResponse;
 import com.impact.core.module.mail.factory.MailFactory;
 import com.impact.core.module.mail.payload.ComposedMail;
 import com.impact.core.module.mail.service.MailService;
-import com.impact.core.module.user.payload.UserResponse;
+import com.impact.core.module.user.mapper.MyUserMapper;
+import com.impact.core.module.user.payload.response.UserResponse;
 import com.impact.core.module.user.entity.*;
 import com.impact.core.module.user.enun.EUserRole;
 import com.impact.core.module.user.enun.EUserState;
@@ -39,6 +40,7 @@ public class AuthService {
     private final UserRoleService userRoleService;
     private final UserStateService userStateService;
     private final UserTokenService userTokenService;
+    private final MyUserMapper myUserMapper;
     // Mail service
     private final MailService mailService;
     // Security
@@ -50,21 +52,16 @@ public class AuthService {
                 new UsernamePasswordAuthenticationToken(loginRequest.getEmail(), loginRequest.getPassword()));
 
         SecurityContextHolder.getContext().setAuthentication(authentication);
-
         String jwt = jwtUtils.generateJwtToken(authentication);
-
         UserDetailsImpl userDetails = (UserDetailsImpl) authentication.getPrincipal();
         User user = userService.findImpactUser(userDetails.getEmail());
-
         EUserState userState = user.getState().getName();
         if (userState.equals(EUserState.STATE_INACTIVE) || userState.equals(EUserState.STATE_SUSPENDED)) {
             throw new UnauthorizedException("El usuario " + user.getName() + " no está activo.");
         }
-
         List<String> roles = userDetails.getAuthorities().stream()
                 .map(GrantedAuthority::getAuthority)
                 .collect(Collectors.toList());
-
         return new JwtResponse(jwt,
                 userDetails.getId(),
                 userDetails.getUsername(),
@@ -73,42 +70,31 @@ public class AuthService {
     }
 
     public UserResponse register(RegisterRequest registerRequest) {
-
         if (userService.existsByEmail(registerRequest.getEmail())) {
             throw new ConflictException("El email ya está en uso.");
         }
-
         String encryptedPassword = encoder.encode(registerRequest.getPassword());
-
         User user = User.builder()
                 .name(registerRequest.getName())
                 .email(registerRequest.getEmail())
                 .password(encryptedPassword)
-                .role(this.getUserRole(registerRequest.getRole()))
-                .state(this.getUserState(registerRequest.getState()))
+                .role(userRoleService.findByName(EUserRole.ROLE_TEACHER)) // Default role
+                .state(userStateService.findByName(EUserState.STATE_INACTIVE)) // Default state
                 .build();
-
         User savedUser = userService.save(user);
-
         ComposedMail welcomeEmail = MailFactory.createWelcomeEmail(savedUser);
         mailService.sendComposedEmail(welcomeEmail);
-
-        return userService.toDTO(savedUser);
+        return myUserMapper.toDTO(savedUser);
     }
-
-
 
     public UserResponse getUserSession() {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-
         if (authentication.getPrincipal() == null) {
             throw new UnauthorizedException("No hay usuario autenticado.");
         }
-
         UserDetailsImpl userDetails = (UserDetailsImpl) authentication.getPrincipal();
         User user = userService.findById(userDetails.getId());
-
-        return userService.toDTO(user);
+        return myUserMapper.toDTO(user);
     }
 
     public void logout(LogoutRequest logoutRequest) {
@@ -127,7 +113,6 @@ public class AuthService {
         String token = resetPasswordRequest.getToken();
         String password = resetPasswordRequest.getPassword();
         String encryptedPassword = encoder.encode(password);
-
         if (!userTokenService.validateToken(token)) {
             throw new UnauthorizedException("El token ha expirado.");
         }
@@ -138,48 +123,26 @@ public class AuthService {
         userTokenService.delete(userToken);
     }
 
-    public UserResponse changeUserState(ChangeUserStateRequest changeUserStateRequest) {
-        String email = changeUserStateRequest.getEmail();
-        String state = changeUserStateRequest.getState();
-
-        User user = userService.findByEmail(email);
-        if(user.getState().getName().equals(getUserState(state).getName())){
-            throw new ConflictException("El usuario ya tiene el estado: '" + state + "'.");
+    public UserResponse changeUserState(int id, ChangeUserStateRequest changeUserStateRequest) {
+        User user = userService.findById(id);
+        UserState userState = userStateService.findById(changeUserStateRequest.getStateId());
+        if(user.getState().getName().equals(userState.getName())){
+            throw new ConflictException("El usuario ya tiene el estado: '" + userState.getName().toString() + "'.");
         }
-        user.setState(this.getUserState(state));
+        user.setState(userState);
         User savedUser = userService.save(user);
-        return userService.toDTO(savedUser);
+        return myUserMapper.toDTO(savedUser);
     }
 
-    public UserResponse changeUserRole(ChangeUserRoleRequest changeUserRoleRequest) {
-        String email = changeUserRoleRequest.getEmail();
-        String role = changeUserRoleRequest.getRole();
-
-        User user = userService.findByEmail(email);
-        if(user.getRole().getName().equals(getUserRole(role).getName())){
-            throw new ConflictException("El usuario ya tiene el rol: '" + role + "'.");
+    public UserResponse changeUserRole(int id, ChangeUserRoleRequest changeUserRoleRequest) {
+        User user = userService.findById(id);
+        UserRole userRole = userRoleService.findById(changeUserRoleRequest.getRoleId());
+        if(user.getRole().getName().equals(userRole.getName())){
+            throw new ConflictException("El usuario ya tiene el rol: '" + userRole.getName().toString() + "'.");
         }
-        user.setRole(this.getUserRole(role));
+        user.setRole(userRole);
         User savedUser = userService.save(user);
-        return userService.toDTO(savedUser);
-    }
-
-    // Private methods
-
-    private UserRole getUserRole(String role) {
-        return switch (role.toLowerCase()) {
-            case "admin" -> userRoleService.findByName(EUserRole.ROLE_ADMINISTRATOR);
-            case "manager" -> userRoleService.findByName(EUserRole.ROLE_MANAGER);
-            default -> userRoleService.findByName(EUserRole.ROLE_TEACHER);
-        };
-    }
-
-    private UserState getUserState(String state) {
-        return switch (state.toLowerCase()) {
-            case "active" -> userStateService.findByName(EUserState.STATE_ACTIVE);
-            case "suspend" -> userStateService.findByName(EUserState.STATE_SUSPENDED);
-            default -> userStateService.findByName(EUserState.STATE_INACTIVE);
-        };
+        return myUserMapper.toDTO(savedUser);
     }
 
 }
