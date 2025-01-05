@@ -8,6 +8,7 @@ import lombok.*;
 import org.hibernate.annotations.ColumnDefault;
 
 import java.time.Instant;
+import java.time.LocalDateTime;
 
 @Getter
 @Setter
@@ -39,6 +40,11 @@ public class AuditLog {
     @ColumnDefault("CURRENT_TIMESTAMP")
     @Column(name = "timestamp")
     private Instant timestamp;
+
+    @PrePersist
+    public void prePersist() {
+        this.timestamp = Instant.now();
+    }
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id")
