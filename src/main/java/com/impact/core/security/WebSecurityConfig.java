@@ -91,6 +91,7 @@ public class WebSecurityConfig {
                         .requestMatchers("/api/product").authenticated()
                         .requestMatchers("/api/resource-request-status").authenticated()
                         .requestMatchers("/api/product-request").authenticated()
+                        .requestMatchers("/api/auditLog").authenticated()
 
                         .requestMatchers("/api/test/auth/**").permitAll()
                         .requestMatchers("/api/test/mail/**").permitAll()
