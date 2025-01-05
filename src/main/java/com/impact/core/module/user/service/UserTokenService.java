@@ -38,6 +38,7 @@ public class UserTokenService {
     }
 
     public UserToken generateAndSaveTokenForUser(User user) {
+        userTokenRepository.findByUser(user).ifPresent(this::delete);
         String token = generateUniqueToken();
         Instant expiryDate = generateExpiryDate();
 
