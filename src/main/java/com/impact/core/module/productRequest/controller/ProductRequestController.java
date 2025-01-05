@@ -47,7 +47,8 @@ public class ProductRequestController {
 
     @PutMapping("/{id}")
     @PreAuthorize("hasRole('ADMINISTRATOR') or hasRole('MANAGER') or hasRole('TEACHER')")
-    public ResponseEntity<ApiResponse<ProductRequestDTOResponse>> updateProductRequest(@PathVariable int id, @Valid @RequestBody ProductRequestDTORequest productRequestDTORequest) {
+    public ResponseEntity<ApiResponse<ProductRequestDTOResponse>> updateProductRequest(
+            @PathVariable int id, @Valid @RequestBody ProductRequestDTORequest productRequestDTORequest) {
         ProductRequestDTOResponse ProductRequestDTOResponse = productRequestService.update(id, productRequestDTORequest);
 
         return ResponseEntity.ok(ApiResponse.<ProductRequestDTOResponse>builder()
