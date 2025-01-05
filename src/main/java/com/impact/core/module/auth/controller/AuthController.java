@@ -3,7 +3,7 @@ package com.impact.core.module.auth.controller;
 import com.impact.core.module.auth.payload.request.*;
 import com.impact.core.module.auth.payload.response.JwtResponse;
 import com.impact.core.module.auth.service.AuthService;
-import com.impact.core.module.user.payload.UserResponse;
+import com.impact.core.module.user.payload.response.UserResponse;
 import com.impact.core.util.ApiResponse;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -77,10 +77,10 @@ public class AuthController {
                 .build());
     }
 
-    @PostMapping("/change-user-state")
+    @PostMapping("/change-user-state/{id}")
     @PreAuthorize("hasRole('ADMINISTRATOR')")
-    public ResponseEntity<ApiResponse<UserResponse>> changeUserState(@Valid @RequestBody ChangeUserStateRequest changeUserStateRequest) {
-        UserResponse userResponse = authService.changeUserState(changeUserStateRequest);
+    public ResponseEntity<ApiResponse<UserResponse>> changeUserState(@PathVariable int id, @Valid @RequestBody ChangeUserStateRequest changeUserStateRequest) {
+        UserResponse userResponse = authService.changeUserState(id, changeUserStateRequest);
 
         return ResponseEntity.ok(ApiResponse.<UserResponse>builder()
                 .message("Estado del usuario cambiado a '" + userResponse.getStateName() + "'.")
@@ -88,10 +88,10 @@ public class AuthController {
                 .build());
     }
 
-    @PostMapping("/change-user-role")
+    @PostMapping("/change-user-role/{id}")
     @PreAuthorize("hasRole('ADMINISTRATOR')")
-    public ResponseEntity<ApiResponse<UserResponse>> changeUserRole(@Valid @RequestBody ChangeUserRoleRequest changeUserRoleRequest) {
-        UserResponse userResponse = authService.changeUserRole(changeUserRoleRequest);
+    public ResponseEntity<ApiResponse<UserResponse>> changeUserRole(@PathVariable int id, @Valid @RequestBody ChangeUserRoleRequest changeUserRoleRequest) {
+        UserResponse userResponse = authService.changeUserRole(id, changeUserRoleRequest);
 
         return ResponseEntity.ok(ApiResponse.<UserResponse>builder()
                 .message("Rol del usuario cambiado a '" + userResponse.getRoleName() + "'.")
