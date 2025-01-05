@@ -11,6 +11,6 @@ public class UserResponse {
     private Integer id;
     private String name;
     private String email;
-    private UserRoleResponse roleName;
-    private UserStateResponse stateName;
+    private UserRoleResponse userRoleResponse;
+    private UserStateResponse userStateResponse;
 }
