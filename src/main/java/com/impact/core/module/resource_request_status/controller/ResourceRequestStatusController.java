@@ -2,7 +2,7 @@ package com.impact.core.module.resource_request_status.controller;
 
 import com.impact.core.module.resource_request_status.payload.response.ResourceRequestStatusResponse;
 import com.impact.core.module.resource_request_status.service.ResourceRequestStatusService;
-import com.impact.core.util.ApiResponse;
+import com.impact.core.util.ResponseWrapper;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -20,10 +20,10 @@ public class ResourceRequestStatusController {
 
     @GetMapping
     @PreAuthorize("hasRole('ADMINISTRATOR') or hasRole('MANAGER')")
-    public ResponseEntity<ApiResponse<List<ResourceRequestStatusResponse>>> getAllResourceRequestStatus() {
+    public ResponseEntity<ResponseWrapper<List<ResourceRequestStatusResponse>>> getAllResourceRequestStatus() {
         List<ResourceRequestStatusResponse> resourceRequestStatusResponses = resourceRequestStatusService.findAll();
 
-        return ResponseEntity.ok(ApiResponse.<List<ResourceRequestStatusResponse>>builder()
+        return ResponseEntity.ok(ResponseWrapper.<List<ResourceRequestStatusResponse>>builder()
                 .message("Lista de estados de solicitud de recursos.")
                 .data(resourceRequestStatusResponses)
                 .build());

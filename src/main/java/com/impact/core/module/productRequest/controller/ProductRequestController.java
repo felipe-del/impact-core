@@ -4,7 +4,7 @@ import com.impact.core.module.productRequest.payload.request.ProductRequestDTORe
 import com.impact.core.module.productRequest.payload.response.ProductRequestDTOResponse;
 import com.impact.core.module.productRequest.service.ProductRequestService;
 import com.impact.core.security.service.UserDetailsImpl;
-import com.impact.core.util.ApiResponse;
+import com.impact.core.util.ResponseWrapper;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -23,10 +23,10 @@ public class ProductRequestController {
 
     @GetMapping
     @PreAuthorize("hasRole('ADMINISTRATOR') or hasRole('MANAGER') or hasRole('TEACHER')")
-    public ResponseEntity<ApiResponse<List<ProductRequestDTOResponse>>> getAllProductRequests() {
+    public ResponseEntity<ResponseWrapper<List<ProductRequestDTOResponse>>> getAllProductRequests() {
         List<ProductRequestDTOResponse> productRequestDTOResponses = productRequestService.findAll();
 
-        return ResponseEntity.ok(ApiResponse.<List<ProductRequestDTOResponse>>builder()
+        return ResponseEntity.ok(ResponseWrapper.<List<ProductRequestDTOResponse>>builder()
                 .message("Lista de solicitudes de productos.")
                 .data(productRequestDTOResponses)
                 .build());
@@ -34,12 +34,12 @@ public class ProductRequestController {
 
     @PostMapping
     @PreAuthorize("hasRole('ADMINISTRATOR') or hasRole('MANAGER') or hasRole('TEACHER')")
-    public ResponseEntity<ApiResponse<ProductRequestDTOResponse>> saveProductRequest(
+    public ResponseEntity<ResponseWrapper<ProductRequestDTOResponse>> saveProductRequest(
             @AuthenticationPrincipal UserDetailsImpl userDetails,
             @Valid @RequestBody ProductRequestDTORequest productRequestDTORequest) {
         ProductRequestDTOResponse ProductRequestDTOResponse = productRequestService.save(userDetails, productRequestDTORequest);
 
-        return ResponseEntity.status(HttpStatus.CREATED).body(ApiResponse.<ProductRequestDTOResponse>builder()
+        return ResponseEntity.status(HttpStatus.CREATED).body(ResponseWrapper.<ProductRequestDTOResponse>builder()
                 .message("Solicitud de producto guardada correctamente.")
                 .data(ProductRequestDTOResponse)
                 .build());
@@ -47,11 +47,11 @@ public class ProductRequestController {
 
     @PutMapping("/{id}")
     @PreAuthorize("hasRole('ADMINISTRATOR') or hasRole('MANAGER') or hasRole('TEACHER')")
-    public ResponseEntity<ApiResponse<ProductRequestDTOResponse>> updateProductRequest(
+    public ResponseEntity<ResponseWrapper<ProductRequestDTOResponse>> updateProductRequest(
             @PathVariable int id, @Valid @RequestBody ProductRequestDTORequest productRequestDTORequest) {
         ProductRequestDTOResponse ProductRequestDTOResponse = productRequestService.update(id, productRequestDTORequest);
 
-        return ResponseEntity.ok(ApiResponse.<ProductRequestDTOResponse>builder()
+        return ResponseEntity.ok(ResponseWrapper.<ProductRequestDTOResponse>builder()
                 .message("Solicitud de producto actualizada correctamente.")
                 .data(ProductRequestDTOResponse)
                 .build());
@@ -59,10 +59,10 @@ public class ProductRequestController {
 
     @DeleteMapping("/{id}")
     @PreAuthorize("hasRole('ADMINISTRATOR') or hasRole('MANAGER') or hasRole('TEACHER')")
-    public ResponseEntity<ApiResponse<ProductRequestDTOResponse>> deleteProductRequest(@PathVariable int id) {
+    public ResponseEntity<ResponseWrapper<ProductRequestDTOResponse>> deleteProductRequest(@PathVariable int id) {
         ProductRequestDTOResponse ProductRequestDTOResponse = productRequestService.delete(id);
 
-        return ResponseEntity.ok(ApiResponse.<ProductRequestDTOResponse>builder()
+        return ResponseEntity.ok(ResponseWrapper.<ProductRequestDTOResponse>builder()
                 .message("Solicitud de producto eliminada correctamente.")
                 .data(ProductRequestDTOResponse)
                 .build());

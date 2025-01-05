@@ -3,7 +3,7 @@ package com.impact.core.module.productCategory.controller;
 import com.impact.core.module.productCategory.payload.request.CategoryTypeRequest;
 import com.impact.core.module.productCategory.payload.response.CategoryTypeResponse;
 import com.impact.core.module.productCategory.service.CategoryTypeService;
-import com.impact.core.util.ApiResponse;
+import com.impact.core.util.ResponseWrapper;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -21,10 +21,10 @@ public class CategoryTypeController {
 
     @GetMapping
     @PreAuthorize("hasRole('ADMINISTRATOR') or hasRole('MANAGER')")
-    public ResponseEntity<ApiResponse<List<CategoryTypeResponse>>> getAllCategoryTypes() {
+    public ResponseEntity<ResponseWrapper<List<CategoryTypeResponse>>> getAllCategoryTypes() {
         List<CategoryTypeResponse> categoryTypeResponses = categoryTypeService.findAll();
 
-        return ResponseEntity.ok(ApiResponse.<List<CategoryTypeResponse>>builder()
+        return ResponseEntity.ok(ResponseWrapper.<List<CategoryTypeResponse>>builder()
                 .message("Lista de tipos de categoría.")
                 .data(categoryTypeResponses)
                 .build());
@@ -32,10 +32,10 @@ public class CategoryTypeController {
 
     @PostMapping
     @PreAuthorize("hasRole('ADMINISTRATOR') or hasRole('MANAGER')")
-    public ResponseEntity<ApiResponse<CategoryTypeResponse>> saveCategoryType(@Valid @RequestBody CategoryTypeRequest categoryTypeRequest) {
+    public ResponseEntity<ResponseWrapper<CategoryTypeResponse>> saveCategoryType(@Valid @RequestBody CategoryTypeRequest categoryTypeRequest) {
         CategoryTypeResponse categoryTypeResponse = categoryTypeService.save(categoryTypeRequest);
 
-        return ResponseEntity.status(HttpStatus.CREATED).body(ApiResponse.<CategoryTypeResponse>builder()
+        return ResponseEntity.status(HttpStatus.CREATED).body(ResponseWrapper.<CategoryTypeResponse>builder()
                 .message("Tipo de categoría guardado.")
                 .data(categoryTypeResponse)
                 .build());
@@ -43,10 +43,10 @@ public class CategoryTypeController {
 
     @PutMapping("/{id}")
     @PreAuthorize("hasRole('ADMINISTRATOR') or hasRole('MANAGER')")
-    public ResponseEntity<ApiResponse<CategoryTypeResponse>> updateCategoryType(@PathVariable int id, @Valid @RequestBody CategoryTypeRequest categoryTypeRequest) {
+    public ResponseEntity<ResponseWrapper<CategoryTypeResponse>> updateCategoryType(@PathVariable int id, @Valid @RequestBody CategoryTypeRequest categoryTypeRequest) {
         CategoryTypeResponse categoryTypeResponse = categoryTypeService.update(id, categoryTypeRequest);
 
-        return ResponseEntity.ok(ApiResponse.<CategoryTypeResponse>builder()
+        return ResponseEntity.ok(ResponseWrapper.<CategoryTypeResponse>builder()
                 .message("Tipo de categoría actualizado.")
                 .data(categoryTypeResponse)
                 .build());
@@ -54,10 +54,10 @@ public class CategoryTypeController {
 
     @DeleteMapping("/{id}")
     @PreAuthorize("hasRole('ADMINISTRATOR') or hasRole('MANAGER')")
-    public ResponseEntity<ApiResponse<CategoryTypeResponse>> deleteCategoryType(@PathVariable int id) {
+    public ResponseEntity<ResponseWrapper<CategoryTypeResponse>> deleteCategoryType(@PathVariable int id) {
         CategoryTypeResponse categoryTypeResponse = categoryTypeService.delete(id);
 
-        return ResponseEntity.ok(ApiResponse.<CategoryTypeResponse>builder()
+        return ResponseEntity.ok(ResponseWrapper.<CategoryTypeResponse>builder()
                 .message("Tipo de categoría eliminado.")
                 .data(categoryTypeResponse)
                 .build());

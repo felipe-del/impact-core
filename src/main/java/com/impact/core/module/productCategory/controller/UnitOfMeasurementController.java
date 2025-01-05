@@ -2,7 +2,7 @@ package com.impact.core.module.productCategory.controller;
 
 import com.impact.core.module.productCategory.payload.response.UnitOfMeasurementResponse;
 import com.impact.core.module.productCategory.service.UnitOfMeasurementService;
-import com.impact.core.util.ApiResponse;
+import com.impact.core.util.ResponseWrapper;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -20,10 +20,10 @@ public class UnitOfMeasurementController {
 
     @GetMapping
     @PreAuthorize("hasRole('ADMINISTRATOR') or hasRole('MANAGER')")
-    public ResponseEntity<ApiResponse<List<UnitOfMeasurementResponse>>> getAllUnitOfMeasurements() {
+    public ResponseEntity<ResponseWrapper<List<UnitOfMeasurementResponse>>> getAllUnitOfMeasurements() {
         List<UnitOfMeasurementResponse> unitOfMeasurementResponses = unitOfMeasurementService.findAll();
 
-        return ResponseEntity.ok(ApiResponse.<List<UnitOfMeasurementResponse>>builder()
+        return ResponseEntity.ok(ResponseWrapper.<List<UnitOfMeasurementResponse>>builder()
                 .message("Lista de unidades de medida.")
                 .data(unitOfMeasurementResponses)
                 .build());

@@ -3,7 +3,7 @@ package com.impact.core.module.buildingLocation.controller;
 import com.impact.core.module.buildingLocation.payload.request.BuildingRequest;
 import com.impact.core.module.buildingLocation.payload.response.BuildingResponse;
 import com.impact.core.module.buildingLocation.service.BuildingService;
-import com.impact.core.util.ApiResponse;
+import com.impact.core.util.ResponseWrapper;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -21,10 +21,10 @@ public class BuildingController {
 
     @GetMapping
     @PreAuthorize("hasRole('ADMINISTRATOR') or hasRole('MANAGER')")
-    public ResponseEntity<ApiResponse<List<BuildingResponse>>> getAllBuildings() {
+    public ResponseEntity<ResponseWrapper<List<BuildingResponse>>> getAllBuildings() {
         List<BuildingResponse> buildingResponses = buildingService.findAll();
 
-        return ResponseEntity.ok(ApiResponse.<List<BuildingResponse>>builder()
+        return ResponseEntity.ok(ResponseWrapper.<List<BuildingResponse>>builder()
                 .message("Lista de edificios")
                 .data(buildingResponses)
                 .build());
@@ -32,10 +32,10 @@ public class BuildingController {
 
     @PostMapping
     @PreAuthorize("hasRole('ADMINISTRATOR') or hasRole('MANAGER')")
-    public ResponseEntity<ApiResponse<BuildingResponse>> saveBuilding(@Valid @RequestBody BuildingRequest buildingRequest) {
+    public ResponseEntity<ResponseWrapper<BuildingResponse>> saveBuilding(@Valid @RequestBody BuildingRequest buildingRequest) {
         BuildingResponse buildingResponse = buildingService.save(buildingRequest);
 
-        return ResponseEntity.status(HttpStatus.CREATED).body(ApiResponse.<BuildingResponse>builder()
+        return ResponseEntity.status(HttpStatus.CREATED).body(ResponseWrapper.<BuildingResponse>builder()
                 .message("Edificio creado exitosamente")
                 .data(buildingResponse)
                 .build());
@@ -43,10 +43,10 @@ public class BuildingController {
 
     @PutMapping("/{id}")
     @PreAuthorize("hasRole('ADMINISTRATOR') or hasRole('MANAGER')")
-    public ResponseEntity<ApiResponse<BuildingResponse>> updateBuilding(@PathVariable Integer id, @Valid @RequestBody BuildingRequest buildingRequest) {
+    public ResponseEntity<ResponseWrapper<BuildingResponse>> updateBuilding(@PathVariable Integer id, @Valid @RequestBody BuildingRequest buildingRequest) {
         BuildingResponse buildingResponse = buildingService.update(id, buildingRequest);
 
-        return ResponseEntity.ok(ApiResponse.<BuildingResponse>builder()
+        return ResponseEntity.ok(ResponseWrapper.<BuildingResponse>builder()
                 .message("Edificio actualizado exitosamente")
                 .data(buildingResponse)
                 .build());
@@ -54,10 +54,10 @@ public class BuildingController {
 
     @DeleteMapping("/{id}")
     @PreAuthorize("hasRole('ADMINISTRATOR') or hasRole('MANAGER')")
-    public ResponseEntity<ApiResponse<BuildingResponse>> deleteBuilding(@PathVariable Integer id) {
+    public ResponseEntity<ResponseWrapper<BuildingResponse>> deleteBuilding(@PathVariable Integer id) {
         BuildingResponse buildingResponse = buildingService.delete(id);
 
-        return ResponseEntity.ok(ApiResponse.<BuildingResponse>builder()
+        return ResponseEntity.ok(ResponseWrapper.<BuildingResponse>builder()
                 .message("Edificio eliminado exitosamente")
                 .data(buildingResponse)
                 .build());

@@ -2,7 +2,7 @@ package com.impact.core.module.auditLog.controller;
 
 import com.impact.core.module.auditLog.payload.response.AuditLogResponse;
 import com.impact.core.module.auditLog.service.AuditLogService;
-import com.impact.core.util.ApiResponse;
+import com.impact.core.util.ResponseWrapper;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -20,10 +20,10 @@ public class AuditLogController {
 
     @GetMapping
     @PreAuthorize("hasRole('ADMINISTRATOR') or hasRole('MANAGER')")
-    public ResponseEntity<ApiResponse<List<AuditLogResponse>>> getAllAuditLogs() {
+    public ResponseEntity<ResponseWrapper<List<AuditLogResponse>>> getAllAuditLogs() {
         List<AuditLogResponse> auditLogResponses = auditLogService.findAll();
 
-        return ResponseEntity.ok(ApiResponse.<List<AuditLogResponse>>builder()
+        return ResponseEntity.ok(ResponseWrapper.<List<AuditLogResponse>>builder()
                 .message("Lista de logs de auditoría.")
                 .data(auditLogResponses)
                 .build());

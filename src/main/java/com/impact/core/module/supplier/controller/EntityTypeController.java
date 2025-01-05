@@ -1,9 +1,8 @@
 package com.impact.core.module.supplier.controller;
 
-import com.impact.core.module.supplier.mapper.EntityTypeMapper;
 import com.impact.core.module.supplier.payload.response.EntityTypeResponse;
 import com.impact.core.module.supplier.service.EntityTypeService;
-import com.impact.core.util.ApiResponse;
+import com.impact.core.util.ResponseWrapper;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -21,10 +20,10 @@ public class EntityTypeController {
 
     @GetMapping
     @PreAuthorize("hasRole('ADMINISTRATOR') or hasRole('MANAGER')")
-    public ResponseEntity<ApiResponse<List<EntityTypeResponse>>> getAllEntityTypes() {
+    public ResponseEntity<ResponseWrapper<List<EntityTypeResponse>>> getAllEntityTypes() {
         List<EntityTypeResponse> entityTypeResponses = entityTypeService.findAll();
 
-        return ResponseEntity.ok(ApiResponse.<List<EntityTypeResponse>>builder()
+        return ResponseEntity.ok(ResponseWrapper.<List<EntityTypeResponse>>builder()
                 .message("Lista de tipos de entidad.")
                 .data(entityTypeResponses)
                 .build());

@@ -2,7 +2,7 @@ package com.impact.core.module.user.controller;
 
 import com.impact.core.module.user.payload.response.UserStateResponse;
 import com.impact.core.module.user.service.UserStateService;
-import com.impact.core.util.ApiResponse;
+import com.impact.core.util.ResponseWrapper;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -20,10 +20,10 @@ public class UserStateController {
 
     @GetMapping
     @PreAuthorize("hasRole('ADMINISTRATOR') or hasRole('MANAGER')")
-    public ResponseEntity<ApiResponse<List<UserStateResponse>>> getAllUserStates() {
+    public ResponseEntity<ResponseWrapper<List<UserStateResponse>>> getAllUserStates() {
         List<UserStateResponse> userStateResponses = userStateService.findAll();
 
-        return ResponseEntity.ok(ApiResponse.<List<UserStateResponse>>builder()
+        return ResponseEntity.ok(ResponseWrapper.<List<UserStateResponse>>builder()
                 .message("Lista de estados de usuario.")
                 .data(userStateResponses)
                 .build());

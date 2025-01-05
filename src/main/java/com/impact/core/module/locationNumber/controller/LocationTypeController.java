@@ -3,7 +3,7 @@ package com.impact.core.module.locationNumber.controller;
 import com.impact.core.module.locationNumber.payload.request.LocationTypeRequest;
 import com.impact.core.module.locationNumber.payload.response.LocationTypeResponse;
 import com.impact.core.module.locationNumber.service.LocationTypeService;
-import com.impact.core.util.ApiResponse;
+import com.impact.core.util.ResponseWrapper;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -21,10 +21,10 @@ public class LocationTypeController {
 
     @GetMapping
     @PreAuthorize("hasRole('ADMINISTRATOR') or hasRole('MANAGER')")
-    public ResponseEntity<ApiResponse<List<LocationTypeResponse>>> getAllLocationTypes() {
+    public ResponseEntity<ResponseWrapper<List<LocationTypeResponse>>> getAllLocationTypes() {
         List<LocationTypeResponse> locationTypeResponses = locationTypeService.findAll();
 
-        return ResponseEntity.ok(ApiResponse.<List<LocationTypeResponse>>builder()
+        return ResponseEntity.ok(ResponseWrapper.<List<LocationTypeResponse>>builder()
                 .message("Lista de tipos de ubicación.")
                 .data(locationTypeResponses)
                 .build());
@@ -32,10 +32,10 @@ public class LocationTypeController {
 
     @PostMapping
     @PreAuthorize("hasRole('ADMINISTRATOR') or hasRole('MANAGER')")
-    public ResponseEntity<ApiResponse<LocationTypeResponse>> saveLocationType(@Valid @RequestBody LocationTypeRequest locationTypeRequest) {
+    public ResponseEntity<ResponseWrapper<LocationTypeResponse>> saveLocationType(@Valid @RequestBody LocationTypeRequest locationTypeRequest) {
         LocationTypeResponse locationTypeResponse = locationTypeService.save(locationTypeRequest);
 
-        return ResponseEntity.status(HttpStatus.CREATED).body(ApiResponse.<LocationTypeResponse>builder()
+        return ResponseEntity.status(HttpStatus.CREATED).body(ResponseWrapper.<LocationTypeResponse>builder()
                 .message("Tipo de ubicación guardado.")
                 .data(locationTypeResponse)
                 .build());
@@ -43,10 +43,10 @@ public class LocationTypeController {
 
     @PutMapping("/{id}")
     @PreAuthorize("hasRole('ADMINISTRATOR') or hasRole('MANAGER')")
-    public ResponseEntity<ApiResponse<LocationTypeResponse>> updateLocationType(@PathVariable int id, @Valid @RequestBody LocationTypeRequest locationTypeRequest) {
+    public ResponseEntity<ResponseWrapper<LocationTypeResponse>> updateLocationType(@PathVariable int id, @Valid @RequestBody LocationTypeRequest locationTypeRequest) {
         LocationTypeResponse locationTypeResponse = locationTypeService.update(id, locationTypeRequest);
 
-        return ResponseEntity.ok(ApiResponse.<LocationTypeResponse>builder()
+        return ResponseEntity.ok(ResponseWrapper.<LocationTypeResponse>builder()
                 .message("Tipo de ubicación actualizado.")
                 .data(locationTypeResponse)
                 .build());
@@ -54,10 +54,10 @@ public class LocationTypeController {
 
     @DeleteMapping("/{id}")
     @PreAuthorize("hasRole('ADMINISTRATOR') or hasRole('MANAGER')")
-    public ResponseEntity<ApiResponse<LocationTypeResponse>> deleteLocationType(@PathVariable int id) {
+    public ResponseEntity<ResponseWrapper<LocationTypeResponse>> deleteLocationType(@PathVariable int id) {
         LocationTypeResponse locationTypeResponse = locationTypeService.delete(id);
 
-        return ResponseEntity.ok(ApiResponse.<LocationTypeResponse>builder()
+        return ResponseEntity.ok(ResponseWrapper.<LocationTypeResponse>builder()
                 .message("Tipo de ubicación eliminado.")
                 .data(locationTypeResponse)
                 .build());

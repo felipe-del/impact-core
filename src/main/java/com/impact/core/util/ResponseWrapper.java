@@ -7,15 +7,15 @@ import lombok.Setter;
 @Getter
 @Setter
 @Builder
-public class ApiResponse<T> {
+public class ResponseWrapper<T> {
     private String message;
     private T data;
 
-    public ApiResponse(String message, T data) {
+    public ResponseWrapper(String message, T data) {
         this.message = message;
         this.data = data;
     }
-    public ApiResponse(String message) {
+    public ResponseWrapper(String message) {
         this.message = message;
     }
 }

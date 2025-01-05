@@ -5,7 +5,9 @@ import com.impact.core.module.auth.payload.response.JwtResponse;
 import com.impact.core.module.auth.service.AuthService;
 import com.impact.core.module.user.payload.response.UserResponse;
 import com.impact.core.security.service.UserDetailsImpl;
-import com.impact.core.util.ApiResponse;
+import com.impact.core.util.ResponseWrapper;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -21,20 +23,20 @@ public class AuthController {
     private final AuthService authService;
 
     @PostMapping("/login")
-    public ResponseEntity<ApiResponse<JwtResponse>> login(@Valid @RequestBody LoginRequest loginRequest) {
+    public ResponseEntity<ResponseWrapper<JwtResponse>> login(@Valid @RequestBody LoginRequest loginRequest) {
         JwtResponse jwtResponse = authService.login(loginRequest);
 
-        return ResponseEntity.ok(ApiResponse.<JwtResponse>builder()
+        return ResponseEntity.ok(ResponseWrapper.<JwtResponse>builder()
                 .message("Usuario logueado.")
                 .data(jwtResponse)
                 .build());
     }
 
     @PostMapping("/register")
-    public ResponseEntity<ApiResponse<UserResponse>> register(@Valid @RequestBody RegisterRequest registerRequest) {
+    public ResponseEntity<ResponseWrapper<UserResponse>> register(@Valid @RequestBody RegisterRequest registerRequest) {
         UserResponse userResponse = authService.register(registerRequest);
 
-        return ResponseEntity.status(HttpStatus.CREATED).body(ApiResponse.<UserResponse>builder()
+        return ResponseEntity.status(HttpStatus.CREATED).body(ResponseWrapper.<UserResponse>builder()
                 .message("Usuario registrado.")
                 .data(userResponse)
                 .build());
@@ -42,10 +44,10 @@ public class AuthController {
 
     @GetMapping("/user-session")
     @PreAuthorize("isAuthenticated()")
-    public ResponseEntity<ApiResponse<UserResponse>> getUserSession() {
+    public ResponseEntity<ResponseWrapper<UserResponse>> getUserSession() {
         UserResponse dto = authService.getUserSession();
 
-        return ResponseEntity.ok(ApiResponse.<UserResponse>builder()
+        return ResponseEntity.ok(ResponseWrapper.<UserResponse>builder()
                 .message("Usuario de la sesión obtenido.")
                 .data(dto)
                 .build());
@@ -53,41 +55,41 @@ public class AuthController {
 
     @GetMapping("/logout")
     @PreAuthorize("isAuthenticated()")
-    public ResponseEntity<ApiResponse<Void>> logout(@Valid @RequestBody LogoutRequest logoutRequest) {
+    public ResponseEntity<ResponseWrapper<Void>> logout(@Valid @RequestBody LogoutRequest logoutRequest) {
         authService.logout(logoutRequest);
 
-        return ResponseEntity.ok(ApiResponse.<Void>builder()
+        return ResponseEntity.ok(ResponseWrapper.<Void>builder()
                 .message("Usuario deslogueado.")
                 .build());
     }
 
     @GetMapping("/forgot-password")
-    public ResponseEntity<ApiResponse<Void>> forgotPassword(@Valid @RequestBody ForgotPasswordRequest forgotPasswordRequest) {
+    public ResponseEntity<ResponseWrapper<Void>> forgotPassword(@Valid @RequestBody ForgotPasswordRequest forgotPasswordRequest) {
         authService.forgotPassword(forgotPasswordRequest);
 
-        return ResponseEntity.ok(ApiResponse.<Void>builder()
+        return ResponseEntity.ok(ResponseWrapper.<Void>builder()
                 .message("Se ha enviado un correo con el token de recuperación.")
                 .build());
     }
 
     @PostMapping("/reset-password")
-    public ResponseEntity<ApiResponse<Void>> resetPassword(@Valid @RequestBody ResetPasswordRequest resetPasswordRequest) {
+    public ResponseEntity<ResponseWrapper<Void>> resetPassword(@Valid @RequestBody ResetPasswordRequest resetPasswordRequest) {
         authService.resetPassword(resetPasswordRequest);
 
-        return ResponseEntity.ok(ApiResponse.<Void>builder()
+        return ResponseEntity.ok(ResponseWrapper.<Void>builder()
                 .message("Contraseña restablecida.")
                 .build());
     }
 
     @PostMapping("/change-user-state/{id}")
     @PreAuthorize("hasRole('ADMINISTRATOR')")
-    public ResponseEntity<ApiResponse<UserResponse>> changeUserState(
+    public ResponseEntity<ResponseWrapper<UserResponse>> changeUserState(
             @PathVariable int id,
             @Valid @RequestBody ChangeUserStateRequest changeUserStateRequest,
             @AuthenticationPrincipal UserDetailsImpl userDetails) {
         UserResponse userResponse = authService.changeUserState(id, changeUserStateRequest, userDetails);
 
-        return ResponseEntity.ok(ApiResponse.<UserResponse>builder()
+        return ResponseEntity.ok(ResponseWrapper.<UserResponse>builder()
                 .message("Estado del usuario cambiado a '" + userResponse.getUserStateResponse().getStateName() + "'.")
                 .data(userResponse)
                 .build());
@@ -95,13 +97,13 @@ public class AuthController {
 
     @PostMapping("/change-user-role/{id}")
     @PreAuthorize("hasRole('ADMINISTRATOR')")
-    public ResponseEntity<ApiResponse<UserResponse>> changeUserRole(
+    public ResponseEntity<ResponseWrapper<UserResponse>> changeUserRole(
             @PathVariable int id,
             @Valid @RequestBody ChangeUserRoleRequest changeUserRoleRequest,
             @AuthenticationPrincipal UserDetailsImpl userDetails) {
         UserResponse userResponse = authService.changeUserRole(id, changeUserRoleRequest, userDetails);
 
-        return ResponseEntity.ok(ApiResponse.<UserResponse>builder()
+        return ResponseEntity.ok(ResponseWrapper.<UserResponse>builder()
                 .message("Rol del usuario cambiado a '" + userResponse.getUserRoleResponse().getRoleName() + "'.")
                 .data(userResponse)
                 .build());

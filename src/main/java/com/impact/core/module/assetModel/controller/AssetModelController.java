@@ -3,7 +3,7 @@ package com.impact.core.module.assetModel.controller;
 import com.impact.core.module.assetModel.payload.request.AssetModelRequest;
 import com.impact.core.module.assetModel.payload.response.AssetModelResponse;
 import com.impact.core.module.assetModel.service.AssetModelService;
-import com.impact.core.util.ApiResponse;
+import com.impact.core.util.ResponseWrapper;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -21,10 +21,10 @@ public class AssetModelController {
 
     @GetMapping
     @PreAuthorize("hasRole('ADMINISTRATOR') or hasRole('MANAGER')")
-    public ResponseEntity<ApiResponse<List<AssetModelResponse>>> getAllAssetModels() {
+    public ResponseEntity<ResponseWrapper<List<AssetModelResponse>>> getAllAssetModels() {
         List<AssetModelResponse> assetModelResponses = assetModelService.findAll();
 
-        return ResponseEntity.ok(ApiResponse.<List<AssetModelResponse>>builder()
+        return ResponseEntity.ok(ResponseWrapper.<List<AssetModelResponse>>builder()
                 .message("Lista de modelos de activo.")
                 .data(assetModelResponses)
                 .build());
@@ -33,10 +33,10 @@ public class AssetModelController {
 
     @PostMapping
     @PreAuthorize("hasRole('ADMINISTRATOR') or hasRole('MANAGER')")
-    public ResponseEntity<ApiResponse<AssetModelResponse>> saveAssetModel(@Valid @RequestBody AssetModelRequest assetModelRequest) {
+    public ResponseEntity<ResponseWrapper<AssetModelResponse>> saveAssetModel(@Valid @RequestBody AssetModelRequest assetModelRequest) {
         AssetModelResponse modelResponse = assetModelService.save(assetModelRequest);
 
-        return ResponseEntity.status(HttpStatus.CREATED).body(ApiResponse.<AssetModelResponse>builder()
+        return ResponseEntity.status(HttpStatus.CREATED).body(ResponseWrapper.<AssetModelResponse>builder()
                 .message("Modelo de activo guardado.")
                 .data(modelResponse)
                 .build());
@@ -44,10 +44,10 @@ public class AssetModelController {
 
     @PutMapping("/{id}")
     @PreAuthorize("hasRole('ADMINISTRATOR') or hasRole('MANAGER')")
-    public ResponseEntity<ApiResponse<AssetModelResponse>> updateAssetModel(@PathVariable int id, @Valid @RequestBody AssetModelRequest assetModelRequest) {
+    public ResponseEntity<ResponseWrapper<AssetModelResponse>> updateAssetModel(@PathVariable int id, @Valid @RequestBody AssetModelRequest assetModelRequest) {
         AssetModelResponse modelResponse = assetModelService.update(id, assetModelRequest);
 
-        return ResponseEntity.ok(ApiResponse.<AssetModelResponse>builder()
+        return ResponseEntity.ok(ResponseWrapper.<AssetModelResponse>builder()
                 .message("Modelo de activo actualizado.")
                 .data(modelResponse)
                 .build());
@@ -55,10 +55,10 @@ public class AssetModelController {
 
     @DeleteMapping("/{id}")
     @PreAuthorize("hasRole('ADMINISTRATOR') or hasRole('MANAGER')")
-    public ResponseEntity<ApiResponse<AssetModelResponse>> deleteAssetModel(@PathVariable int id) {
+    public ResponseEntity<ResponseWrapper<AssetModelResponse>> deleteAssetModel(@PathVariable int id) {
         AssetModelResponse modelResponse = assetModelService.delete(id);
 
-        return ResponseEntity.ok(ApiResponse.<AssetModelResponse>builder()
+        return ResponseEntity.ok(ResponseWrapper.<AssetModelResponse>builder()
                 .message("Modelo de activo eliminado.")
                 .data(modelResponse)
                 .build());

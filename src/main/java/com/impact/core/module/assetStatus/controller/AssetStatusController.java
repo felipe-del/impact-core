@@ -2,7 +2,7 @@ package com.impact.core.module.assetStatus.controller;
 
 import com.impact.core.module.assetStatus.payload.response.AssetStatusResponse;
 import com.impact.core.module.assetStatus.service.AssetStatusService;
-import com.impact.core.util.ApiResponse;
+import com.impact.core.util.ResponseWrapper;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -20,10 +20,10 @@ public class AssetStatusController {
 
     @GetMapping
     @PreAuthorize("hasRole('ADMINISTRATOR') or hasRole('MANAGER')")
-    public ResponseEntity<ApiResponse<List<AssetStatusResponse>>> getAllAssetStatus() {
+    public ResponseEntity<ResponseWrapper<List<AssetStatusResponse>>> getAllAssetStatus() {
         List<AssetStatusResponse> assetStatusResponses = assetStatusService.findAll();
 
-        return ResponseEntity.ok(ApiResponse.<List<AssetStatusResponse>>builder()
+        return ResponseEntity.ok(ResponseWrapper.<List<AssetStatusResponse>>builder()
                 .message("Lista de estados de activo.")
                 .data(assetStatusResponses)
                 .build());

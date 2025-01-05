@@ -2,7 +2,7 @@ package com.impact.core.security.exceptionHandling;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.impact.core.expection.payload.ErrorDataResponse;
-import com.impact.core.util.ApiResponse;
+import com.impact.core.util.ResponseWrapper;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
@@ -36,12 +36,12 @@ public class AccessDeniedHandlerJwt implements AccessDeniedHandler {
                 .path(request.getServletPath())
                 .build();
 
-        ApiResponse<ErrorDataResponse> apiResponse = ApiResponse.<ErrorDataResponse>builder()
+        ResponseWrapper<ErrorDataResponse> responseWrapper = ResponseWrapper.<ErrorDataResponse>builder()
                 .message("Acceso prohibido")
                 .data(errorDataResponse)
                 .build();
 
         final ObjectMapper mapper = new ObjectMapper();
-        mapper.writeValue(response.getOutputStream(), apiResponse);
+        mapper.writeValue(response.getOutputStream(), responseWrapper);
     }
 }

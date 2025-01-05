@@ -3,7 +3,7 @@ package com.impact.core.module.assetSubcategory.controller;
 import com.impact.core.module.assetSubcategory.payload.request.AssetSubcategoryRequest;
 import com.impact.core.module.assetSubcategory.payload.response.AssetSubcategoryResponse;
 import com.impact.core.module.assetSubcategory.service.AssetSubcategoryService;
-import com.impact.core.util.ApiResponse;
+import com.impact.core.util.ResponseWrapper;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -21,10 +21,10 @@ public class AssetSubcategoryController {
 
     @GetMapping
     @PreAuthorize("hasRole('ADMINISTRATOR') or hasRole('MANAGER')")
-    public ResponseEntity<ApiResponse<List<AssetSubcategoryResponse>>> getAllAssetSubcategories() {
+    public ResponseEntity<ResponseWrapper<List<AssetSubcategoryResponse>>> getAllAssetSubcategories() {
         List<AssetSubcategoryResponse> assetSubcategoryResponses = assetSubcategoryService.findAll();
 
-        return ResponseEntity.ok(ApiResponse.<List<AssetSubcategoryResponse>>builder()
+        return ResponseEntity.ok(ResponseWrapper.<List<AssetSubcategoryResponse>>builder()
                 .message("Lista de subcategorías de activo.")
                 .data(assetSubcategoryResponses)
                 .build());
@@ -32,10 +32,10 @@ public class AssetSubcategoryController {
 
     @PostMapping
     @PreAuthorize("hasRole('ADMINISTRATOR') or hasRole('MANAGER')")
-    public ResponseEntity<ApiResponse<AssetSubcategoryResponse>> saveAssetSubcategory(@Valid @RequestBody AssetSubcategoryRequest assetSubcategoryRequest) {
+    public ResponseEntity<ResponseWrapper<AssetSubcategoryResponse>> saveAssetSubcategory(@Valid @RequestBody AssetSubcategoryRequest assetSubcategoryRequest) {
         AssetSubcategoryResponse subcategoryResponse = assetSubcategoryService.save(assetSubcategoryRequest);
 
-        return ResponseEntity.status(HttpStatus.CREATED).body(ApiResponse.<AssetSubcategoryResponse>builder()
+        return ResponseEntity.status(HttpStatus.CREATED).body(ResponseWrapper.<AssetSubcategoryResponse>builder()
                 .message("Subcategoría de activo guardada.")
                 .data(subcategoryResponse)
                 .build());
@@ -43,10 +43,10 @@ public class AssetSubcategoryController {
 
     @PutMapping("/{id}")
     @PreAuthorize("hasRole('ADMINISTRATOR') or hasRole('MANAGER')")
-    public ResponseEntity<ApiResponse<AssetSubcategoryResponse>> updateAssetSubcategory(@PathVariable int id, @Valid @RequestBody AssetSubcategoryRequest assetSubcategoryRequest) {
+    public ResponseEntity<ResponseWrapper<AssetSubcategoryResponse>> updateAssetSubcategory(@PathVariable int id, @Valid @RequestBody AssetSubcategoryRequest assetSubcategoryRequest) {
         AssetSubcategoryResponse subcategoryResponse = assetSubcategoryService.update(id, assetSubcategoryRequest);
 
-        return ResponseEntity.ok(ApiResponse.<AssetSubcategoryResponse>builder()
+        return ResponseEntity.ok(ResponseWrapper.<AssetSubcategoryResponse>builder()
                 .message("Subcategoría de activo actualizada.")
                 .data(subcategoryResponse)
                 .build());
@@ -54,10 +54,10 @@ public class AssetSubcategoryController {
 
     @DeleteMapping("/{id}")
     @PreAuthorize("hasRole('ADMINISTRATOR') or hasRole('MANAGER')")
-    public ResponseEntity<ApiResponse<AssetSubcategoryResponse>> deleteAssetSubcategory(@PathVariable int id) {
+    public ResponseEntity<ResponseWrapper<AssetSubcategoryResponse>> deleteAssetSubcategory(@PathVariable int id) {
         AssetSubcategoryResponse subcategoryResponse = assetSubcategoryService.delete(id);
 
-        return ResponseEntity.ok(ApiResponse.<AssetSubcategoryResponse>builder()
+        return ResponseEntity.ok(ResponseWrapper.<AssetSubcategoryResponse>builder()
                 .message("Subcategoría de activo eliminada.")
                 .data(subcategoryResponse)
                 .build());

@@ -2,7 +2,7 @@ package com.impact.core.module.productStatus.controller;
 
 import com.impact.core.module.productStatus.payload.response.ProductStatusResponse;
 import com.impact.core.module.productStatus.service.ProductStatusService;
-import com.impact.core.util.ApiResponse;
+import com.impact.core.util.ResponseWrapper;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -20,10 +20,10 @@ public class ProductStatusController {
 
     @GetMapping
     @PreAuthorize("hasRole('ADMINISTRATOR') or hasRole('MANAGER')")
-    public ResponseEntity<ApiResponse<List<ProductStatusResponse>>> getAllProductStatus() {
+    public ResponseEntity<ResponseWrapper<List<ProductStatusResponse>>> getAllProductStatus() {
         List<ProductStatusResponse> productStatusResponses = productStatusService.findAll();
 
-        return ResponseEntity.ok(ApiResponse.<List<ProductStatusResponse>>builder()
+        return ResponseEntity.ok(ResponseWrapper.<List<ProductStatusResponse>>builder()
                 .message("Lista de estados de producto.")
                 .data(productStatusResponses)
                 .build());

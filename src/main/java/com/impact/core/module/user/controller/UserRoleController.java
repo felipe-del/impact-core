@@ -2,7 +2,7 @@ package com.impact.core.module.user.controller;
 
 import com.impact.core.module.user.payload.response.UserRoleResponse;
 import com.impact.core.module.user.service.UserRoleService;
-import com.impact.core.util.ApiResponse;
+import com.impact.core.util.ResponseWrapper;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -20,10 +20,10 @@ public class UserRoleController {
 
     @GetMapping
     @PreAuthorize("hasRole('ADMINISTRATOR') or hasRole('MANAGER')")
-    public ResponseEntity<ApiResponse<List<UserRoleResponse>>> getAllUserRoles() {
+    public ResponseEntity<ResponseWrapper<List<UserRoleResponse>>> getAllUserRoles() {
         List<UserRoleResponse> userRoleResponses = userRoleService.findAll();
 
-        return ResponseEntity.ok(ApiResponse.<List<UserRoleResponse>>builder()
+        return ResponseEntity.ok(ResponseWrapper.<List<UserRoleResponse>>builder()
                 .message("Lista de roles de usuario.")
                 .data(userRoleResponses)
                 .build());

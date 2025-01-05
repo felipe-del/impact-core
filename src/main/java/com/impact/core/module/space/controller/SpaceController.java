@@ -3,7 +3,7 @@ package com.impact.core.module.space.controller;
 import com.impact.core.module.space.payload.request.SpaceRequest;
 import com.impact.core.module.space.payload.response.SpaceResponse;
 import com.impact.core.module.space.service.SpaceService;
-import com.impact.core.util.ApiResponse;
+import com.impact.core.util.ResponseWrapper;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -21,8 +21,8 @@ public class SpaceController {
 
     @GetMapping
     @PreAuthorize("hasRole('ADMINISTRATOR') or hasRole('MANAGER')")
-    public ResponseEntity<ApiResponse<List<SpaceResponse>>> getAllSpaces() {
-        return ResponseEntity.ok(ApiResponse.<List<SpaceResponse>>builder()
+    public ResponseEntity<ResponseWrapper<List<SpaceResponse>>> getAllSpaces() {
+        return ResponseEntity.ok(ResponseWrapper.<List<SpaceResponse>>builder()
                 .message("Listado de espacios.")
                 .data(spaceService.findAll())
                 .build());
@@ -30,10 +30,10 @@ public class SpaceController {
 
     @PostMapping
     @PreAuthorize("hasRole('ADMINISTRATOR') or hasRole('MANAGER')")
-    public ResponseEntity<ApiResponse<SpaceResponse>> saveSpace(@Valid @RequestBody SpaceRequest spaceRequest) {
+    public ResponseEntity<ResponseWrapper<SpaceResponse>> saveSpace(@Valid @RequestBody SpaceRequest spaceRequest) {
         SpaceResponse spaceResponse = spaceService.save(spaceRequest);
 
-        return ResponseEntity.status(HttpStatus.CREATED).body(ApiResponse.<SpaceResponse>builder()
+        return ResponseEntity.status(HttpStatus.CREATED).body(ResponseWrapper.<SpaceResponse>builder()
                 .message("Espacio creado exitosamente.")
                 .data(spaceResponse)
                 .build());
@@ -41,10 +41,10 @@ public class SpaceController {
 
     @PutMapping("/{id}")
     @PreAuthorize("hasRole('ADMINISTRATOR') or hasRole('MANAGER')")
-    public ResponseEntity<ApiResponse<SpaceResponse>> updateSpace(@PathVariable int id, @Valid @RequestBody SpaceRequest spaceRequest) {
+    public ResponseEntity<ResponseWrapper<SpaceResponse>> updateSpace(@PathVariable int id, @Valid @RequestBody SpaceRequest spaceRequest) {
         SpaceResponse spaceResponse = spaceService.update(id, spaceRequest);
 
-        return ResponseEntity.ok(ApiResponse.<SpaceResponse>builder()
+        return ResponseEntity.ok(ResponseWrapper.<SpaceResponse>builder()
                 .message("Espacio actualizado exitosamente.")
                 .data(spaceResponse)
                 .build());
@@ -52,10 +52,10 @@ public class SpaceController {
 
     @DeleteMapping("/{id}")
     @PreAuthorize("hasRole('ADMINISTRATOR') or hasRole('MANAGER')")
-    public ResponseEntity<ApiResponse<SpaceResponse>> deleteSpace(@PathVariable int id) {
+    public ResponseEntity<ResponseWrapper<SpaceResponse>> deleteSpace(@PathVariable int id) {
         SpaceResponse spaceResponse = spaceService.delete(id);
 
-        return ResponseEntity.ok(ApiResponse.<SpaceResponse>builder()
+        return ResponseEntity.ok(ResponseWrapper.<SpaceResponse>builder()
                 .message("Espacio eliminado exitosamente.")
                 .data(spaceResponse)
                 .build());

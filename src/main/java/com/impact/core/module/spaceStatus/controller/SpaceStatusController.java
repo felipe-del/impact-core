@@ -2,7 +2,7 @@ package com.impact.core.module.spaceStatus.controller;
 
 import com.impact.core.module.spaceStatus.payload.response.SpaceStatusResponse;
 import com.impact.core.module.spaceStatus.service.SpaceStatusService;
-import com.impact.core.util.ApiResponse;
+import com.impact.core.util.ResponseWrapper;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -20,10 +20,10 @@ public class SpaceStatusController {
 
     @GetMapping
     @PreAuthorize("hasRole('ADMINISTRATOR') or hasRole('MANAGER')")
-    public ResponseEntity<ApiResponse<List<SpaceStatusResponse>>> getAllSpaceStatus() {
+    public ResponseEntity<ResponseWrapper<List<SpaceStatusResponse>>> getAllSpaceStatus() {
         List<SpaceStatusResponse> spaceStatusResponses = spaceStatusService.findAll();
 
-        return ResponseEntity.ok(ApiResponse.<List<SpaceStatusResponse>>builder()
+        return ResponseEntity.ok(ResponseWrapper.<List<SpaceStatusResponse>>builder()
                 .message("Lista de estados de espacio.")
                 .data(spaceStatusResponses)
                 .build());

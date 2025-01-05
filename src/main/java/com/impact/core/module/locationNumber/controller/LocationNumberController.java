@@ -3,7 +3,7 @@ package com.impact.core.module.locationNumber.controller;
 import com.impact.core.module.locationNumber.payload.request.LocationNumberRequest;
 import com.impact.core.module.locationNumber.payload.response.LocationNumberResponse;
 import com.impact.core.module.locationNumber.service.LocationNumberService;
-import com.impact.core.util.ApiResponse;
+import com.impact.core.util.ResponseWrapper;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -21,10 +21,10 @@ public class LocationNumberController {
 
     @GetMapping
     @PreAuthorize("hasRole('ADMINISTRATOR') or hasRole('MANAGER')")
-    public ResponseEntity<ApiResponse<List<LocationNumberResponse>>> getAllLocationNumbers() {
+    public ResponseEntity<ResponseWrapper<List<LocationNumberResponse>>> getAllLocationNumbers() {
         List<LocationNumberResponse> locationNumberResponses = locationNumberService.findAll();
 
-        return ResponseEntity.ok(ApiResponse.<List<LocationNumberResponse>>builder()
+        return ResponseEntity.ok(ResponseWrapper.<List<LocationNumberResponse>>builder()
                 .message("Lista de números de ubicación.")
                 .data(locationNumberResponses)
                 .build());
@@ -32,10 +32,10 @@ public class LocationNumberController {
 
     @PostMapping
     @PreAuthorize("hasRole('ADMINISTRATOR') or hasRole('MANAGER')")
-    public ResponseEntity<ApiResponse<LocationNumberResponse>> saveLocationNumber(@Valid @RequestBody LocationNumberRequest locationNumberRequest) {
+    public ResponseEntity<ResponseWrapper<LocationNumberResponse>> saveLocationNumber(@Valid @RequestBody LocationNumberRequest locationNumberRequest) {
         LocationNumberResponse locationNumberResponse = locationNumberService.save(locationNumberRequest);
 
-        return ResponseEntity.status(HttpStatus.CREATED).body(ApiResponse.<LocationNumberResponse>builder()
+        return ResponseEntity.status(HttpStatus.CREATED).body(ResponseWrapper.<LocationNumberResponse>builder()
                 .message("Número de ubicación guardado.")
                 .data(locationNumberResponse)
                 .build());
@@ -43,10 +43,10 @@ public class LocationNumberController {
 
     @PutMapping("/{id}")
     @PreAuthorize("hasRole('ADMINISTRATOR') or hasRole('MANAGER')")
-    public ResponseEntity<ApiResponse<LocationNumberResponse>> updateLocationNumber(@PathVariable int id ,@Valid @RequestBody LocationNumberRequest locationNumberRequest) {
+    public ResponseEntity<ResponseWrapper<LocationNumberResponse>> updateLocationNumber(@PathVariable int id , @Valid @RequestBody LocationNumberRequest locationNumberRequest) {
         LocationNumberResponse locationNumberResponse = locationNumberService.update(id, locationNumberRequest);
 
-        return ResponseEntity.ok(ApiResponse.<LocationNumberResponse>builder()
+        return ResponseEntity.ok(ResponseWrapper.<LocationNumberResponse>builder()
                 .message("Número de ubicación actualizado.")
                 .data(locationNumberResponse)
                 .build());
@@ -54,10 +54,10 @@ public class LocationNumberController {
 
     @DeleteMapping("/{id}")
     @PreAuthorize("hasRole('ADMINISTRATOR') or hasRole('MANAGER')")
-    public ResponseEntity<ApiResponse<LocationNumberResponse>> deleteLocationNumber(@PathVariable int id) {
+    public ResponseEntity<ResponseWrapper<LocationNumberResponse>> deleteLocationNumber(@PathVariable int id) {
         LocationNumberResponse locationNumberResponse = locationNumberService.delete(id);
 
-        return ResponseEntity.ok(ApiResponse.<LocationNumberResponse>builder()
+        return ResponseEntity.ok(ResponseWrapper.<LocationNumberResponse>builder()
                 .message("Número de ubicación eliminado.")
                 .data(locationNumberResponse)
                 .build());

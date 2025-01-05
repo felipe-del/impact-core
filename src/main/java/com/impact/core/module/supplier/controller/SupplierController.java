@@ -3,7 +3,7 @@ package com.impact.core.module.supplier.controller;
 import com.impact.core.module.supplier.payload.request.SupplierRequest;
 import com.impact.core.module.supplier.payload.response.SupplierResponse;
 import com.impact.core.module.supplier.service.SupplierService;
-import com.impact.core.util.ApiResponse;
+import com.impact.core.util.ResponseWrapper;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -21,10 +21,10 @@ public class SupplierController {
 
     @GetMapping
     @PreAuthorize("hasRole('ADMINISTRATOR') or hasRole('MANAGER')")
-    public ResponseEntity<ApiResponse<List<SupplierResponse>>> getAllSuppliers() {
+    public ResponseEntity<ResponseWrapper<List<SupplierResponse>>> getAllSuppliers() {
         List<SupplierResponse> supplierResponses = supplierService.findAll();
 
-        return ResponseEntity.ok(ApiResponse.<List<SupplierResponse>>builder()
+        return ResponseEntity.ok(ResponseWrapper.<List<SupplierResponse>>builder()
                 .message("Lista de proveedores.")
                 .data(supplierResponses)
                 .build());
@@ -32,10 +32,10 @@ public class SupplierController {
 
     @PostMapping
     @PreAuthorize("hasRole('ADMINISTRATOR') or hasRole('MANAGER')")
-    public ResponseEntity<ApiResponse<SupplierResponse>> saveSupplier(@Valid @RequestBody SupplierRequest supplierRequest) {
+    public ResponseEntity<ResponseWrapper<SupplierResponse>> saveSupplier(@Valid @RequestBody SupplierRequest supplierRequest) {
         SupplierResponse supplierResponse = supplierService.save(supplierRequest);
 
-        return ResponseEntity.status(HttpStatus.CREATED).body(ApiResponse.<SupplierResponse>builder()
+        return ResponseEntity.status(HttpStatus.CREATED).body(ResponseWrapper.<SupplierResponse>builder()
                 .message("Proveedor guardado.")
                 .data(supplierResponse)
                 .build());
@@ -43,10 +43,10 @@ public class SupplierController {
 
     @PutMapping("/{id}")
     @PreAuthorize("hasRole('ADMINISTRATOR') or hasRole('MANAGER')")
-    public ResponseEntity<ApiResponse<SupplierResponse>> updateSupplier(@PathVariable Integer id, @Valid @RequestBody SupplierRequest supplierRequest) {
+    public ResponseEntity<ResponseWrapper<SupplierResponse>> updateSupplier(@PathVariable Integer id, @Valid @RequestBody SupplierRequest supplierRequest) {
         SupplierResponse supplierResponse = supplierService.update(id, supplierRequest);
 
-        return ResponseEntity.ok(ApiResponse.<SupplierResponse>builder()
+        return ResponseEntity.ok(ResponseWrapper.<SupplierResponse>builder()
                 .message("Proveedor actualizado.")
                 .data(supplierResponse)
                 .build());
@@ -54,10 +54,10 @@ public class SupplierController {
 
     @DeleteMapping("/{id}")
     @PreAuthorize("hasRole('ADMINISTRATOR') or hasRole('MANAGER')")
-    public ResponseEntity<ApiResponse<SupplierResponse>> deleteSupplier(@PathVariable Integer id) {
+    public ResponseEntity<ResponseWrapper<SupplierResponse>> deleteSupplier(@PathVariable Integer id) {
         SupplierResponse supplierResponse = supplierService.delete(id);
 
-        return ResponseEntity.ok(ApiResponse.<SupplierResponse>builder()
+        return ResponseEntity.ok(ResponseWrapper.<SupplierResponse>builder()
                 .message("Proveedor eliminado.")
                 .data(supplierResponse)
                 .build());

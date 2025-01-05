@@ -3,7 +3,7 @@ package com.impact.core.module.user.controller;
 import com.impact.core.module.user.payload.request.UserRequest;
 import com.impact.core.module.user.payload.response.UserResponse;
 import com.impact.core.module.user.service.UserService;
-import com.impact.core.util.ApiResponse;
+import com.impact.core.util.ResponseWrapper;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -20,10 +20,10 @@ public class UserController {
 
     @GetMapping
     @PreAuthorize("hasRole('ADMINISTRATOR') or hasRole('MANAGER')")
-    public ResponseEntity<ApiResponse<List<UserResponse>>> getAllUsers() {
+    public ResponseEntity<ResponseWrapper<List<UserResponse>>> getAllUsers() {
         List<UserResponse> userResponses = userService.findAll();
 
-        return ResponseEntity.ok(ApiResponse.<List<UserResponse>>builder()
+        return ResponseEntity.ok(ResponseWrapper.<List<UserResponse>>builder()
                 .message("Lista de usuarios.")
                 .data(userResponses)
                 .build());
@@ -33,10 +33,10 @@ public class UserController {
 
     @PutMapping("/{id}")
     @PreAuthorize("hasRole('ADMINISTRATOR') or hasRole('MANAGER')")
-    public ResponseEntity<ApiResponse<UserResponse>> updateUser(@PathVariable int id, @Valid @RequestBody UserRequest userRequest) {
+    public ResponseEntity<ResponseWrapper<UserResponse>> updateUser(@PathVariable int id, @Valid @RequestBody UserRequest userRequest) {
         UserResponse userResponse = userService.update(id, userRequest);
 
-        return ResponseEntity.ok(ApiResponse.<UserResponse>builder()
+        return ResponseEntity.ok(ResponseWrapper.<UserResponse>builder()
                 .message("Usuario actualizado.")
                 .data(userResponse)
                 .build());

@@ -3,7 +3,7 @@ package com.impact.core.module.asset.controller;
 import com.impact.core.module.asset.payload.request.AssetRequest;
 import com.impact.core.module.asset.payload.response.AssetResponse;
 import com.impact.core.module.asset.service.AssetService;
-import com.impact.core.util.ApiResponse;
+import com.impact.core.util.ResponseWrapper;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -21,10 +21,10 @@ public class AssetController {
 
     @GetMapping
     @PreAuthorize("hasRole('ADMINISTRATOR') or hasRole('MANAGER')")
-    public ResponseEntity<ApiResponse<List<AssetResponse>>> getAllAssets() {
+    public ResponseEntity<ResponseWrapper<List<AssetResponse>>> getAllAssets() {
         List<AssetResponse> assetResponses = assetService.findAll();
 
-        return ResponseEntity.ok(ApiResponse.<List<AssetResponse>>builder()
+        return ResponseEntity.ok(ResponseWrapper.<List<AssetResponse>>builder()
                 .message("Lista de activos.")
                 .data(assetResponses)
                 .build());
@@ -32,10 +32,10 @@ public class AssetController {
 
     @PostMapping
     @PreAuthorize("hasRole('ADMINISTRATOR') or hasRole('MANAGER')")
-    public ResponseEntity<ApiResponse<AssetResponse>> saveAsset(@Valid @RequestBody AssetRequest assetRequest) {
+    public ResponseEntity<ResponseWrapper<AssetResponse>> saveAsset(@Valid @RequestBody AssetRequest assetRequest) {
         AssetResponse assetResponse = assetService.save(assetRequest);
 
-        return ResponseEntity.status(HttpStatus.CREATED).body(ApiResponse.<AssetResponse>builder()
+        return ResponseEntity.status(HttpStatus.CREATED).body(ResponseWrapper.<AssetResponse>builder()
                 .message("Activo guardado.")
                 .data(assetResponse)
                 .build());
@@ -43,10 +43,10 @@ public class AssetController {
 
     @PutMapping("/{id}")
     @PreAuthorize("hasRole('ADMINISTRATOR') or hasRole('MANAGER')")
-    public ResponseEntity<ApiResponse<AssetResponse>> updateAsset(@PathVariable int id, @Valid @RequestBody AssetRequest assetRequest) {
+    public ResponseEntity<ResponseWrapper<AssetResponse>> updateAsset(@PathVariable int id, @Valid @RequestBody AssetRequest assetRequest) {
         AssetResponse assetResponse = assetService.update(id, assetRequest);
 
-        return ResponseEntity.ok(ApiResponse.<AssetResponse>builder()
+        return ResponseEntity.ok(ResponseWrapper.<AssetResponse>builder()
                 .message("Activo actualizado.")
                 .data(assetResponse)
                 .build());
@@ -54,10 +54,10 @@ public class AssetController {
 
     @DeleteMapping("/{id}")
     @PreAuthorize("hasRole('ADMINISTRATOR') or hasRole('MANAGER')")
-    public ResponseEntity<ApiResponse<AssetResponse>> deleteAsset(@PathVariable int id) {
+    public ResponseEntity<ResponseWrapper<AssetResponse>> deleteAsset(@PathVariable int id) {
         AssetResponse assetResponse = assetService.delete(id);
 
-        return ResponseEntity.ok(ApiResponse.<AssetResponse>builder()
+        return ResponseEntity.ok(ResponseWrapper.<AssetResponse>builder()
                 .message("Activo eliminado.")
                 .data(assetResponse)
                 .build());
