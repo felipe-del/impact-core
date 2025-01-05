@@ -2,7 +2,7 @@ package com.impact.core.module.productRequest.payload.response;
 
 import com.impact.core.module.product.payload.response.ProductResponseDTO;
 import com.impact.core.module.resource_request_status.payload.response.ResourceRequestStatusResponse;
-import com.impact.core.module.user.payload.UserResponse;
+import com.impact.core.module.user.payload.response.UserResponse;
 import lombok.*;
 
 @Setter
