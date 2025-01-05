@@ -1,7 +1,10 @@
 package com.impact.core.module.mail.controller;
 
+import com.impact.core.module.mail.enun.EMailTemplate;
+import com.impact.core.module.mail.payload.ComposedMail;
+import com.impact.core.module.mail.payload.MetaData;
 import com.impact.core.module.mail.payload.request.BasicMailRequest;
-import com.impact.core.module.mail.factory.MailFactoryService;
+import com.impact.core.module.mail.factory.MailFactory;
 import com.impact.core.module.mail.service.MailService;
 import com.impact.core.module.user.entity.User;
 import com.impact.core.util.ApiResponse;
@@ -10,6 +13,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
 import java.util.Map;
 
 @RestController
@@ -33,7 +37,7 @@ public class TestMailController {
 
     @PostMapping("/sendMail")
     public ResponseEntity<ApiResponse<String>> sendMail() {
-        mailService.sendComposedEmail(MailFactoryService.createWelcomeEmail(
+        mailService.sendComposedEmail(MailFactory.createWelcomeEmail(
                 User.builder()
                         .email("isaacfelibrenes1904@gmail.com")
                         .name("Isaac Felipe")
