@@ -24,6 +24,35 @@ public class MailFactory {
                 .build();
     }
 
+    public static ComposedMail createChangeUserRoleEmail(String adminName, User user) {
+        String emailContent = """
+                Se ha cambiado su rol de usuario a: <strong>%s</strong> por el administrador: <strong>%s</strong>.
+                """.formatted(user.getRole().getName().toString(), adminName);
+
+        List<MetaData> metaData = List.of(
+                new MetaData("emailTitle", "Cambio de rol de usuario"),
+                new MetaData("userName", user.getName()),
+                new MetaData("emailContent", emailContent));
+
+        return createEmail(user.getEmail(), "Cambio de rol de usuario",
+                EMailTemplate.GENERIC_EMAIL, metaData, List.of(IMPACT_LOGO_IMAGE));
+
+    }
+
+    public static ComposedMail createChangeUserStateEmail(String adminName, User user) {
+        String emailContent = """
+                Se ha cambiado su estado de usuario a: <strong>%s</strong> por el administrador: <strong>%s</strong>.
+                """.formatted(user.getState().getName().toString(), adminName);
+
+        List<MetaData> metaData = List.of(
+                new MetaData("emailTitle", "Cambio de estado de usuario"),
+                new MetaData("userName", user.getName()),
+                new MetaData("emailContent", emailContent));
+
+        return createEmail(user.getEmail(), "Cambio de estado de usuario",
+                EMailTemplate.GENERIC_EMAIL, metaData, List.of(IMPACT_LOGO_IMAGE));
+    }
+
     public static ComposedMail createWelcomeEmail(User user) {
         String emailContent = "Gracias por registrarte en IMPACT. Esperamos que disfrutes de nuestra plataforma.";
 
