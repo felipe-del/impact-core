@@ -6,8 +6,6 @@ import com.impact.core.module.auth.service.AuthService;
 import com.impact.core.module.user.payload.response.UserResponse;
 import com.impact.core.security.service.UserDetailsImpl;
 import com.impact.core.util.ResponseWrapper;
-import io.swagger.v3.oas.annotations.Operation;
-import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
