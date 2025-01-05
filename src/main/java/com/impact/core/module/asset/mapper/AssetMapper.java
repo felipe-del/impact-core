@@ -22,6 +22,7 @@ import com.impact.core.module.locationNumber.mapper.LocationNumberMapper;
 import com.impact.core.module.locationNumber.service.LocationNumberService;
 import com.impact.core.module.supplier.mapper.SupplierMapper;
 import com.impact.core.module.supplier.service.SupplierService;
+import com.impact.core.module.user.mapper.MyUserMapper;
 import com.impact.core.module.user.service.UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
@@ -47,7 +48,8 @@ public class AssetMapper {
     public final AssetModelMapper assetModelMapper;
     public final CurrencyMapper currencyMapper;
     public final LocationNumberMapper locationNumberMapper;
-    private final AssetCategoryMapper assetCategoryMapper;
+    public final AssetCategoryMapper assetCategoryMapper;
+    public final MyUserMapper myUserMapper;
 
 
     public Asset toEntity(AssetRequest assetRequest) {
@@ -73,7 +75,7 @@ public class AssetMapper {
                 .id(asset.getId())
                 .purchaseDate(asset.getPurchaseDate())
                 .value(asset.getValue())
-                .user(userService.toDTO(asset.getResponsible()))
+                .user(myUserMapper.toDTO(asset.getResponsible()))
                 .supplier(supplierMapper.toDTO(asset.getSupplier()))
                 .subcategory(assetSubcategoryMapper.toDTO(asset.getSubcategory()))
                 .category(assetCategoryMapper.toDTO(asset.getSubcategory().getCategory()))
