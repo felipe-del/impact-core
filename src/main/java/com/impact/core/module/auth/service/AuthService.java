@@ -123,7 +123,7 @@ public class AuthService {
         userTokenService.delete(userToken);
     }
 
-    public UserResponse changeUserState(int id, ChangeUserStateRequest changeUserStateRequest) {
+    public UserResponse changeUserState(int id, ChangeUserStateRequest changeUserStateRequest, UserDetailsImpl userDetailsSession) {
         User user = userService.findById(id);
         UserState userState = userStateService.findById(changeUserStateRequest.getStateId());
         if(user.getState().getName().equals(userState.getName())){
@@ -131,6 +131,9 @@ public class AuthService {
         }
         user.setState(userState);
         User savedUser = userService.save(user);
+        // Email notification
+        ComposedMail composedMail = MailFactory.createChangeUserStateEmail(userDetailsSession.getUsername(), savedUser);
+        mailService.sendComposedEmail(composedMail);
         return myUserMapper.toDTO(savedUser);
     }
 
@@ -142,6 +145,9 @@ public class AuthService {
         }
         user.setRole(userRole);
         User savedUser = userService.save(user);
+        // Email notification
+        ComposedMail composedMail = MailFactory.createChangeUserRoleEmail(user.getName(), savedUser);
+        mailService.sendComposedEmail(composedMail);
         return myUserMapper.toDTO(savedUser);
     }
 
