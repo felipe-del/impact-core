@@ -20,10 +20,6 @@ public class RegisterRequest {
     @Email(message = "El email no es válido")
     private String email;
 
-    private String role;
-
-    private String state;
-
     @NotBlank(message = "La contraseña no puede estar vacía")
     @Size(min = 6, max = 40, message = "La contraseña debe tener entre 6 y 40 caracteres")
     private String password;
