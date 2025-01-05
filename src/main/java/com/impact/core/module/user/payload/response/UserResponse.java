@@ -1,4 +1,4 @@
-package com.impact.core.module.user.payload;
+package com.impact.core.module.user.payload.response;
 
 import lombok.*;
 
@@ -11,6 +11,6 @@ public class UserResponse {
     private Integer id;
     private String name;
     private String email;
-    private String roleName;
-    private String stateName;
+    private UserRoleResponse roleName;
+    private UserStateResponse stateName;
 }
