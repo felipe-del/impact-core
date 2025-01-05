@@ -137,7 +137,7 @@ public class AuthService {
         return myUserMapper.toDTO(savedUser);
     }
 
-    public UserResponse changeUserRole(int id, ChangeUserRoleRequest changeUserRoleRequest) {
+    public UserResponse changeUserRole(int id, ChangeUserRoleRequest changeUserRoleRequest, UserDetailsImpl userDetailsSession) {
         User user = userService.findById(id);
         UserRole userRole = userRoleService.findById(changeUserRoleRequest.getRoleId());
         if(user.getRole().getName().equals(userRole.getName())){
@@ -146,7 +146,7 @@ public class AuthService {
         user.setRole(userRole);
         User savedUser = userService.save(user);
         // Email notification
-        ComposedMail composedMail = MailFactory.createChangeUserRoleEmail(user.getName(), savedUser);
+        ComposedMail composedMail = MailFactory.createChangeUserRoleEmail(userDetailsSession.getUsername(), savedUser);
         mailService.sendComposedEmail(composedMail);
         return myUserMapper.toDTO(savedUser);
     }
