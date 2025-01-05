@@ -88,18 +88,21 @@ public class AuthController {
         UserResponse userResponse = authService.changeUserState(id, changeUserStateRequest, userDetails);
 
         return ResponseEntity.ok(ApiResponse.<UserResponse>builder()
-                .message("Estado del usuario cambiado a '" + userResponse.getStateName() + "'.")
+                .message("Estado del usuario cambiado a '" + userResponse.getUserStateResponse().getStateName() + "'.")
                 .data(userResponse)
                 .build());
     }
 
     @PostMapping("/change-user-role/{id}")
     @PreAuthorize("hasRole('ADMINISTRATOR')")
-    public ResponseEntity<ApiResponse<UserResponse>> changeUserRole(@PathVariable int id, @Valid @RequestBody ChangeUserRoleRequest changeUserRoleRequest) {
-        UserResponse userResponse = authService.changeUserRole(id, changeUserRoleRequest);
+    public ResponseEntity<ApiResponse<UserResponse>> changeUserRole(
+            @PathVariable int id,
+            @Valid @RequestBody ChangeUserRoleRequest changeUserRoleRequest,
+            @AuthenticationPrincipal UserDetailsImpl userDetails) {
+        UserResponse userResponse = authService.changeUserRole(id, changeUserRoleRequest, userDetails);
 
         return ResponseEntity.ok(ApiResponse.<UserResponse>builder()
-                .message("Rol del usuario cambiado a '" + userResponse.getRoleName() + "'.")
+                .message("Rol del usuario cambiado a '" + userResponse.getUserRoleResponse().getRoleName() + "'.")
                 .data(userResponse)
                 .build());
     }
