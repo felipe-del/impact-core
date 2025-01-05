@@ -1,6 +1,6 @@
 package com.impact.core.module.auditLog.listener;
 
-import com.impact.core.module.auditLog.service.AuditService;
+import com.impact.core.module.auditLog.service.AuditLogService;
 import jakarta.persistence.*;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -10,11 +10,11 @@ import org.springframework.stereotype.Component;
 @RequiredArgsConstructor
 public class AuditLogListener {
 
-    private static AuditService auditService;
+    private static AuditLogService auditLogService;
 
     @Autowired
-    public void setAuditService(AuditService auditService) {
-        AuditLogListener.auditService = auditService;
+    public void setAuditLogService(AuditLogService auditLogService) {
+        AuditLogListener.auditLogService = auditLogService;
     }
 
     @PostPersist
@@ -42,7 +42,7 @@ public class AuditLogListener {
             user = userService.findById(userDetails.getId());
         }*/
 
-        auditService.logAction(
+        auditLogService.logAction(
                 entityName,
                 action,
                 entity.toString(),
