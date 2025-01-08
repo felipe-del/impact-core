@@ -63,21 +63,21 @@ CREATE TABLE audit_log
 -- NOT NECESSARY
 -- CREATE TABLE request_status
 
-CREATE TABLE resource_request_status
+CREATE TABLE resource_petition_status
 (
     id          INT AUTO_INCREMENT PRIMARY KEY,
     name        VARCHAR(50) NOT NULL UNIQUE,
     description TEXT
 );
 
-INSERT INTO resource_request_status (name, description)
-VALUES ('RESOURCE_REQUEST_STATUS_EARRING', 'Está pendiente de ser aprobado.'),
-       ('RESOURCE_REQUEST_STATUS_ACCEPTED', 'Ha sido aceptado.'),
-       ('RESOURCE_REQUEST_STATUS_RETURNED', 'Ha sido devuelto.'),
-       ('RESOURCE_REQUEST_STATUS_CANCELED', 'Ha sido cancelada.');
+INSERT INTO resource_petition_status (name, description)
+VALUES ('RESOURCE_PETITION_STATUS_EARRING', 'Está pendiente de ser aprobado.'),
+       ('RESOURCE_PETITION_STATUS_ACCEPTED', 'Ha sido aceptado.'),
+       ('RESOURCE_PETITION_STATUS_RETURNED', 'Ha sido devuelto.'),
+       ('RESOURCE_PETITION_STATUS_CANCELED', 'Ha sido cancelada.');
 
 -- NOT NECESSARY
--- CREATE TABLE request
+-- CREATE TABLE PETITION
 
 CREATE TABLE entity_type
 (
@@ -199,7 +199,7 @@ CREATE TABLE space_reservation
     FOREIGN KEY (space_id) REFERENCES space (id)
 );
 
-CREATE TABLE space_request
+CREATE TABLE space_petition
 (
     id            INT AUTO_INCREMENT PRIMARY KEY,
     space_id      INT,
@@ -209,7 +209,7 @@ CREATE TABLE space_request
     status_id     INT,
     use_equipment TINYINT(1) DEFAULT 0,
     FOREIGN KEY (space_id) REFERENCES space (id),
-    FOREIGN KEY (status_id) REFERENCES resource_request_status (id)
+    FOREIGN KEY (status_id) REFERENCES resource_petition_status (id)
 );
 
 CREATE TABLE location_type
@@ -374,29 +374,33 @@ CREATE TABLE product
     CONSTRAINT FOREIGN KEY (category_id) REFERENCES product_category (id)
 );
 
-CREATE TABLE product_request
+CREATE TABLE product_petition
 (
     id         INT AUTO_INCREMENT PRIMARY KEY,
     product_id INT,
     status_id  INT,
     reason     TEXT,
-    user_id    int  null,
+    user_id    INT NOT NULL,
     created_at   DATETIME DEFAULT CURRENT_TIMESTAMP,
     FOREIGN KEY (product_id) REFERENCES product (id),
-    FOREIGN KEY (status_id) REFERENCES resource_request_status (id),
+    FOREIGN KEY (status_id) REFERENCES resource_petition_status (id),
     FOREIGN KEY (user_id) REFERENCES user (id),
     CONSTRAINT unique_product_user UNIQUE (product_id, user_id)
 );
 
-CREATE TABLE asset_request
+CREATE TABLE asset_petition
 (
     id              INT AUTO_INCREMENT PRIMARY KEY,
     asset_id        INT,
     status_id       INT,
     reason          TEXT NULL,
     expiration_date DATE,
+    user_id         INT NOT NULL,
+    created_at      DATETIME DEFAULT CURRENT_TIMESTAMP,
     FOREIGN KEY (asset_id) REFERENCES asset (id),
-    FOREIGN KEY (status_id) REFERENCES resource_request_status (id)
+    FOREIGN KEY (status_id) REFERENCES resource_petition_status (id),
+    FOREIGN KEY (user_id) REFERENCES user (id),
+    CONSTRAINT unique_asset_user UNIQUE (asset_id, user_id)
 );
 
 
