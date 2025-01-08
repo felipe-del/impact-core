@@ -27,7 +27,7 @@ public class ProductMapper {
                 .purchaseDate(productRequestDTO.getPurchaseDate())
                 .expiryDate(productRequestDTO.getExpiryDate())
                 .category(productCategoryService.findById(productRequestDTO.getCategoryId()))
-                .status(this.getProductStatus(productRequestDTO.getStatusName()))
+                .status(productStatusService.findByName(EProductStatus.PRODUCT_STATUS_AVAILABLE))
                 .build();
     }
 
@@ -42,13 +42,4 @@ public class ProductMapper {
                 .build();
     }
 
-    // PRIVATE METHODS
-
-    private ProductStatus getProductStatus(String statusName) {
-        return switch (statusName.toLowerCase()) {
-            case "pendiente" -> productStatusService.findByName(EProductStatus.PRODUCT_STATUS_EARRING);
-            case "prestado" -> productStatusService.findByName(EProductStatus.PRODUCT_STATUS_LOANED);
-            default -> productStatusService.findByName(EProductStatus.PRODUCT_STATUS_AVAILABLE);
-        };
-    }
 }
