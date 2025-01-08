@@ -48,6 +48,6 @@ public class AuditLog {
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id")
-    private User user;
+    private User user;  // TODO: Really we need to store the user object here?
 
 }
