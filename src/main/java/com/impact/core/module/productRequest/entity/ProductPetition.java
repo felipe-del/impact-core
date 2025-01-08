@@ -5,6 +5,7 @@ import com.impact.core.module.resource_request_status.entity.ResourceRequestStat
 import com.impact.core.module.user.entity.User;
 import jakarta.persistence.*;
 import lombok.*;
+import org.hibernate.annotations.ColumnDefault;
 
 import java.time.LocalDateTime;
 
@@ -42,7 +43,8 @@ public class ProductPetition {
 
     @PrePersist
     public void prePersist() {
-        this.createdAt = LocalDateTime.now();
+        if (this.createdAt == null) {
+            this.createdAt = LocalDateTime.now();
+        }
     }
-
 }
