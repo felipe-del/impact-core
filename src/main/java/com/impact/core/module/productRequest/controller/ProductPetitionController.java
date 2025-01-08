@@ -16,14 +16,14 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @RestController
-@RequestMapping("/api/product-request")
+@RequestMapping("/api/product-petition")
 @RequiredArgsConstructor
 public class ProductPetitionController {
     public final ProductPetitionService productPetitionService;
 
     @GetMapping
     @PreAuthorize("hasRole('ADMINISTRATOR') or hasRole('MANAGER') or hasRole('TEACHER')")
-    public ResponseEntity<ResponseWrapper<List<ProductPetitionDTOResponse>>> getAllProductRequests() {
+    public ResponseEntity<ResponseWrapper<List<ProductPetitionDTOResponse>>> getAllProductPetitions() {
         List<ProductPetitionDTOResponse> productPetitionDTORespons = productPetitionService.findAll();
 
         return ResponseEntity.ok(ResponseWrapper.<List<ProductPetitionDTOResponse>>builder()
@@ -34,7 +34,7 @@ public class ProductPetitionController {
 
     @PostMapping
     @PreAuthorize("hasRole('ADMINISTRATOR') or hasRole('MANAGER') or hasRole('TEACHER')")
-    public ResponseEntity<ResponseWrapper<ProductPetitionDTOResponse>> saveProductRequest(
+    public ResponseEntity<ResponseWrapper<ProductPetitionDTOResponse>> saveProductPetition(
             @AuthenticationPrincipal UserDetailsImpl userDetails,
             @Valid @RequestBody ProductPetitionDTORequest productPetitionDTORequest) {
         ProductPetitionDTOResponse ProductPetitionDTOResponse = productPetitionService.save(userDetails, productPetitionDTORequest);
@@ -47,7 +47,7 @@ public class ProductPetitionController {
 
     @PutMapping("/{id}")
     @PreAuthorize("hasRole('ADMINISTRATOR') or hasRole('MANAGER') or hasRole('TEACHER')")
-    public ResponseEntity<ResponseWrapper<ProductPetitionDTOResponse>> updateProductRequest(
+    public ResponseEntity<ResponseWrapper<ProductPetitionDTOResponse>> updateProductPetition(
             @PathVariable int id, @Valid @RequestBody ProductPetitionDTORequest productPetitionDTORequest) {
         ProductPetitionDTOResponse ProductPetitionDTOResponse = productPetitionService.update(id, productPetitionDTORequest);
 
@@ -59,7 +59,7 @@ public class ProductPetitionController {
 
     @DeleteMapping("/{id}")
     @PreAuthorize("hasRole('ADMINISTRATOR') or hasRole('MANAGER') or hasRole('TEACHER')")
-    public ResponseEntity<ResponseWrapper<ProductPetitionDTOResponse>> deleteProductRequest(@PathVariable int id) {
+    public ResponseEntity<ResponseWrapper<ProductPetitionDTOResponse>> deleteProductPetition(@PathVariable int id) {
         ProductPetitionDTOResponse ProductPetitionDTOResponse = productPetitionService.delete(id);
 
         return ResponseEntity.ok(ResponseWrapper.<ProductPetitionDTOResponse>builder()
