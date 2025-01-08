@@ -15,7 +15,7 @@ import java.time.LocalDateTime;
 @Table(name = "product_petition")
 @NoArgsConstructor
 @AllArgsConstructor
-public class ProductRequest {
+public class ProductPetition {
     @Id
     @Column(name = "id", nullable = false)
     @GeneratedValue(strategy = GenerationType.IDENTITY)
