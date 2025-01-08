@@ -61,7 +61,7 @@ CREATE TABLE audit_log
 );
 
 -- NOT NECESSARY
--- CREATE TABLE request_status
+-- CREATE TABLE petition_status
 
 CREATE TABLE resource_petition_status
 (
@@ -381,7 +381,7 @@ CREATE TABLE product_petition
     status_id  INT,
     reason     TEXT,
     user_id    INT NOT NULL,
-    created_at   DATETIME DEFAULT CURRENT_TIMESTAMP,
+    created_at   DATETIME DEFAULT CURRENT_TIMESTAMP NULL,
     FOREIGN KEY (product_id) REFERENCES product (id),
     FOREIGN KEY (status_id) REFERENCES resource_petition_status (id),
     FOREIGN KEY (user_id) REFERENCES user (id),
@@ -396,7 +396,7 @@ CREATE TABLE asset_petition
     reason          TEXT NULL,
     expiration_date DATE,
     user_id         INT NOT NULL,
-    created_at      DATETIME DEFAULT CURRENT_TIMESTAMP,
+    created_at      DATETIME DEFAULT CURRENT_TIMESTAMP NULL,
     FOREIGN KEY (asset_id) REFERENCES asset (id),
     FOREIGN KEY (status_id) REFERENCES resource_petition_status (id),
     FOREIGN KEY (user_id) REFERENCES user (id),
