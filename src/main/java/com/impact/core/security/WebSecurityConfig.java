@@ -90,8 +90,9 @@ public class WebSecurityConfig {
                         .requestMatchers("/api/product-status").authenticated()
                         .requestMatchers("/api/product").authenticated()
                         .requestMatchers("/api/resource-request-status").authenticated()
-                        .requestMatchers("/api/product-request").authenticated()
+                        .requestMatchers("/api/product-petition").authenticated()
                         .requestMatchers("/api/auditLog").authenticated()
+                        .requestMatchers("/api/asset-petition").authenticated()
                         // TESTING API
                         .requestMatchers("/api/test/auth/**").permitAll()
                         .requestMatchers("/api/test/mail/**").permitAll()
