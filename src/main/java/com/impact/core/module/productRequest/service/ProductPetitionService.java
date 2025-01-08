@@ -32,30 +32,31 @@ public class ProductPetitionService {
         productPetition.setUser(user);
         ProductPetition productPetitionSaved = productPetitionRepository.save(productPetition);
 
-        ComposedMail composedMail = MailFactory.createProductRequestEmail(productPetitionSaved);
-        mailService.sendComposedEmail(composedMail);
-        ComposedMail composedMailToAdmin = MailFactory.createAdminReviewRequest(productPetitionSaved);
+        ComposedMail composedMailToUser = MailFactory.createProductPetitionEmail(productPetitionSaved);
+        mailService.sendComposedEmail(composedMailToUser);
+        ComposedMail composedMailToAdmin = MailFactory.createAdminReviewProductPetition(productPetitionSaved);
         mailService.sendComposedEmailToAllAdmins(composedMailToAdmin);
 
         return productPetitionMapper.toDTO(productPetitionSaved);
     }
 
     public ProductPetitionDTOResponse update(int id, ProductPetitionDTORequest productPetitionDTORequest) {
-        ProductPetition productPetition = findProductRequestById(id);
+        ProductPetition productPetition = this.findById(id);
         ProductPetition productPetitionUpdated = productPetitionMapper.toEntity(productPetitionDTORequest);
         productPetitionUpdated.setId(productPetition.getId());
         productPetitionUpdated.setUser(productPetition.getUser());
+        productPetitionUpdated.setCreatedAt(productPetition.getCreatedAt());
         ProductPetition productPetitionSaved = productPetitionRepository.save(productPetitionUpdated);
         return productPetitionMapper.toDTO(productPetitionSaved);
     }
 
     public ProductPetitionDTOResponse delete(int id) {
-        ProductPetition productPetition = findProductRequestById(id);
+        ProductPetition productPetition = findById(id);
         productPetitionRepository.delete(productPetition);
         return productPetitionMapper.toDTO(productPetition);
     }
 
-    public ProductPetition findProductRequestById(int id) {
+    public ProductPetition findById(int id) {
         return productPetitionRepository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("La solicitud de producto con el id: " + id + " no existe en la base de datos."));
     }
