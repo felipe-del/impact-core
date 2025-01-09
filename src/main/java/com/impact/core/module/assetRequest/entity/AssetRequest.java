@@ -6,9 +6,7 @@ import com.impact.core.module.user.entity.User;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
 import lombok.*;
-import org.hibernate.annotations.ColumnDefault;
 
-import java.time.Instant;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 
@@ -16,10 +14,10 @@ import java.time.LocalDateTime;
 @Setter
 @Builder
 @Entity
-@Table(name = "asset_petition")
+@Table(name = "asset_request")
 @NoArgsConstructor
 @AllArgsConstructor
-public class AssetPetition {
+public class AssetRequest {
     @Id
     @Column(name = "id", nullable = false)
     @GeneratedValue(strategy = GenerationType.IDENTITY)

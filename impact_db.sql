@@ -61,7 +61,7 @@ CREATE TABLE audit_log
 );
 
 -- NOT NECESSARY
--- CREATE TABLE petition_status
+-- CREATE TABLE request_status
 
 CREATE TABLE resource_request_status
 (
@@ -199,7 +199,7 @@ CREATE TABLE space_reservation
     FOREIGN KEY (space_id) REFERENCES space (id)
 );
 
-CREATE TABLE space_petition
+CREATE TABLE space_request
 (
     id            INT AUTO_INCREMENT PRIMARY KEY,
     space_id      INT,

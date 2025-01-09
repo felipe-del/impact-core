@@ -1,6 +1,6 @@
 package com.impact.core.module.mail.factory;
 
-import com.impact.core.module.assetRequest.entity.AssetPetition;
+import com.impact.core.module.assetRequest.entity.AssetRequest;
 import com.impact.core.module.mail.payload.ComposedMail;
 import com.impact.core.module.mail.payload.MetaData;
 import com.impact.core.module.mail.enun.EMailTemplate;
@@ -72,9 +72,9 @@ public class MailFactory {
                 EMailTemplate.GENERIC_EMAIL, metaData, List.of(IMPACT_LOGO_IMAGE));
     }
 
-    // PRODUCT PETITION EMAILS
+    // PRODUCT Request EMAILS
 
-    public static ComposedMail createProductPetitionEmail(ProductRequest productRequest) {
+    public static ComposedMail createProductRequestEmail(ProductRequest productRequest) {
         String emailContent = """
                 Se ha enviado una solicitud de producto con los siguientes detalles: <br>
                 <strong>Producto:</strong> %s <br>
@@ -94,7 +94,7 @@ public class MailFactory {
                 EMailTemplate.GENERIC_EMAIL, metaData, List.of(IMPACT_LOGO_IMAGE));
     }
 
-    public static ComposedMail createAdminReviewProductPetition(ProductRequest productRequest) {
+    public static ComposedMail createAdminReviewProductRequest(ProductRequest productRequest) {
         String emailContent = """
                 Se ha recibido una nueva solicitud de producto que requiere su revisión: <br>
                 <strong>Solicitante:</strong> %s <br>
@@ -116,9 +116,9 @@ public class MailFactory {
                 EMailTemplate.GENERIC_EMAIL, metaData, List.of(IMPACT_LOGO_IMAGE));
     }
 
-    // ASSET PETITION EMAILS
+    // ASSET Request EMAILS
 
-    public static ComposedMail createAssetPetitionEmail(AssetPetition assetPetition) {
+    public static ComposedMail createAssetRequestEmail(AssetRequest assetRequest) {
         String emailContent = """
                 Se ha enviado una solicitud de activo con los siguientes detalles: <br>
                 <strong>Subcategoría del Activo:</strong> %s <br>
@@ -127,17 +127,17 @@ public class MailFactory {
                 <strong>Fecha de creación:</strong> %s <br>
                 <br>
                 Por favor, espere a que se procese su solicitud.
-                """.formatted(assetPetition.getAsset().getSubcategory().getName(), assetPetition.getReason(),
-                assetPetition.getStatus().getName(), assetPetition.getCreatedAt().toString());
+                """.formatted(assetRequest.getAsset().getSubcategory().getName(), assetRequest.getReason(),
+                assetRequest.getStatus().getName(), assetRequest.getCreatedAt().toString());
         List<MetaData> metaData = List.of(
                 new MetaData("emailTitle", "Solicitud de Activo realizada"),
-                new MetaData("userName", assetPetition.getUser().getName()),
+                new MetaData("userName", assetRequest.getUser().getName()),
                 new MetaData("emailContent", emailContent));
-        return createEmail(assetPetition.getUser().getEmail(), "Solicitud de activo realizada",
+        return createEmail(assetRequest.getUser().getEmail(), "Solicitud de activo realizada",
                 EMailTemplate.GENERIC_EMAIL, metaData, List.of(IMPACT_LOGO_IMAGE));
     }
 
-    public static ComposedMail createAdminReviewAssetPetition(AssetPetition assetPetition) {
+    public static ComposedMail createAdminReviewAssetRequest(AssetRequest assetRequest) {
         String emailContent = """
                 Se ha recibido una nueva solicitud de activo que requiere su revisión: <br>
                 <strong>Solicitante:</strong> %s <br>
@@ -148,14 +148,14 @@ public class MailFactory {
                 <strong>Fecha de creación:</strong> %s <br>
                 <br>
                 Por favor, revise la solicitud y tome la acción correspondiente (aceptar o rechazar).
-                """.formatted(assetPetition.getUser().getName(), assetPetition.getUser().getEmail(),
-                assetPetition.getAsset().getSubcategory().getName(), assetPetition.getReason(),
-                assetPetition.getStatus().getName(), assetPetition.getCreatedAt().toString());
+                """.formatted(assetRequest.getUser().getName(), assetRequest.getUser().getEmail(),
+                assetRequest.getAsset().getSubcategory().getName(), assetRequest.getReason(),
+                assetRequest.getStatus().getName(), assetRequest.getCreatedAt().toString());
         List<MetaData> metaData = List.of(
                 new MetaData("emailTitle", "Revision de solicitud de Activo"),
                 new MetaData("userName", "Usuario Administrador"),
                 new MetaData("emailContent", emailContent));
-        return createEmail(assetPetition.getUser().getEmail(), "Revision de solicitud",
+        return createEmail(assetRequest.getUser().getEmail(), "Revision de solicitud",
                 EMailTemplate.GENERIC_EMAIL, metaData, List.of(IMPACT_LOGO_IMAGE));
     }
 }

@@ -1,0 +1,73 @@
+package com.impact.core.module.assetRequest.controller;
+
+
+import com.impact.core.module.assetRequest.payload.request.AssetRequestDTORequest;
+import com.impact.core.module.assetRequest.payload.response.AssetRequestDTOResponse;
+import com.impact.core.module.assetRequest.service.AssetRequestService;
+import com.impact.core.security.service.UserDetailsImpl;
+import com.impact.core.util.ResponseWrapper;
+import jakarta.validation.Valid;
+import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
+
+
+@RestController
+@RequestMapping("/api/asset-request")
+@RequiredArgsConstructor
+public class AssetRequestController {
+
+    public final AssetRequestService assetRequestService;
+
+    @GetMapping
+    @PreAuthorize("hasRole('ADMINISTRATOR') or hasRole('MANAGER') or hasRole('TEACHER')")
+    public ResponseEntity<ResponseWrapper<List<AssetRequestDTOResponse>>> getAllAssetRequests() {
+        List<AssetRequestDTOResponse> assetRequestDTORespons = assetRequestService.findAll();
+
+        return ResponseEntity.ok(ResponseWrapper.<List<AssetRequestDTOResponse>>builder()
+                .message("Lista de solicitudes de activos.")
+                .data(assetRequestDTORespons)
+                .build());
+    }
+
+    @PostMapping
+    @PreAuthorize("hasRole('ADMINISTRATOR') or hasRole('MANAGER') or hasRole('TEACHER')")
+    public ResponseEntity<ResponseWrapper<AssetRequestDTOResponse>> saveAssetRequest(
+            @AuthenticationPrincipal UserDetailsImpl userDetails,
+            @Valid @RequestBody AssetRequestDTORequest assetRequestDTORequest) {
+        AssetRequestDTOResponse assetRequestDTOResponse = assetRequestService.save(userDetails, assetRequestDTORequest);
+
+        return ResponseEntity.status(HttpStatus.CREATED).body(ResponseWrapper.<AssetRequestDTOResponse>builder()
+                .message("Solicitud de activo guardada correctamente.")
+                .data(assetRequestDTOResponse)
+                .build());
+    }
+
+    @PutMapping("/{id}")
+    @PreAuthorize("hasRole('ADMINISTRATOR') or hasRole('MANAGER') or hasRole('TEACHER')")
+    public ResponseEntity<ResponseWrapper<AssetRequestDTOResponse>> updateAssetRequest(
+            @PathVariable int id, @Valid @RequestBody AssetRequestDTORequest assetRequestDTORequest) {
+        AssetRequestDTOResponse assetRequestDTOResponse = assetRequestService.update(id, assetRequestDTORequest);
+
+        return ResponseEntity.ok(ResponseWrapper.<AssetRequestDTOResponse>builder()
+                .message("Solicitud de activo actualizada correctamente.")
+                .data(assetRequestDTOResponse)
+                .build());
+    }
+
+    @DeleteMapping("/{id}")
+    @PreAuthorize("hasRole('ADMINISTRATOR') or hasRole('MANAGER') or hasRole('TEACHER')")
+    public ResponseEntity<ResponseWrapper<Void>> deleteAssetRequest(@PathVariable int id) {
+        assetRequestService.delete(id);
+
+        return ResponseEntity.ok(ResponseWrapper.<Void>builder()
+                .message("Solicitud de activo eliminada correctamente.")
+                .build());
+    }
+
+}

@@ -3,7 +3,6 @@ package com.impact.core.module.assetRequest.payload.request;
 import jakarta.validation.constraints.Future;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
-import jakarta.validation.constraints.PastOrPresent;
 import lombok.*;
 
 import java.time.LocalDate;
@@ -13,7 +12,7 @@ import java.time.LocalDate;
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
-public class AssetPetitionDTORequest {
+public class AssetRequestDTORequest {
     @NotNull(message = "El id del activo es requerido")
     private int assetId;
     @NotBlank(message = "La razón es requerida")

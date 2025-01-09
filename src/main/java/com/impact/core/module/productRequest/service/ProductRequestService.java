@@ -32,9 +32,9 @@ public class ProductRequestService {
         productRequest.setUser(user);
         ProductRequest productRequestSaved = productRequestRepository.save(productRequest);
 
-        ComposedMail composedMailToUser = MailFactory.createProductPetitionEmail(productRequestSaved);
+        ComposedMail composedMailToUser = MailFactory.createProductRequestEmail(productRequestSaved);
         mailService.sendComposedEmail(composedMailToUser);
-        ComposedMail composedMailToAdmin = MailFactory.createAdminReviewProductPetition(productRequestSaved);
+        ComposedMail composedMailToAdmin = MailFactory.createAdminReviewProductRequest(productRequestSaved);
         mailService.sendComposedEmailToAllAdmins(composedMailToAdmin);
 
         return productRequestMapper.toDTO(productRequestSaved);

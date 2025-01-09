@@ -10,7 +10,7 @@ import lombok.*;
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
-public class AssetPetitionDTOResponse {
+public class AssetRequestDTOResponse {
     private int id;
     private AssetResponse asset;
     private ResourceRequestStatusResponse status;

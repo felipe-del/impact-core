@@ -24,11 +24,11 @@ public class ProductRequestController {
     @GetMapping
     @PreAuthorize("hasRole('ADMINISTRATOR') or hasRole('MANAGER') or hasRole('TEACHER')")
     public ResponseEntity<ResponseWrapper<List<ProductRequestDTOResponse>>> getAllProductRequests() {
-        List<ProductRequestDTOResponse> productPetitionDTORespons = productRequestService.findAll();
+        List<ProductRequestDTOResponse> productRequestDTOResponses = productRequestService.findAll();
 
         return ResponseEntity.ok(ResponseWrapper.<List<ProductRequestDTOResponse>>builder()
                 .message("Lista de solicitudes de productos.")
-                .data(productPetitionDTORespons)
+                .data(productRequestDTOResponses)
                 .build());
     }
 
