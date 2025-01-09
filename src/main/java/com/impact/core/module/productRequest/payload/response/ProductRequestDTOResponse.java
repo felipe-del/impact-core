@@ -10,7 +10,7 @@ import lombok.*;
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
-public class ProductPetitionDTOResponse {
+public class ProductRequestDTOResponse {
     private int id;
     private ProductResponseDTO product;
     private ResourceRequestStatusResponse status;

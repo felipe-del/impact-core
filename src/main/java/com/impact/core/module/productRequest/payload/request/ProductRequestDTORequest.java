@@ -9,7 +9,7 @@ import lombok.*;
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
-public class ProductPetitionDTORequest {
+public class ProductRequestDTORequest {
     @NotNull(message = "El id del producto es requerido")
     private int productId;
     @NotBlank(message = "La razón es requerida")

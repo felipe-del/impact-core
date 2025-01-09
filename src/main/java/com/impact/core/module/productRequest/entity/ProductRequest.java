@@ -5,7 +5,6 @@ import com.impact.core.module.resource_request_status.entity.ResourceRequestStat
 import com.impact.core.module.user.entity.User;
 import jakarta.persistence.*;
 import lombok.*;
-import org.hibernate.annotations.ColumnDefault;
 
 import java.time.LocalDateTime;
 
@@ -13,10 +12,10 @@ import java.time.LocalDateTime;
 @Setter
 @Builder
 @Entity
-@Table(name = "product_petition")
+@Table(name = "product_request")
 @NoArgsConstructor
 @AllArgsConstructor
-public class ProductPetition {
+public class ProductRequest {
     @Id
     @Column(name = "id", nullable = false)
     @GeneratedValue(strategy = GenerationType.IDENTITY)

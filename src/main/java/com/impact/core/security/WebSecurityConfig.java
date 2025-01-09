@@ -92,7 +92,7 @@ public class WebSecurityConfig {
                         .requestMatchers("/api/resource-request-status").authenticated()
                         .requestMatchers("/api/product-petition").authenticated()
                         .requestMatchers("/api/auditLog").authenticated()
-                        .requestMatchers("/api/asset-petition").authenticated()
+                        .requestMatchers("/api/asset-request").authenticated()
                         // TESTING API
                         .requestMatchers("/api/test/auth/**").permitAll()
                         .requestMatchers("/api/test/mail/**").permitAll()

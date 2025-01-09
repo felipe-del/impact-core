@@ -4,7 +4,7 @@ import com.impact.core.module.assetRequest.entity.AssetPetition;
 import com.impact.core.module.mail.payload.ComposedMail;
 import com.impact.core.module.mail.payload.MetaData;
 import com.impact.core.module.mail.enun.EMailTemplate;
-import com.impact.core.module.productRequest.entity.ProductPetition;
+import com.impact.core.module.productRequest.entity.ProductRequest;
 import com.impact.core.module.user.entity.User;
 import com.impact.core.module.user.entity.UserToken;
 
@@ -74,7 +74,7 @@ public class MailFactory {
 
     // PRODUCT PETITION EMAILS
 
-    public static ComposedMail createProductPetitionEmail(ProductPetition productPetition) {
+    public static ComposedMail createProductPetitionEmail(ProductRequest productRequest) {
         String emailContent = """
                 Se ha enviado una solicitud de producto con los siguientes detalles: <br>
                 <strong>Producto:</strong> %s <br>
@@ -83,18 +83,18 @@ public class MailFactory {
                 <strong>Fecha de creación:</strong> %s <br>
                 <br>
                 Por favor, espere a que se procese su solicitud.
-                """.formatted(productPetition.getProduct().getName(), productPetition.getReason(),
-                productPetition.getStatus().getName(), productPetition.getCreatedAt().toString());
+                """.formatted(productRequest.getProduct().getName(), productRequest.getReason(),
+                productRequest.getStatus().getName(), productRequest.getCreatedAt().toString());
         List<MetaData> metaData = List.of(
                 new MetaData("emailTitle", "Solicitud de Producto realizada"),
-                new MetaData("userName", productPetition.getUser().getName()),
+                new MetaData("userName", productRequest.getUser().getName()),
                 new MetaData("emailContent", emailContent));
 
-        return createEmail(productPetition.getUser().getEmail(), "Solicitud de producto realizada",
+        return createEmail(productRequest.getUser().getEmail(), "Solicitud de producto realizada",
                 EMailTemplate.GENERIC_EMAIL, metaData, List.of(IMPACT_LOGO_IMAGE));
     }
 
-    public static ComposedMail createAdminReviewProductPetition(ProductPetition productPetition) {
+    public static ComposedMail createAdminReviewProductPetition(ProductRequest productRequest) {
         String emailContent = """
                 Se ha recibido una nueva solicitud de producto que requiere su revisión: <br>
                 <strong>Solicitante:</strong> %s <br>
@@ -105,14 +105,14 @@ public class MailFactory {
                 <strong>Fecha de creación:</strong> %s <br>
                 <br>
                 Por favor, revise la solicitud y tome la acción correspondiente (aceptar o rechazar).
-                """.formatted(productPetition.getUser().getName(), productPetition.getUser().getEmail(),
-                productPetition.getProduct().getName(), productPetition.getReason(),
-                productPetition.getStatus().getName(), productPetition.getCreatedAt().toString());
+                """.formatted(productRequest.getUser().getName(), productRequest.getUser().getEmail(),
+                productRequest.getProduct().getName(), productRequest.getReason(),
+                productRequest.getStatus().getName(), productRequest.getCreatedAt().toString());
         List<MetaData> metaData = List.of(
                 new MetaData("emailTitle", "Revision de solicitud de Producto"),
                 new MetaData("userName", "Usuario Administrador"),
                 new MetaData("emailContent", emailContent));
-        return createEmail(productPetition.getUser().getEmail(), "Revision de solicitud",
+        return createEmail(productRequest.getUser().getEmail(), "Revision de solicitud",
                 EMailTemplate.GENERIC_EMAIL, metaData, List.of(IMPACT_LOGO_IMAGE));
     }
 

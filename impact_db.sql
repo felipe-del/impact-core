@@ -374,7 +374,7 @@ CREATE TABLE product
     CONSTRAINT FOREIGN KEY (category_id) REFERENCES product_category (id)
 );
 
-CREATE TABLE product_petition
+CREATE TABLE product_request
 (
     id         INT AUTO_INCREMENT PRIMARY KEY,
     product_id INT,
