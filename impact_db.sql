@@ -63,21 +63,21 @@ CREATE TABLE audit_log
 -- NOT NECESSARY
 -- CREATE TABLE petition_status
 
-CREATE TABLE resource_petition_status
+CREATE TABLE resource_request_status
 (
     id          INT AUTO_INCREMENT PRIMARY KEY,
     name        VARCHAR(50) NOT NULL UNIQUE,
     description TEXT
 );
 
-INSERT INTO resource_petition_status (name, description)
-VALUES ('RESOURCE_PETITION_STATUS_EARRING', 'Está pendiente de ser aprobado.'),
-       ('RESOURCE_PETITION_STATUS_ACCEPTED', 'Ha sido aceptado.'),
-       ('RESOURCE_PETITION_STATUS_RETURNED', 'Ha sido devuelto.'),
-       ('RESOURCE_PETITION_STATUS_CANCELED', 'Ha sido cancelada.');
+INSERT INTO resource_request_status (name, description)
+VALUES ('RESOURCE_REQUEST_STATUS_EARRING', 'Está pendiente de ser aprobado.'),
+       ('RESOURCE_REQUEST_STATUS_ACCEPTED', 'Ha sido aceptado.'),
+       ('RESOURCE_REQUEST_STATUS_RETURNED', 'Ha sido devuelto.'),
+       ('RESOURCE_REQUEST_STATUS_CANCELED', 'Ha sido cancelada.');
 
 -- NOT NECESSARY
--- CREATE TABLE PETITION
+-- CREATE TABLE REQUEST
 
 CREATE TABLE entity_type
 (
@@ -209,7 +209,7 @@ CREATE TABLE space_petition
     status_id     INT,
     use_equipment TINYINT(1) DEFAULT 0,
     FOREIGN KEY (space_id) REFERENCES space (id),
-    FOREIGN KEY (status_id) REFERENCES resource_petition_status (id)
+    FOREIGN KEY (status_id) REFERENCES resource_request_status (id)
 );
 
 CREATE TABLE location_type
@@ -383,12 +383,12 @@ CREATE TABLE product_request
     user_id    INT NOT NULL,
     created_at   DATETIME DEFAULT CURRENT_TIMESTAMP NULL,
     FOREIGN KEY (product_id) REFERENCES product (id),
-    FOREIGN KEY (status_id) REFERENCES resource_petition_status (id),
+    FOREIGN KEY (status_id) REFERENCES resource_request_status (id),
     FOREIGN KEY (user_id) REFERENCES user (id),
     CONSTRAINT unique_product_user UNIQUE (product_id, user_id)
 );
 
-CREATE TABLE asset_petition
+CREATE TABLE asset_request
 (
     id              INT AUTO_INCREMENT PRIMARY KEY,
     asset_id        INT,
@@ -398,7 +398,7 @@ CREATE TABLE asset_petition
     user_id         INT NOT NULL,
     created_at      DATETIME DEFAULT CURRENT_TIMESTAMP NULL,
     FOREIGN KEY (asset_id) REFERENCES asset (id),
-    FOREIGN KEY (status_id) REFERENCES resource_petition_status (id),
+    FOREIGN KEY (status_id) REFERENCES resource_request_status (id),
     FOREIGN KEY (user_id) REFERENCES user (id),
     CONSTRAINT unique_asset_user UNIQUE (asset_id, user_id)
 );

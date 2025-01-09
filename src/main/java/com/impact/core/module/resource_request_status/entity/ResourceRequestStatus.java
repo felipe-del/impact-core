@@ -10,7 +10,7 @@ import lombok.Setter;
 @Getter
 @Setter
 @Entity
-@Table(name = "resource_petition_status")
+@Table(name = "resource_request_status")
 public class ResourceRequestStatus {
     @Id
     @Column(name = "id", nullable = false)
