@@ -27,11 +27,11 @@ public class AssetRequestController {
     @GetMapping
     @PreAuthorize("hasRole('ADMINISTRATOR') or hasRole('MANAGER') or hasRole('TEACHER')")
     public ResponseEntity<ResponseWrapper<List<AssetRequestDTOResponse>>> getAllAssetRequests() {
-        List<AssetRequestDTOResponse> assetRequestDTORespons = assetRequestService.findAll();
+        List<AssetRequestDTOResponse> assetRequestDTOResponses = assetRequestService.findAll();
 
         return ResponseEntity.ok(ResponseWrapper.<List<AssetRequestDTOResponse>>builder()
                 .message("Lista de solicitudes de activos.")
-                .data(assetRequestDTORespons)
+                .data(assetRequestDTOResponses)
                 .build());
     }
 
