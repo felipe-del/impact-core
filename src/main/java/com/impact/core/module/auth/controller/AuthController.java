@@ -51,7 +51,7 @@ public class AuthController {
                 .build());
     }
 
-    @GetMapping("/logout")
+    @PostMapping("/logout")
     @PreAuthorize("isAuthenticated()")
     public ResponseEntity<ResponseWrapper<Void>> logout(@Valid @RequestBody LogoutRequest logoutRequest) {
         authService.logout(logoutRequest);
