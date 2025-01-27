@@ -121,6 +121,8 @@ public class AuthService {
         user.setPassword(encryptedPassword);
         userService.save(user);
         userTokenService.delete(userToken);
+        ComposedMail resetPasswordEmail = MailFactory.createPasswordResetEmail(user);
+        mailService.sendComposedEmail(resetPasswordEmail);
     }
 
     public UserResponse changeUserState(int id, ChangeUserStateRequest changeUserStateRequest, UserDetailsImpl userDetailsSession) {
