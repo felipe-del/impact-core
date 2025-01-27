@@ -72,6 +72,16 @@ public class MailFactory {
                 EMailTemplate.GENERIC_EMAIL, metaData, List.of(IMPACT_LOGO_IMAGE));
     }
 
+    public static ComposedMail createPasswordResetEmail(User user) {
+        String emailContent = "Tu contraseña ha sido restablecida con éxito. Si no has sido tú, por favor, contacta con el soporte.";
+        List<MetaData> metaData = List.of(
+                new MetaData("emailTitle", "Contraseña restablecida"),
+                new MetaData("userName", user.getName()),
+                new MetaData("emailContent", emailContent));
+        return createEmail(user.getEmail(), "Contraseña restablecida",
+                EMailTemplate.GENERIC_EMAIL, metaData, List.of(IMPACT_LOGO_IMAGE));
+    }
+
     // PRODUCT Request EMAILS
 
     public static ComposedMail createProductRequestEmail(ProductRequest productRequest) {
