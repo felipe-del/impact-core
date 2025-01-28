@@ -58,6 +58,8 @@ public class AuthTokenFilter extends OncePerRequestFilter {
         String HEADER = "Authorization";
         String headerAuth = request.getHeader(HEADER);
 
+        System.out.println("headerAuth: " + headerAuth);
+
         if (headerAuth == null) {
             logger.warn("Authorization header is missing");
             return null;
