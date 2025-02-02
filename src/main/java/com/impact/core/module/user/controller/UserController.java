@@ -3,11 +3,13 @@ package com.impact.core.module.user.controller;
 import com.impact.core.module.user.payload.request.UserRequest;
 import com.impact.core.module.user.payload.response.UserResponse;
 import com.impact.core.module.user.service.UserService;
+import com.impact.core.security.service.UserDetailsImpl;
 import com.impact.core.util.ResponseWrapper;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
