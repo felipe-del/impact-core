@@ -8,6 +8,7 @@ import com.impact.core.module.mail.factory.MailFactory;
 import com.impact.core.module.mail.payload.ComposedMail;
 import com.impact.core.module.mail.service.MailService;
 import com.impact.core.module.user.mapper.MyUserMapper;
+import com.impact.core.module.user.payload.request.UserRequest;
 import com.impact.core.module.user.payload.response.UserResponse;
 import com.impact.core.module.user.entity.*;
 import com.impact.core.module.user.enun.EUserRole;
@@ -27,6 +28,7 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import java.security.SecureRandom;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -85,6 +87,37 @@ public class AuthService {
         ComposedMail welcomeEmail = MailFactory.createWelcomeEmail(savedUser);
         mailService.sendComposedEmail(welcomeEmail);
         return myUserMapper.toDTO(savedUser);
+    }
+
+    public UserResponse saveUserCreatedByAdminOrManager(UserRequest user, UserDetailsImpl createdBy) {
+        String password = generateRandomPassword();
+        User newUser = User.builder()
+                .name(user.getName())
+                .email(user.getEmail())
+                .password(encoder.encode(password))
+                .role(userRoleService.findByName(EUserRole.ROLE_TEACHER)) // Default role
+                .state(userStateService.findByName(EUserState.STATE_INACTIVE)) // Default state
+                .build();
+        User savedUser = userService.save(newUser);
+        ComposedMail mailToAdminOrManager = MailFactory.createNewUserCreatedEmail(savedUser, createdBy.getUsername(), createdBy.getEmail());
+        ComposedMail mailToUser = MailFactory.createNewUserEmail(savedUser, password, createdBy.getEmail());
+        mailService.sendComposedEmail(mailToAdminOrManager);
+        mailService.sendComposedEmail(mailToUser);
+        return myUserMapper.toDTO(savedUser);
+    }
+
+    // Method to generate a random password
+    private String generateRandomPassword() {
+        String characters = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789!@#$%^&*()_-+=<>?/";
+        SecureRandom random = new SecureRandom();
+        StringBuilder password = new StringBuilder();
+
+        for (int i = 0; i < 12; i++) {
+            int index = random.nextInt(characters.length());
+            password.append(characters.charAt(index));
+        }
+
+        return password.toString();
     }
 
     public UserResponse getUserSession() {
