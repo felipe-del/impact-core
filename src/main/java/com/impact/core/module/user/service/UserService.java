@@ -1,16 +1,22 @@
 package com.impact.core.module.user.service;
 
 import com.impact.core.expection.customException.ResourceNotFoundException;
+import com.impact.core.module.mail.factory.MailFactory;
+import com.impact.core.module.mail.payload.ComposedMail;
+import com.impact.core.module.mail.service.MailService;
 import com.impact.core.module.user.enun.EUserRole;
 import com.impact.core.module.user.mapper.MyUserMapper;
 import com.impact.core.module.user.payload.request.UserRequest;
 import com.impact.core.module.user.payload.response.UserResponse;
 import com.impact.core.module.user.entity.User;
 import com.impact.core.module.user.repository.UserRepository;
+import com.impact.core.security.service.UserDetailsImpl;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import java.security.SecureRandom;
 import java.util.List;
 
 @Service("userService")
