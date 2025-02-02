@@ -3,6 +3,7 @@ package com.impact.core.module.auth.controller;
 import com.impact.core.module.auth.payload.request.*;
 import com.impact.core.module.auth.payload.response.JwtResponse;
 import com.impact.core.module.auth.service.AuthService;
+import com.impact.core.module.user.payload.request.UserRequest;
 import com.impact.core.module.user.payload.response.UserResponse;
 import com.impact.core.security.service.UserDetailsImpl;
 import com.impact.core.util.ResponseWrapper;
@@ -36,6 +37,19 @@ public class AuthController {
 
         return ResponseEntity.status(HttpStatus.CREATED).body(ResponseWrapper.<UserResponse>builder()
                 .message("Usuario registrado.")
+                .data(userResponse)
+                .build());
+    }
+
+    @PostMapping("/save-user")
+    @PreAuthorize("hasRole('ADMINISTRATOR') or hasRole('MANAGER')")
+    public ResponseEntity<ResponseWrapper<UserResponse>> saveUser(
+            @Valid @RequestBody UserRequest userRequest,
+            @AuthenticationPrincipal UserDetailsImpl userDetailsSession) {
+        UserResponse userResponse = authService.saveUserCreatedByAdminOrManager(userRequest, userDetailsSession);
+
+        return ResponseEntity.ok(ResponseWrapper.<UserResponse>builder()
+                .message("Usuario guardado.")
                 .data(userResponse)
                 .build());
     }
