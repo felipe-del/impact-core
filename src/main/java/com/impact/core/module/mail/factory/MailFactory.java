@@ -168,4 +168,34 @@ public class MailFactory {
         return createEmail(assetRequest.getUser().getEmail(), "Revision de solicitud",
                 EMailTemplate.GENERIC_EMAIL, metaData, List.of(IMPACT_LOGO_IMAGE));
     }
+
+    // to new user with password random
+    public static ComposedMail createNewUserEmail(User user, String password, String createdBy) {
+        String emailContent = """
+                El administrador o gestor: <strong>%s</strong> ha creado una cuenta para ti en IMPACT. <br><br>
+                Tus credenciales de inicio de sesión son: <br>
+                <strong>Correo:</strong> %s <br>
+                <strong>Contraseña:</strong> %s <br>
+                <br>
+                Por favor, cambia tu contraseña en tu primer inicio de sesión.
+                """.formatted(createdBy, user.getEmail(), password);
+        List<MetaData> metaData = List.of(
+                new MetaData("emailTitle", "Cuenta creada en IMPACT"),
+                new MetaData("userName", user.getName()),
+                new MetaData("emailContent", emailContent));
+        return createEmail(user.getEmail(), "Cuenta creada en IMPACT",
+                EMailTemplate.GENERIC_EMAIL, metaData, List.of(IMPACT_LOGO_IMAGE));
+    }
+    // to send a admin that create a new user
+    public static ComposedMail createNewUserCreatedEmail(User user, String createdBy_NAME, String createdBy_EMAIL) {
+        String emailContent = """
+                    Has creado una cuenta para el usuario: <strong>%s</strong> en IMPACT. <br>
+                    """.formatted(user.getName());
+        List<MetaData> metaData = List.of(
+                new MetaData("emailTitle", "Cuenta creada en IMPACT"),
+                new MetaData("userName", createdBy_NAME),
+                new MetaData("emailContent", emailContent));
+        return createEmail(createdBy_EMAIL, "Cuenta creada en IMPACT",
+                EMailTemplate.GENERIC_EMAIL, metaData, List.of(IMPACT_LOGO_IMAGE));
+    }
 }
