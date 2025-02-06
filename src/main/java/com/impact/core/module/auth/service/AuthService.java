@@ -89,35 +89,21 @@ public class AuthService {
         return myUserMapper.toDTO(savedUser);
     }
 
-    public UserResponse saveUserCreatedByAdminOrManager(UserRequest user, UserDetailsImpl createdBy) {
-        String password = generateRandomPassword();
+    public UserResponse saveUserWithRandomPassword(NewUserRequest newUserRequest, UserDetailsImpl createdBy) {
+        String password = this.generateRandomPassword();
         User newUser = User.builder()
-                .name(user.getName())
-                .email(user.getEmail())
-                .password(encoder.encode(password))
-                .role(userRoleService.findByName(EUserRole.ROLE_TEACHER)) // Default role
-                .state(userStateService.findByName(EUserState.STATE_INACTIVE)) // Default state
+                .name(newUserRequest.getName())
+                .email(newUserRequest.getEmail())
+                .password(encoder.encode(password)) // Random password
+                .role(userRoleService.findById(newUserRequest.getUserRoleId()))
+                .state(userStateService.findById(newUserRequest.getUserStatusId()))
                 .build();
         User savedUser = userService.save(newUser);
-        ComposedMail mailToAdminOrManager = MailFactory.createNewUserCreatedEmail(savedUser, createdBy.getUsername(), createdBy.getEmail());
-        ComposedMail mailToUser = MailFactory.createNewUserEmail(savedUser, password, createdBy.getEmail());
+        ComposedMail mailToAdminOrManager = MailFactory.composeAdminNotificationForNewUser(savedUser, createdBy.getUsername(), createdBy.getEmail());
+        ComposedMail mailToUser = MailFactory.composeNewUserWelcomeEmail(savedUser, password, createdBy.getEmail());
         mailService.sendComposedEmail(mailToAdminOrManager);
         mailService.sendComposedEmail(mailToUser);
         return myUserMapper.toDTO(savedUser);
-    }
-
-    // Method to generate a random password
-    private String generateRandomPassword() {
-        String characters = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789!@#$%^&*()_-+=<>?/";
-        SecureRandom random = new SecureRandom();
-        StringBuilder password = new StringBuilder();
-
-        for (int i = 0; i < 12; i++) {
-            int index = random.nextInt(characters.length());
-            password.append(characters.charAt(index));
-        }
-
-        return password.toString();
     }
 
     public UserResponse getUserSession() {
@@ -184,6 +170,22 @@ public class AuthService {
         ComposedMail composedMail = MailFactory.createChangeUserRoleEmail(userDetailsSession.getUsername(), savedUser);
         mailService.sendComposedEmail(composedMail);
         return myUserMapper.toDTO(savedUser);
+    }
+
+    // PRIVATE METHODS
+
+    // Method to generate a random password
+    private String generateRandomPassword() {
+        String characters = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789!@#$%^&*()_-+=<>?/";
+        SecureRandom random = new SecureRandom();
+        StringBuilder password = new StringBuilder();
+
+        for (int i = 0; i < 12; i++) {
+            int index = random.nextInt(characters.length());
+            password.append(characters.charAt(index));
+        }
+
+        return password.toString();
     }
 
 }
