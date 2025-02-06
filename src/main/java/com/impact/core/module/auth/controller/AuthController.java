@@ -44,9 +44,9 @@ public class AuthController {
     @PostMapping("/save-user")
     @PreAuthorize("hasRole('ADMINISTRATOR') or hasRole('MANAGER')")
     public ResponseEntity<ResponseWrapper<UserResponse>> saveUser(
-            @Valid @RequestBody UserRequest userRequest,
+            @Valid @RequestBody NewUserRequest newUserRequest,
             @AuthenticationPrincipal UserDetailsImpl userDetailsSession) {
-        UserResponse userResponse = authService.saveUserCreatedByAdminOrManager(userRequest, userDetailsSession);
+        UserResponse userResponse = authService.saveUserWithRandomPassword(newUserRequest, userDetailsSession);
 
         return ResponseEntity.ok(ResponseWrapper.<UserResponse>builder()
                 .message("Usuario guardado.")
