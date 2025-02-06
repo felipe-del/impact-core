@@ -170,7 +170,7 @@ public class MailFactory {
     }
 
     // to new user with password random
-    public static ComposedMail createNewUserEmail(User user, String password, String createdBy) {
+    public static ComposedMail composeNewUserWelcomeEmail(User user, String password, String createdBy) {
         String emailContent = """
                 El administrador o gestor: <strong>%s</strong> ha creado una cuenta para ti en IMPACT. <br><br>
                 Tus credenciales de inicio de sesión son: <br>
@@ -187,7 +187,7 @@ public class MailFactory {
                 EMailTemplate.GENERIC_EMAIL, metaData, List.of(IMPACT_LOGO_IMAGE));
     }
     // to send a admin that create a new user
-    public static ComposedMail createNewUserCreatedEmail(User user, String createdBy_NAME, String createdBy_EMAIL) {
+    public static ComposedMail composeAdminNotificationForNewUser(User user, String createdBy_NAME, String createdBy_EMAIL) {
         String emailContent = """
                     Has creado una cuenta para el usuario: <strong>%s</strong> en IMPACT. <br>
                     """.formatted(user.getName());
