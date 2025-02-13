@@ -144,6 +144,26 @@ public class AuthService {
         mailService.sendComposedEmail(resetPasswordEmail);
     }
 
+    public void changePassword(ChangePasswordRequest changePasswordRequest) {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        UserDetailsImpl userDetails = (UserDetailsImpl) authentication.getPrincipal();
+        User user = userService.findById(userDetails.getId());
+        if (!encoder.matches(changePasswordRequest.getOldPassword(), user.getPassword())) {
+            throw new UnauthorizedException("La contraseña actual no coincide.");
+        }
+        if (!changePasswordRequest.getNewPassword().equals(changePasswordRequest.getConfirmNewPassword())) {
+            throw new ConflictException("La contraseña nueva no coincide.");
+        }
+        String encryptedPassword = encoder.encode(changePasswordRequest.getNewPassword());
+        if (encoder.matches(changePasswordRequest.getOldPassword(), encryptedPassword)) {
+            throw new ConflictException("La nueva contraseña no puede ser igual a la anterior.");
+        }
+        user.setPassword(encryptedPassword);
+        userService.save(user);
+        ComposedMail changePasswordEmail = MailFactory.createPasswordChangedEmail(user);
+        mailService.sendComposedEmail(changePasswordEmail);
+    }
+
     public UserResponse changeUserState(int id, ChangeUserStateRequest changeUserStateRequest, UserDetailsImpl userDetailsSession) {
         User user = userService.findById(id);
         UserState userState = userStateService.findById(changeUserStateRequest.getStateId());
