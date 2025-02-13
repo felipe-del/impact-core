@@ -93,6 +93,16 @@ public class AuthController {
                 .build());
     }
 
+    @PostMapping("/change-password")
+    @PreAuthorize("isAuthenticated()")
+    public ResponseEntity<ResponseWrapper<Void>> changePassword(@Valid @RequestBody ChangePasswordRequest changePasswordRequest) {
+        authService.changePassword(changePasswordRequest);
+
+        return ResponseEntity.ok(ResponseWrapper.<Void>builder()
+                .message("Contraseña cambiada.")
+                .build());
+    }
+
     @PostMapping("/change-user-state/{id}")
     @PreAuthorize("hasRole('ADMINISTRATOR')")
     public ResponseEntity<ResponseWrapper<UserResponse>> changeUserState(
