@@ -72,7 +72,7 @@ public class GlobalExceptionHandler {
         Throwable rootCause = ex.getRootCause();
         String detailedMessage = (rootCause != null) ? rootCause.getMessage() : ex.getMessage();
 
-        String userMessage = "Hubo un conflicto al procesar la solicitud. Asegúrese de que los datos enviados no violen restricciones de integridad.";
+        String userMessage = "Asegúrese de que los datos enviados no violen restricciones de integridad.";
         return handleException(HttpStatus.CONFLICT, detailedMessage, userMessage, request);
     }
 
