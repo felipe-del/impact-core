@@ -1,17 +1,19 @@
-package com.impact.core.entities;
+package com.impact.core.module.space_equipment.entity;
 
 import com.impact.core.module.brand.entity.Brand;
 import com.impact.core.module.space.entity.Space;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
-import lombok.Getter;
-import lombok.Setter;
+import lombok.*;
 
 @Getter
 @Setter
 @Entity
+@Builder
 @Table(name = "space_equipment")
+@NoArgsConstructor
+@AllArgsConstructor
 public class SpaceEquipment {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
