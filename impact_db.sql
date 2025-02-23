@@ -182,13 +182,15 @@ VALUES ('SPACE_STATUS_AVAILABLE', 'El espacio está disponible para su uso.'),
 CREATE TABLE space_equipment
 (
     id       INT AUTO_INCREMENT PRIMARY KEY,
-    name     VARCHAR(100) NOT NULL,
+    name     VARCHAR(100) NOT NULL UNIQUE,
     brand_id INT          NOT NULL,
     space_id INT          NOT NULL,
     quantity INT          NOT NULL,
     FOREIGN KEY (brand_id) REFERENCES brand (id),
     FOREIGN KEY (space_id) REFERENCES space (id)
 );
+
+
 
 CREATE TABLE space_reservation
 (
