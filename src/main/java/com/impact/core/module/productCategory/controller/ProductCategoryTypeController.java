@@ -14,9 +14,9 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @RestController
-@RequestMapping("/api/category-type")
+@RequestMapping("/api/product-category-type")
 @RequiredArgsConstructor
-public class CategoryTypeController {
+public class ProductCategoryTypeController {
     public final CategoryTypeService categoryTypeService;
 
     @GetMapping
