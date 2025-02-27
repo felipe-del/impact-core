@@ -1,0 +1,53 @@
+package com.impact.core.module.auditLog.listener;
+
+import com.impact.core.module.auditLog.service.AuditLogService;
+import jakarta.persistence.*;
+import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
+
+@Component
+@RequiredArgsConstructor
+public class AuditLogListener {
+
+    private static AuditLogService auditLogService;
+
+    @Autowired
+    public void setAuditLogService(AuditLogService auditLogService) {
+        AuditLogListener.auditLogService = auditLogService;
+    }
+
+    @PostPersist
+    public void logInsert(Object entity) {
+        logAction("INSERT", entity);
+    }
+
+    @PostUpdate
+    public void logUpdate(Object entity) {
+        logAction("UPDATE", entity);
+    }
+
+    @PostRemove
+    public void logDelete(Object entity) {
+        logAction("DELETE", entity);
+    }
+
+    private void logAction(String action, Object entity) {
+        String entityName = entity.getClass().getSimpleName();
+
+        /*User user = null;
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        if (authentication.getPrincipal() != null) {
+            UserDetailsImpl userDetails = (UserDetailsImpl) authentication.getPrincipal();
+            user = userService.findById(userDetails.getId());
+        }*/
+
+        auditLogService.logAction(
+                entityName,
+                action,
+                entity.toString(),
+                null
+        );
+    }
+
+}
