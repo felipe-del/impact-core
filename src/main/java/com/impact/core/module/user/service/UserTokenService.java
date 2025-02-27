@@ -46,7 +46,7 @@ public class UserTokenService {
                 .user(user)
                 .token(token)
                 .expiryDate(expiryDate)
-                .createdAt(Instant.now()) // TODO: do this in entity
+                .createdAt(Instant.now())
                 .build();
 
         return save(userToken);
