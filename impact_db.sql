@@ -177,7 +177,7 @@ VALUES ('SPACE_STATUS_AVAILABLE', 'El espacio está disponible para su uso.'),
        ('SPACE_STATUS_LOANED', 'El espacio está actualmente ocupado.'),
        ('SPACE_STATUS_IN_MAINTENANCE', 'El espacio está en mantenimiento y no está disponible para su uso.'),
        ('SPACE_STATUS_OUT_OF_SERVICE', 'El espacio ya no está disponible o no está operativo.'),
-       ('SPACE_STATUS_OUT_OF_EARRING', 'El espacio está pendiente de ser entregado o procesado.');
+       ('SPACE_STATUS_EARRING', 'El espacio está pendiente de ser entregado o procesado.');
 
 CREATE TABLE space_equipment
 (
