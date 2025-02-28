@@ -242,8 +242,8 @@ CREATE TABLE currency
 );
 
 INSERT INTO currency (currency_code, currency_name)
-VALUES ('CRC', 'Colones'),
-       ('USD', 'Dólares');
+VALUES ('CRC-₡', 'CURRENCY_COLON'),
+       ('USD-$', 'CURRENCY_DOLLAR');
 
 CREATE TABLE asset_model
 (
