@@ -11,6 +11,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
+import java.time.LocalDate;
 import java.util.List;
 
 @RestController
@@ -60,6 +61,19 @@ public class AssetController {
         return ResponseEntity.ok(ResponseWrapper.<AssetResponse>builder()
                 .message("Activo eliminado.")
                 .data(assetResponse)
+                .build());
+    }
+
+    @GetMapping("/inventory-value")
+    @PreAuthorize("hasRole('ADMINISTRATOR') or hasRole('MANAGER')")
+    public ResponseEntity<ResponseWrapper<List<Object[]>>> getInventoryValue(
+            @RequestParam("start_date") LocalDate start_date,
+            @RequestParam("end_date") LocalDate end_date) {
+        List<Object[]> inventoryValues = assetService.getInventoryValue(start_date, end_date);
+
+        return ResponseEntity.ok(ResponseWrapper.<List<Object[]>>builder()
+                .message("Valor del inventario")
+                .data(inventoryValues)
                 .build());
     }
 }
