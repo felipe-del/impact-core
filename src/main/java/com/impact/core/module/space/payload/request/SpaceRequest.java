@@ -36,6 +36,14 @@ public class SpaceRequest {
     @Pattern(regexp = "^([01]?\\d|2[0-3]):[0-5]\\d$", message = "La hora de cierre debe estar en el formato HH:mm.")
     private String closeTime;
 
+    @AssertTrue(message = "La hora de apertura debe ser antes de la hora de cierre.")
+    public boolean isValidTimeRange() {
+        if (openTime == null || closeTime == null) {
+            return true; // Se validará con @NotBlank
+        }
+        return openTime.compareTo(closeTime) < 0; // Verifica que openTime sea menor que closeTime
+    }
+
     @NotBlank(message = "El nombre del estado del espacio es obligatorio.")
     @Size(max = 50, message = "El nombre no debe exceder los 50 caracteres.")
     private String spaceStatusName;
