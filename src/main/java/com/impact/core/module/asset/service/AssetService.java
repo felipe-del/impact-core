@@ -6,10 +6,14 @@ import com.impact.core.module.asset.mapper.AssetMapper;
 import com.impact.core.module.asset.payload.request.AssetRequest;
 import com.impact.core.module.asset.payload.response.AssetResponse;
 import com.impact.core.module.asset.repository.AssetRepository;
+import com.impact.core.module.currency.entity.Currency;
+import com.impact.core.module.currency.payload.response.SumOfCurrency;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import java.math.BigDecimal;
 import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.List;
 
 @Service("assetService")
@@ -43,8 +47,19 @@ public class AssetService {
                 .orElseThrow(() -> new ResourceNotFoundException("El activo con el id: " + id + " no existe."));
     }
 
-    public List<Object[]> getInventoryValue(LocalDate start_date, LocalDate end_date) {
-        return this.assetRepository.inventoryValueInAPeriod(start_date, end_date);
+    public List<SumOfCurrency> getInventoryValue(LocalDate start_date, LocalDate end_date) {
+        List<SumOfCurrency> sumOfCurrencies = new ArrayList<>();
+
+        for (Object[] currencyValues : assetRepository.inventoryValueInAPeriod(start_date, end_date) ) {
+            SumOfCurrency toAdd = new SumOfCurrency();
+
+            toAdd.setCurrency(assetMapper.currencyMapper.toDTO((Currency) currencyValues[0]));
+            toAdd.setAmount((BigDecimal)  currencyValues[1]);
+
+            sumOfCurrencies.add(toAdd);
+        }
+
+        return sumOfCurrencies;
     }
 
     public List<AssetResponse> findAll() {
