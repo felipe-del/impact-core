@@ -9,6 +9,7 @@ import com.impact.core.module.asset.repository.AssetRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDate;
 import java.util.List;
 
 @Service("assetService")
@@ -40,6 +41,10 @@ public class AssetService {
     public Asset findById(int id) {
         return assetRepository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("El activo con el id: " + id + " no existe."));
+    }
+
+    public List<Object[]> getInventoryValue(LocalDate start_date, LocalDate end_date) {
+        return this.assetRepository.inventoryValueInAPeriod(start_date, end_date);
     }
 
     public List<AssetResponse> findAll() {
