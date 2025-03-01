@@ -3,6 +3,7 @@ package com.impact.core.module.asset.controller;
 import com.impact.core.module.asset.payload.request.AssetRequest;
 import com.impact.core.module.asset.payload.response.AssetResponse;
 import com.impact.core.module.asset.service.AssetService;
+import com.impact.core.module.currency.payload.response.SumOfCurrency;
 import com.impact.core.util.ResponseWrapper;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -66,12 +67,12 @@ public class AssetController {
 
     @GetMapping("/inventory-value")
     @PreAuthorize("hasRole('ADMINISTRATOR') or hasRole('MANAGER')")
-    public ResponseEntity<ResponseWrapper<List<Object[]>>> getInventoryValue(
+    public ResponseEntity<ResponseWrapper<List<SumOfCurrency>>> getInventoryValue(
             @RequestParam("start_date") LocalDate start_date,
             @RequestParam("end_date") LocalDate end_date) {
-        List<Object[]> inventoryValues = assetService.getInventoryValue(start_date, end_date);
+        List<SumOfCurrency> inventoryValues = assetService.getInventoryValue(start_date, end_date);
 
-        return ResponseEntity.ok(ResponseWrapper.<List<Object[]>>builder()
+        return ResponseEntity.ok(ResponseWrapper.<List<SumOfCurrency>>builder()
                 .message("Valor del inventario")
                 .data(inventoryValues)
                 .build());
