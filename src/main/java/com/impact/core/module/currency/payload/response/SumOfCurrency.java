@@ -11,5 +11,6 @@ import java.math.BigDecimal;
 @AllArgsConstructor
 public class SumOfCurrency {
     private CurrencyResponse currency;
+    private Long quantity;
     private BigDecimal amount;
 }
