@@ -12,6 +12,6 @@ import java.util.List;
 @Repository
 public interface AssetRepository extends JpaRepository<Asset, Integer> {
 
-    @Query("SELECT a.currency, SUM(a.value) FROM Asset a WHERE a.purchaseDate BETWEEN :start_date AND :end_date GROUP BY a.currency")
+    @Query("SELECT a.currency, SUM(a.value), COUNT(*) FROM Asset a WHERE a.purchaseDate BETWEEN :start_date AND :end_date GROUP BY a.currency")
     List<Object[]> inventoryValueInAPeriod(@Param("start_date") LocalDate start_date, @Param("end_date") LocalDate end_date);
 }
