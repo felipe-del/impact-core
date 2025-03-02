@@ -55,6 +55,7 @@ public class AssetService {
 
             toAdd.setCurrency(assetMapper.currencyMapper.toDTO((Currency) currencyValues[0]));
             toAdd.setAmount((BigDecimal)  currencyValues[1]);
+            toAdd.setQuantity((Long) currencyValues[2]);
 
             sumOfCurrencies.add(toAdd);
         }
