@@ -114,8 +114,8 @@ ALTER TABLE asset_category
 CREATE TABLE asset_subcategory
 (
     id          INT AUTO_INCREMENT PRIMARY KEY,
-    name        VARCHAR(100) NOT NULL UNIQUE,
-    description VARCHAR(255),
+    name        VARCHAR(100),
+    description VARCHAR(255) NOT NULL UNIQUE,
     category_id INT,
     FOREIGN KEY (category_id) REFERENCES asset_category (id)
 );
