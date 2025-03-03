@@ -70,4 +70,15 @@ public class AssetRequestController {
                 .build());
     }
 
+    @GetMapping("/user/{id}")
+    @PreAuthorize("hasRole('ADMINISTRATOR') or hasRole('MANAGER') or hasRole('TEACHER')")
+    public ResponseEntity<ResponseWrapper<List<AssetRequestDTOResponse>>> getMyRequests(@PathVariable int id){
+        List<AssetRequestDTOResponse> assetRequestDTOResponses = assetRequestService.findByUser(id);
+
+        return ResponseEntity.ok(ResponseWrapper.<List<AssetRequestDTOResponse>>builder()
+                .message("Lista de solicitudes de activos por usuario.")
+                .data(assetRequestDTOResponses)
+                .build());
+    }
+
 }
