@@ -14,7 +14,7 @@ public class ProductRequestDTO {
 
     @NotNull(message = "La cantidad es requerida.")
     @Positive(message = "La cantidad debe ser mayor a 0.")
-    private String quantity;
+    private int quantity;
 
     @NotNull(message = "La fecha de compra es requerida.")
     @PastOrPresent(message = "La fecha de compra no puede ser en el futuro.")
