@@ -165,6 +165,13 @@ CREATE TABLE space
     FOREIGN KEY (status_id) REFERENCES space_status (id)
 );
 
+-- DO THIS OR NOTHING RELATED TO THE REQUEST WILL WORK
+ALTER TABLE space_request  
+DROP FOREIGN KEY space_request_ibfk_1,  
+ADD CONSTRAINT fk_space_request_space_status  
+FOREIGN KEY (space_id) REFERENCES space_status (id);
+
+
 CREATE TABLE space_status
 (
     id          INT AUTO_INCREMENT PRIMARY KEY,
@@ -198,8 +205,15 @@ CREATE TABLE space_reservation
     space_id   INT,
     start_time DATETIME,
     end_time   DATETIME,
-    FOREIGN KEY (space_id) REFERENCES space (id)
+    user_id    INT NOT NULL,
+    FOREIGN KEY (space_id) REFERENCES space (id),
+    FOREIGN KEY (user_id) REFERENCES user (id)
 );
+
+-- DO THIS OR NOTHING RELATED TO THE REQUEST WILL WORK
+ALTER TABLE space_reservation 
+ADD COLUMN user_id INT NOT NULL,
+ADD CONSTRAINT fk_space_reservation_user FOREIGN KEY (user_id) REFERENCES user (id);
 
 CREATE TABLE space_request
 (
@@ -209,10 +223,17 @@ CREATE TABLE space_request
     event_desc    VARCHAR(255),
     event_obs     VARCHAR(255),
     status_id     INT,
+    user_id    INT NOT NULL,
     use_equipment TINYINT(1) DEFAULT 0,
     FOREIGN KEY (space_id) REFERENCES space (id),
-    FOREIGN KEY (status_id) REFERENCES resource_request_status (id)
+    FOREIGN KEY (status_id) REFERENCES space_status (id),
+    FOREIGN KEY (user_id) REFERENCES user (id)
 );
+
+-- DO THIS OR NOTHING RELATED TO THE REQUEST WILL WORK
+ALTER TABLE space_request 
+ADD COLUMN user_id INT NOT NULL,
+ADD CONSTRAINT fk_space_request_user FOREIGN KEY (user_id) REFERENCES user (id);
 
 CREATE TABLE location_type
 (
