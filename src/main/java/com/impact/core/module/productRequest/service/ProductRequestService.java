@@ -66,5 +66,10 @@ public class ProductRequestService {
                 .map(productRequestMapper::toDTO)
                 .collect(Collectors.toList());
     }
+    public List<ProductRequestDTOResponse> findByUser(int id){
+        return productRequestRepository.productsRequestByUser(id).stream()
+                .map(productRequestMapper::toDTO)
+                .collect(Collectors.toList());
+    }
 
 }

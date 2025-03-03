@@ -66,5 +66,10 @@ public class AssetRequestService {
                 .map(assetRequestMapper::toDTO)
                 .collect(Collectors.toList());
     }
+    public List<AssetRequestDTOResponse> findByUser(Integer user){
+        return assetRequestRepository.assetsRequestByUser(user).stream()
+                .map(assetRequestMapper::toDTO)
+                .collect(Collectors.toList());
+    }
 
 }
