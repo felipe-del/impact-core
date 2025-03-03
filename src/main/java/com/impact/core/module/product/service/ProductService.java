@@ -9,6 +9,7 @@ import com.impact.core.module.product.repository.ProductRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -18,10 +19,17 @@ public class ProductService {
     public final ProductRepository productRepository;
     public final ProductMapper productMapper;
 
-    public ProductResponseDTO save(ProductRequestDTO productRequestDTO) {
-        Product product = productMapper.toEntity(productRequestDTO);
-        Product productSaved = productRepository.save(product);
-        return productMapper.toDTO(productSaved);
+    public ArrayList<ProductResponseDTO> save(ProductRequestDTO productRequestDTO) {
+        int quantity = productRequestDTO.getQuantity();
+        ArrayList<Product> products = new ArrayList<>();
+        for(int i = 0; i < quantity; i++) {
+            Product product = productMapper.toEntity(productRequestDTO);
+            Product productSaved = productRepository.save(product);
+            products.add(productSaved);
+        }
+        return products.stream()
+                .map(productMapper::toDTO)
+                .collect(Collectors.toCollection(ArrayList::new));
     }
 
     public ProductResponseDTO update(int id, ProductRequestDTO productRequestDTO) {
