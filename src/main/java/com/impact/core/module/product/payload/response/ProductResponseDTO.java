@@ -13,7 +13,6 @@ import java.time.LocalDate;
 @NoArgsConstructor
 public class ProductResponseDTO {
     private int id;
-    private String name;
     private LocalDate purchaseDate;
     private LocalDate expiryDate;
     private ProductCategoryResponse category;
