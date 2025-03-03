@@ -67,4 +67,15 @@ public class ProductRequestController {
                 .data(ProductRequestDTOResponse)
                 .build());
     }
+
+    @GetMapping("/user/{id}")
+    @PreAuthorize("hasRole('ADMINISTRATOR') or hasRole('MANAGER') or hasRole('TEACHER')")
+    public ResponseEntity<ResponseWrapper<List<ProductRequestDTOResponse>>> getMyRequests(@PathVariable int id){
+        List<ProductRequestDTOResponse> productRequestDTOResponse = productRequestService.findByUser(id);
+
+        return ResponseEntity.ok(ResponseWrapper.<List<ProductRequestDTOResponse>>builder()
+                .message("Lista de solicitudes de activos por usuario.")
+                .data(productRequestDTOResponse)
+                .build());
+    }
 }
