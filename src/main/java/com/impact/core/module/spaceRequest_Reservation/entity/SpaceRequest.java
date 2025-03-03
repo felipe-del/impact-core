@@ -1,17 +1,23 @@
-package com.impact.core.entities;
+package com.impact.core.module.spaceRequest_Reservation.entity;
 
 import com.impact.core.module.resource_request_status.entity.ResourceRequestStatus;
 import com.impact.core.module.space.entity.Space;
+import com.impact.core.module.spaceStatus.entity.SpaceStatus;
+import com.impact.core.module.spaceStatus.enun.ESpaceStatus;
+import com.impact.core.module.user.entity.User;
 import jakarta.persistence.*;
+import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
-import lombok.Getter;
-import lombok.Setter;
+import lombok.*;
 import org.hibernate.annotations.ColumnDefault;
 
 @Getter
 @Setter
+@Builder
 @Entity
 @Table(name = "space_request")
+@NoArgsConstructor
+@AllArgsConstructor
 public class SpaceRequest {
     @Id
     @Column(name = "id", nullable = false)
@@ -34,10 +40,14 @@ public class SpaceRequest {
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "status_id")
-    private ResourceRequestStatus status;
+    private SpaceStatus status;
 
     @ColumnDefault("0")
     @Column(name = "use_equipment")
     private Boolean useEquipment;
 
+    @NotNull
+    @ManyToOne(fetch = FetchType.LAZY, optional = false)
+    @JoinColumn(name = "user_id", nullable = false)
+    private User user;
 }
