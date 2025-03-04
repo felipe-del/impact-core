@@ -56,4 +56,11 @@ public class ProductService {
                 .map(productMapper::toDTO)
                 .collect(Collectors.toList());
     }
+
+    // HELPER METHODS
+
+    public List<Product> getAvailableProductsByCategory(String categoryName, int quantity) {
+        List<Product> products = productRepository.findAvailableProductsByCategory(categoryName);
+        return products.stream().limit(quantity).collect(Collectors.toList());
+    }
 }
