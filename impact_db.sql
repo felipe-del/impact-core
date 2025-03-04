@@ -165,12 +165,6 @@ CREATE TABLE space
     FOREIGN KEY (status_id) REFERENCES space_status (id)
 );
 
--- DO THIS OR NOTHING RELATED TO THE REQUEST WILL WORK
-ALTER TABLE space_request  
-DROP FOREIGN KEY space_request_ibfk_1,  
-ADD CONSTRAINT fk_space_request_space_status  
-FOREIGN KEY (space_id) REFERENCES space_status (id);
-
 
 CREATE TABLE space_status
 (
@@ -229,11 +223,6 @@ CREATE TABLE space_request
     FOREIGN KEY (status_id) REFERENCES space_status (id),
     FOREIGN KEY (user_id) REFERENCES user (id)
 );
-
--- DO THIS OR NOTHING RELATED TO THE REQUEST WILL WORK
-ALTER TABLE space_request 
-ADD COLUMN user_id INT NOT NULL,
-ADD CONSTRAINT fk_space_request_user FOREIGN KEY (user_id) REFERENCES user (id);
 
 CREATE TABLE location_type
 (
