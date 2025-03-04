@@ -1,10 +1,6 @@
 package com.impact.core.module.spaceRequest_Reservation.service;
 
-import com.impact.core.module.mail.factory.MailFactory;
-import com.impact.core.module.mail.payload.ComposedMail;
 import com.impact.core.module.mail.service.MailService;
-import com.impact.core.module.space.mapper.SpaceMapper;
-import com.impact.core.module.space.service.SpaceService;
 import com.impact.core.module.spaceRequest_Reservation.entity.SpaceRequest;
 import com.impact.core.module.spaceRequest_Reservation.entity.SpaceReservation;
 import com.impact.core.module.spaceRequest_Reservation.mapper.SpaceRndRMapper;
@@ -12,8 +8,6 @@ import com.impact.core.module.spaceRequest_Reservation.payload.request.SpaceRndR
 import com.impact.core.module.spaceRequest_Reservation.payload.response.SpaceRndRResponse;
 import com.impact.core.module.spaceRequest_Reservation.repository.SpaceRequestRepository;
 import com.impact.core.module.spaceRequest_Reservation.repository.SpaceReservationRepository;
-import com.impact.core.module.spaceStatus.mapper.SpaceStatusMapper;
-import com.impact.core.module.spaceStatus.service.SpaceStatusService;
 import com.impact.core.module.user.entity.User;
 import com.impact.core.module.user.service.UserService;
 import com.impact.core.security.service.UserDetailsImpl;
@@ -28,12 +22,6 @@ public class SpaceRndRService {
     public final SpaceRequestRepository spaceRequestRepository;
     public final SpaceReservationRepository spaceReservationRepository;
     public final SpaceRndRMapper spaceRndRMapper;
-
-    public final SpaceMapper spaceMapper;
-    public final SpaceService spaceService;
-
-    public final SpaceStatusService spaceStatusService;
-    public final SpaceStatusMapper spaceStatusMapper;
 
     public final UserService userService;
     public final MailService mailService;
@@ -52,6 +40,7 @@ public class SpaceRndRService {
         SpaceReservation spaceReservationSaved = spaceReservationRepository.save(requestAndReservation.b);
 
         // SENDING MAILS IS PENDING
+        // FELIPE LO TIENE QUE HACER PORQUE SE OFRECIO EL 03/03/2025
 
         return spaceRndRMapper.toDTO(spaceRequestSaved, spaceReservationSaved);
     }
