@@ -1,9 +1,6 @@
 package com.impact.core.module.product.payload.request;
 
-import jakarta.validation.constraints.Future;
-import jakarta.validation.constraints.NotBlank;
-import jakarta.validation.constraints.NotNull;
-import jakarta.validation.constraints.PastOrPresent;
+import jakarta.validation.constraints.*;
 import lombok.*;
 
 import java.time.LocalDate;
@@ -15,8 +12,9 @@ import java.time.LocalDate;
 @NoArgsConstructor
 public class ProductRequestDTO {
 
-    @NotBlank(message = "El nombre del producto es requerido.")
-    private String name;
+    @NotNull(message = "La cantidad es requerida.")
+    @Positive(message = "La cantidad debe ser mayor a 0.")
+    private int quantity;
 
     @NotNull(message = "La fecha de compra es requerida.")
     @PastOrPresent(message = "La fecha de compra no puede ser en el futuro.")

@@ -26,8 +26,9 @@ public class SpaceRndRMapper {
 
     public final MyUserMapper myUserMapper;
 
-    public Pair<SpaceRequest, SpaceReservation> toEntity(SpaceRndRRequest spaceRndR_Request) {
+        public Pair<SpaceRequest, SpaceReservation> toEntity(SpaceRndRRequest spaceRndR_Request) {
         SpaceRequest sReq = SpaceRequest.builder()
+                .id(0)
                 .space(spaceService.findById(spaceRndR_Request.getSpaceId()))
                 .numPeople(spaceRndR_Request.getNumPeople())
                 .eventDesc(spaceRndR_Request.getEventDesc())
@@ -37,6 +38,7 @@ public class SpaceRndRMapper {
                 .build();
 
         SpaceReservation sRes = SpaceReservation.builder()
+                .id(0)
                 .space(spaceService.findById(spaceRndR_Request.getSpaceId()))
                 .startTime(spaceRndR_Request.getStartTime())
                 .endTime(spaceRndR_Request.getEndTime())

@@ -114,8 +114,8 @@ ALTER TABLE asset_category
 CREATE TABLE asset_subcategory
 (
     id          INT AUTO_INCREMENT PRIMARY KEY,
-    name        VARCHAR(100) NOT NULL UNIQUE,
-    description VARCHAR(255),
+    name        VARCHAR(100),
+    description VARCHAR(255) NOT NULL UNIQUE,
     category_id INT,
     FOREIGN KEY (category_id) REFERENCES asset_category (id)
 );
@@ -164,12 +164,6 @@ CREATE TABLE space
     FOREIGN KEY (location_id) REFERENCES building_location (id),
     FOREIGN KEY (status_id) REFERENCES space_status (id)
 );
-
--- DO THIS OR NOTHING RELATED TO THE REQUEST WILL WORK
-ALTER TABLE space_request  
-DROP FOREIGN KEY space_request_ibfk_1,  
-ADD CONSTRAINT fk_space_request_space_status  
-FOREIGN KEY (space_id) REFERENCES space_status (id);
 
 
 CREATE TABLE space_status
@@ -229,11 +223,6 @@ CREATE TABLE space_request
     FOREIGN KEY (status_id) REFERENCES space_status (id),
     FOREIGN KEY (user_id) REFERENCES user (id)
 );
-
--- DO THIS OR NOTHING RELATED TO THE REQUEST WILL WORK
-ALTER TABLE space_request 
-ADD COLUMN user_id INT NOT NULL,
-ADD CONSTRAINT fk_space_request_user FOREIGN KEY (user_id) REFERENCES user (id);
 
 CREATE TABLE location_type
 (
@@ -388,7 +377,6 @@ VALUES ('PRODUCT_STATUS_AVAILABLE', 'El producto está disponible para solicitar
 CREATE TABLE product
 (
     id            INT AUTO_INCREMENT PRIMARY KEY,
-    name          VARCHAR(100) NOT NULL UNIQUE,
     purchase_date DATE,
     expiry_date   DATE,
     category_id   INT,
