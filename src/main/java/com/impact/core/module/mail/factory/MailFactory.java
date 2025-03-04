@@ -97,13 +97,13 @@ public class MailFactory {
     public static ComposedMail createProductRequestEmail(ProductRequest productRequest) {
         String emailContent = """
                 Se ha enviado una solicitud de producto con los siguientes detalles: <br>
-                <strong>Producto:</strong> %s <br>
+                <strong>Producto (Categoría):</strong> %s <br>
                 <strong>Razón:</strong> %s <br>
                 <strong>Estado de solicitud:</strong> %s <br>
                 <strong>Fecha de creación:</strong> %s <br>
                 <br>
                 Por favor, espere a que se procese su solicitud.
-                """.formatted(productRequest.getProduct().getName(), productRequest.getReason(),
+                """.formatted(productRequest.getProduct().getCategory().getName(), productRequest.getReason(),
                 productRequest.getStatus().getName(), productRequest.getCreatedAt().toString());
         List<MetaData> metaData = List.of(
                 new MetaData("emailTitle", "Solicitud de Producto realizada"),
@@ -119,14 +119,14 @@ public class MailFactory {
                 Se ha recibido una nueva solicitud de producto que requiere su revisión: <br>
                 <strong>Solicitante:</strong> %s <br>
                 <strong>Correo del solicitante:</strong> %s <br>
-                <strong>Producto:</strong> %s <br>
+                <strong>Producto (Categoría):</strong> %s <br>
                 <strong>Razón:</strong> %s <br>
                 <strong>Estado actual de la solicitud:</strong> %s <br>
                 <strong>Fecha de creación:</strong> %s <br>
                 <br>
                 Por favor, revise la solicitud y tome la acción correspondiente (aceptar o rechazar).
                 """.formatted(productRequest.getUser().getName(), productRequest.getUser().getEmail(),
-                productRequest.getProduct().getName(), productRequest.getReason(),
+                productRequest.getProduct().getCategory().getName(), productRequest.getReason(),
                 productRequest.getStatus().getName(), productRequest.getCreatedAt().toString());
         List<MetaData> metaData = List.of(
                 new MetaData("emailTitle", "Revision de solicitud de Producto"),
