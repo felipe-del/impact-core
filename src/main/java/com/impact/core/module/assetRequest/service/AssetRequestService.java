@@ -1,11 +1,14 @@
 package com.impact.core.module.assetRequest.service;
 
 import com.impact.core.expection.customException.ResourceNotFoundException;
+import com.impact.core.module.asset.entity.Asset;
 import com.impact.core.module.assetRequest.entity.AssetRequest;
 import com.impact.core.module.assetRequest.mapper.AssetRequestMapper;
 import com.impact.core.module.assetRequest.payload.request.AssetRequestDTORequest;
 import com.impact.core.module.assetRequest.payload.response.AssetRequestDTOResponse;
 import com.impact.core.module.assetRequest.repository.AssetRequestRepository;
+import com.impact.core.module.assetStatus.enun.EAssetStatus;
+import com.impact.core.module.assetStatus.service.AssetStatusService;
 import com.impact.core.module.mail.factory.MailFactory;
 import com.impact.core.module.mail.payload.ComposedMail;
 import com.impact.core.module.mail.service.MailService;
@@ -22,6 +25,7 @@ import java.util.stream.Collectors;
 @RequiredArgsConstructor
 public class AssetRequestService {
     public final AssetRequestRepository assetRequestRepository;
+    public final AssetStatusService assetStatusService;
     public final AssetRequestMapper assetRequestMapper;
     public final UserService userService;
     public final MailService mailService;
@@ -29,6 +33,10 @@ public class AssetRequestService {
 
     public AssetRequestDTOResponse save(UserDetailsImpl userDetails, AssetRequestDTORequest assetRequestDTORequest) {
         AssetRequest assetRequest = assetRequestMapper.toEntity(assetRequestDTORequest);
+        Asset asset = assetRequest.getAsset();
+        asset.setStatus(assetStatusService.findByName(EAssetStatus.ASSET_STATUS_EARRING));
+        assetRequest.setAsset(asset);
+
         User user = userService.findById(userDetails.getId());
         assetRequest.setUser(user);
         AssetRequest assetRequestSaved = assetRequestRepository.save(assetRequest);
