@@ -37,7 +37,6 @@ public class ProductRequestService {
     public final MailService mailService;
 
     public ProductRequestDTOResponse save(UserDetailsImpl userDetails, ProductRequestDTORequest productRequestDTORequest) {
-
         ProductRequest productRequest = productRequestMapper.toEntity(productRequestDTORequest);
         User user = userService.findById(userDetails.getId());
         productRequest.setUser(user);
