@@ -205,7 +205,7 @@ CREATE TABLE space_reservation
 );
 
 -- DO THIS OR NOTHING RELATED TO THE REQUEST WILL WORK
-ALTER TABLE space_reservation 
+ALTER TABLE space_reservation
 ADD COLUMN user_id INT NOT NULL,
 ADD CONSTRAINT fk_space_reservation_user FOREIGN KEY (user_id) REFERENCES user (id);
 
@@ -397,6 +397,17 @@ CREATE TABLE product_request
     FOREIGN KEY (status_id) REFERENCES resource_request_status (id),
     FOREIGN KEY (user_id) REFERENCES user (id),
     CONSTRAINT unique_product_user UNIQUE (product_id, user_id)
+);
+
+-- This table is used for tracking all product records associated with a request.
+-- It links products to specific product requests through foreign keys.
+CREATE TABLE products_of_request
+(
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    product_id INT,
+    product_request_id INT,
+    FOREIGN KEY (product_id) REFERENCES product (id),
+    FOREIGN KEY (product_request_id) REFERENCES product_request (id)
 );
 
 CREATE TABLE asset_request

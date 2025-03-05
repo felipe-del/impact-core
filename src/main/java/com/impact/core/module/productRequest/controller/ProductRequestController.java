@@ -78,4 +78,13 @@ public class ProductRequestController {
                 .data(productRequestDTOResponse)
                 .build());
     }
+    @PutMapping("/{statusId}/{productRId}")
+    @PreAuthorize("hasRole('ADMINISTRATOR') or hasRole('MANAGER') or hasRole('TEACHER')")
+    public ResponseEntity<ResponseWrapper<Void>> updateStatus(@PathVariable Integer statusId, @PathVariable Integer productRId){
+        productRequestService.updateStatus(statusId,productRId);
+
+        return ResponseEntity.ok(ResponseWrapper.<Void>builder()
+                .message("Cambio de estado de solicitud a cancelado.")
+                .build());
+    }
 }
