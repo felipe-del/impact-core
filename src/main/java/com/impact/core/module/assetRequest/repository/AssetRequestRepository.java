@@ -11,7 +11,7 @@ import java.util.List;
 @Repository
 public interface AssetRequestRepository extends JpaRepository<AssetRequest, Integer> {
 
-    @Query("SELECT a FROM AssetRequest a WHERE a.asset.id = :userId")
+    @Query("SELECT a FROM AssetRequest a WHERE a.user.id = :userId")
     List<AssetRequest> assetsRequestByUser(@Param("userId") Integer userId);
 
 }

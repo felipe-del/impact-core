@@ -70,7 +70,7 @@ public class ProductRequestController {
 
     @GetMapping("/user/{id}")
     @PreAuthorize("hasRole('ADMINISTRATOR') or hasRole('MANAGER') or hasRole('TEACHER')")
-    public ResponseEntity<ResponseWrapper<List<ProductRequestDTOResponse>>> getMyRequests(@PathVariable int id){
+    public ResponseEntity<ResponseWrapper<List<ProductRequestDTOResponse>>> getMyRequests(@PathVariable Integer id){
         List<ProductRequestDTOResponse> productRequestDTOResponse = productRequestService.findByUser(id);
 
         return ResponseEntity.ok(ResponseWrapper.<List<ProductRequestDTOResponse>>builder()

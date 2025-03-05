@@ -23,7 +23,6 @@ public class ProductMapper {
 
     public Product toEntity(ProductRequestDTO productRequestDTO) {
         return Product.builder()
-                .name(productRequestDTO.getName())
                 .purchaseDate(productRequestDTO.getPurchaseDate())
                 .expiryDate(productRequestDTO.getExpiryDate())
                 .category(productCategoryService.findById(productRequestDTO.getCategoryId()))
@@ -34,7 +33,6 @@ public class ProductMapper {
     public ProductResponseDTO toDTO(Product product) {
         return ProductResponseDTO.builder()
                 .id(product.getId())
-                .name(product.getName())
                 .purchaseDate(product.getPurchaseDate())
                 .expiryDate(product.getExpiryDate())
                 .category(productCategoryMapper.toDTO(productCategoryService.findById(product.getCategory().getId())))

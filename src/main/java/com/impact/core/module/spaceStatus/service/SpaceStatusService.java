@@ -23,6 +23,11 @@ public class SpaceStatusService {
                 .toList();
     }
 
+    public SpaceStatus findById(int id) {
+        return spaceStatusRepository.findById(id).
+                orElseThrow(() -> new ResourceNotFoundException("El estado de espacio : id-" + id + " no se encuentra en la base de datos"));
+    }
+
     public SpaceStatus findByName(ESpaceStatus name) {
         return spaceStatusRepository.findByName(name)
                 .orElseThrow(() -> new ResourceNotFoundException("El estado de espacio : " + name + " no se encuentra en la base de datos"));

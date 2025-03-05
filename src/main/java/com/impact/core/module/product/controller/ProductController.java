@@ -11,6 +11,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @RestController
@@ -32,12 +33,12 @@ public class ProductController {
 
     @PostMapping
     @PreAuthorize("hasRole('ADMINISTRATOR') or hasRole('MANAGER')")
-    public ResponseEntity<ResponseWrapper<ProductResponseDTO>> saveProduct(@Valid @RequestBody ProductRequestDTO productRequestDTO) {
-        ProductResponseDTO productResponseDTO = productService.save(productRequestDTO);
+    public ResponseEntity<ResponseWrapper<ArrayList<ProductResponseDTO>>> saveProduct(@Valid @RequestBody ProductRequestDTO productRequestDTO) {
+        ArrayList<ProductResponseDTO> productResponseDTOS = productService.save(productRequestDTO);
 
-        return ResponseEntity.status(HttpStatus.CREATED).body(ResponseWrapper.<ProductResponseDTO>builder()
+        return ResponseEntity.status(HttpStatus.CREATED).body(ResponseWrapper.<ArrayList<ProductResponseDTO>>builder()
                 .message("Producto guardado correctamente.")
-                .data(productResponseDTO)
+                .data(productResponseDTOS)
                 .build());
     }
 
