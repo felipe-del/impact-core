@@ -5,6 +5,8 @@ import com.impact.core.module.mail.factory.MailFactory;
 import com.impact.core.module.mail.payload.ComposedMail;
 import com.impact.core.module.mail.service.MailService;
 import com.impact.core.module.space.entity.Space;
+import com.impact.core.module.space.respository.SpaceRepository;
+import com.impact.core.module.space.service.SpaceService;
 import com.impact.core.module.spaceRequest_Reservation.entity.SpaceRequest;
 import com.impact.core.module.spaceRequest_Reservation.entity.SpaceReservation;
 import com.impact.core.module.spaceRequest_Reservation.mapper.SpaceRndRMapper;
@@ -12,6 +14,8 @@ import com.impact.core.module.spaceRequest_Reservation.payload.request.SpaceRndR
 import com.impact.core.module.spaceRequest_Reservation.payload.response.SpaceRndRResponse;
 import com.impact.core.module.spaceRequest_Reservation.repository.SpaceRequestRepository;
 import com.impact.core.module.spaceRequest_Reservation.repository.SpaceReservationRepository;
+import com.impact.core.module.spaceStatus.enun.ESpaceStatus;
+import com.impact.core.module.spaceStatus.service.SpaceStatusService;
 import com.impact.core.module.user.entity.User;
 import com.impact.core.module.user.service.UserService;
 import com.impact.core.security.service.UserDetailsImpl;
@@ -33,6 +37,8 @@ public class SpaceRndRService {
     public final SpaceRndRMapper spaceRndRMapper;
     public final UserService userService;
     public final MailService mailService;
+    private final SpaceStatusService spaceStatusService;
+    private final SpaceRepository spaceRepository;
 
     public SpaceRndRResponse save(UserDetailsImpl userDetails, SpaceRndRRequest spaceRndRRequest) {
         // Because of how pair works, (a = SpaceRequest, b = SpaceReservation)
@@ -75,6 +81,9 @@ public class SpaceRndRService {
                 ));
             }
         }
+
+        //space.setStatus(spaceStatusService.findByName(ESpaceStatus.SPACE_STATUS_EARRING));
+        //spaceRepository.save(space); // Update space status
 
         // Setting the user since it is only attribute not set by the SpaceRndRMapper
         requestAndReservation.a.setUser(user); // SpaceRequest.setUser
