@@ -1,6 +1,8 @@
 package com.impact.core.module.productRequest.service;
 
 import com.impact.core.expection.customException.ResourceNotFoundException;
+import com.impact.core.module.ProductsOfRequest.Service.ProductsOfRequestServive;
+import com.impact.core.module.ProductsOfRequest.repository.ProductsOfRequestRepository;
 import com.impact.core.module.mail.factory.MailFactory;
 import com.impact.core.module.mail.payload.ComposedMail;
 import com.impact.core.module.mail.service.MailService;
@@ -31,6 +33,7 @@ import java.util.stream.Collectors;
 public class ProductRequestService {
     public final ProductRequestRepository productRequestRepository;
     public final ProductService productService;
+    public final ProductsOfRequestServive productsOfRequestServive;
     public final ProductRepository productRepository;
     public final ProductStatusService productStatusService;
     public final ProductRequestMapper productRequestMapper;
@@ -98,7 +101,8 @@ public class ProductRequestService {
                 .collect(Collectors.toList());
     }
     @Transactional
-    public void updateStatus(Integer status, Integer assetR){
-        productRequestRepository.updateProductRequestStatus(status,assetR);
+    public void cancelRequest(Integer status, Integer productR, Integer productStatus){
+        productRequestRepository.updateProductRequestStatus(status,productR);
+        productsOfRequestServive.cancelRequest(productR,productStatus);
     }
 }
