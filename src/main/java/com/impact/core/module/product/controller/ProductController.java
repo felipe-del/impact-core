@@ -64,5 +64,13 @@ public class ProductController {
                 .build());
     }
 
+    @PutMapping("/{statusId}/{productId}")
+    @PreAuthorize("hasRole('ADMINISTRATOR') or hasRole('MANAGER') or hasRole('TEACHER')")
+    public ResponseEntity<ResponseWrapper<Void>> updateStatus(@PathVariable Integer statusId, @PathVariable Integer productId){
+        productService.updateStatus(statusId,productId);
 
+        return ResponseEntity.ok(ResponseWrapper.<Void>builder()
+                .message("Cambio de estado de producto a DISPONIBLE.")
+                .build());
+    }
 }

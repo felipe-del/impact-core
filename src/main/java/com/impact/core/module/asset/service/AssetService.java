@@ -10,6 +10,7 @@ import com.impact.core.module.currency.entity.Currency;
 import com.impact.core.module.currency.payload.response.SumOfCurrency;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
@@ -68,5 +69,11 @@ public class AssetService {
                 .map(assetMapper::toDTO)
                 .toList();
     }
+
+    @Transactional
+    public void updateStatus(Integer status, String asset){
+        assetRepository.updateAssetStatus(status,asset);
+    }
+
 
 }

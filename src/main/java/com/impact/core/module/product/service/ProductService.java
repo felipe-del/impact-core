@@ -8,6 +8,7 @@ import com.impact.core.module.product.payload.response.ProductResponseDTO;
 import com.impact.core.module.product.repository.ProductRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -62,5 +63,9 @@ public class ProductService {
     public List<Product> getAvailableProductsByCategory(String categoryName, int quantity) {
         List<Product> products = productRepository.findAvailableProductsByCategory(categoryName);
         return products.stream().limit(quantity).collect(Collectors.toList());
+    }
+    @Transactional
+    public void updateStatus(Integer status, Integer product){
+        productRepository.updateProdductStatus(status,product);
     }
 }

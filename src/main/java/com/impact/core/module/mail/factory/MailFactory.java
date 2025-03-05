@@ -5,6 +5,8 @@ import com.impact.core.module.mail.payload.ComposedMail;
 import com.impact.core.module.mail.payload.MetaData;
 import com.impact.core.module.mail.enun.EMailTemplate;
 import com.impact.core.module.productRequest.entity.ProductRequest;
+import com.impact.core.module.spaceRequest_Reservation.entity.SpaceRequest;
+import com.impact.core.module.spaceRequest_Reservation.entity.SpaceReservation;
 import com.impact.core.module.user.entity.User;
 import com.impact.core.module.user.entity.UserToken;
 
@@ -179,6 +181,54 @@ public class MailFactory {
                 EMailTemplate.GENERIC_EMAIL, metaData, List.of(IMPACT_LOGO_IMAGE));
     }
 
+    // SPACE Request EMAILS
+
+    public static ComposedMail createSpaceRequestEmail(SpaceRequest spaceRequest, SpaceReservation spaceReservation) {
+        String emailContent = """
+                Se ha enviado una solicitud de espacio con los siguientes detalles: <br>
+                <strong>Descripción del evento:</strong> %s <br>
+                <strong>Observaciones del evento:</strong> %s <br>
+                <strong>Uso de equipo:</strong> %s <br>
+                <strong>Fecha de inicio:</strong> %s <br>
+                <strong>Fecha de fin:</strong> %s <br>
+                <strong>Espacio:</strong> %s <br>
+                <br>
+                Por favor, espere a que se procese su solicitud.
+                """.formatted(spaceRequest.getEventDesc(), spaceRequest.getEventObs(),
+                spaceRequest.getUseEquipment() ? "Sí" : "No", spaceReservation.getStartTime().toString(), spaceReservation.getEndTime().toString(),
+                spaceRequest.getSpace().getName());
+        List<MetaData> metaData = List.of(
+                new MetaData("emailTitle", "Solicitud de Espacio realizada"),
+                new MetaData("userName", spaceRequest.getUser().getName()),
+                new MetaData("emailContent", emailContent));
+        return createEmail(spaceRequest.getUser().getEmail(), "Solicitud de espacio realizada",
+                EMailTemplate.GENERIC_EMAIL, metaData, List.of(IMPACT_LOGO_IMAGE));
+    }
+
+    public static ComposedMail createAdminReviewSpaceRequest(SpaceRequest spaceRequest, SpaceReservation spaceReservation) {
+        String emailContent = """
+                Se ha recibido una nueva solicitud de espacio que requiere su revisión: <br>
+                <strong>Solicitante:</strong> %s <br>
+                <strong>Correo del solicitante:</strong> %s <br>
+                <strong>Descripción del evento:</strong> %s <br>
+                <strong>Observaciones del evento:</strong> %s <br>
+                <strong>Uso de equipo:</strong> %s <br>
+                <strong>Fecha de inicio:</strong> %s <br>
+                <strong>Fecha de fin:</strong> %s <br>
+                <strong>Espacio:</strong> %s <br>
+                <br>
+                Por favor, revise la solicitud y tome la acción correspondiente (aceptar o rechazar).
+                """.formatted(spaceRequest.getUser().getName(), spaceRequest.getUser().getEmail(),
+                spaceRequest.getEventDesc(), spaceRequest.getEventObs(), spaceRequest.getUseEquipment() ? "Sí" : "No",
+                spaceReservation.getStartTime().toString(), spaceReservation.getEndTime().toString(), spaceRequest.getSpace().getName());
+        List<MetaData> metaData = List.of(
+                new MetaData("emailTitle", "Revision de solicitud de Espacio"),
+                new MetaData("userName", "Usuario Administrador"),
+                new MetaData("emailContent", emailContent));
+        return createEmail(spaceRequest.getUser().getEmail(), "Revision de solicitud",
+                EMailTemplate.GENERIC_EMAIL, metaData, List.of(IMPACT_LOGO_IMAGE));
+    }
+
     // to new user with password random
     public static ComposedMail composeNewUserWelcomeEmail(User user, String password, String createdBy) {
         String emailContent = """
@@ -208,4 +258,5 @@ public class MailFactory {
         return createEmail(createdBy_EMAIL, "Cuenta creada en IMPACT",
                 EMailTemplate.GENERIC_EMAIL, metaData, List.of(IMPACT_LOGO_IMAGE));
     }
+
 }
