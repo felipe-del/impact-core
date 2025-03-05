@@ -1,6 +1,10 @@
 package com.impact.core.module.spaceRequest_Reservation.service;
 
+import com.impact.core.expection.customException.ConflictException;
+import com.impact.core.module.mail.factory.MailFactory;
+import com.impact.core.module.mail.payload.ComposedMail;
 import com.impact.core.module.mail.service.MailService;
+import com.impact.core.module.space.entity.Space;
 import com.impact.core.module.spaceRequest_Reservation.entity.SpaceRequest;
 import com.impact.core.module.spaceRequest_Reservation.entity.SpaceReservation;
 import com.impact.core.module.spaceRequest_Reservation.mapper.SpaceRndRMapper;
@@ -15,6 +19,7 @@ import lombok.RequiredArgsConstructor;
 import org.antlr.v4.runtime.misc.Pair;
 import org.springframework.stereotype.Service;
 
+import java.time.*;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
@@ -26,7 +31,6 @@ public class SpaceRndRService {
     public final SpaceRequestRepository spaceRequestRepository;
     public final SpaceReservationRepository spaceReservationRepository;
     public final SpaceRndRMapper spaceRndRMapper;
-
     public final UserService userService;
     public final MailService mailService;
 
@@ -34,6 +38,43 @@ public class SpaceRndRService {
         // Because of how pair works, (a = SpaceRequest, b = SpaceReservation)
         Pair<SpaceRequest, SpaceReservation> requestAndReservation = spaceRndRMapper.toEntity(spaceRndRRequest);
         User user = userService.findById(userDetails.getId());
+        Space space = requestAndReservation.a.getSpace();
+        LocalTime openTime = space.getOpenTime();
+        LocalTime closeTime = space.getCloseTime();
+        Instant startTime = requestAndReservation.b.getStartTime();
+        Instant endTime = requestAndReservation.b.getEndTime();
+
+        // Convertir los Instant a LocalTime directamente, sin usar ZoneId
+        LocalTime startLocalTime = LocalTime.ofInstant(startTime, ZoneOffset.UTC);  // Suponiendo que los Instant están en UTC
+        LocalTime endLocalTime = LocalTime.ofInstant(endTime, ZoneOffset.UTC);  // Suponiendo que los Instant están en UTC
+
+        // Validar si la reserva está dentro del horario permitido
+        if (startLocalTime.isBefore(openTime) || endLocalTime.isAfter(closeTime)) {
+            throw new ConflictException(String.format(
+                    "El espacio '%s' solo está disponible de %s a %s.",
+                    space.getName(), openTime, closeTime
+            ));
+        }
+
+        // Obtener reservas activas en el mismo espacio
+        List<SpaceReservation> reservations = spaceReservationRepository.findAllBySpace(space);
+
+        for (SpaceReservation reservation : reservations) {
+            Instant reservedStart = reservation.getStartTime();
+            Instant reservedEnd = reservation.getEndTime();
+
+            // Convertir los Instant de las reservas existentes a LocalTime
+            LocalTime reservedStartLocal = LocalTime.ofInstant(reservedStart, ZoneOffset.UTC);
+            LocalTime reservedEndLocal = LocalTime.ofInstant(reservedEnd, ZoneOffset.UTC);
+
+            // Verificar si hay solapamiento con otra reserva
+            if (reservedStartLocal.isBefore(endLocalTime) && reservedEndLocal.isAfter(startLocalTime)) {
+                throw new ConflictException(String.format(
+                        "El espacio '%s' ya está reservado en ese horario. Próxima disponibilidad después de %s.",
+                        space.getName(), reservedEndLocal
+                ));
+            }
+        }
 
         // Setting the user since it is only attribute not set by the SpaceRndRMapper
         requestAndReservation.a.setUser(user); // SpaceRequest.setUser
@@ -43,8 +84,10 @@ public class SpaceRndRService {
         SpaceRequest spaceRequestSaved = spaceRequestRepository.save(requestAndReservation.a);
         SpaceReservation spaceReservationSaved = spaceReservationRepository.save(requestAndReservation.b);
 
-        // SENDING MAILS IS PENDING
-        // FELIPE LO TIENE QUE HACER PORQUE SE OFRECIO EL 03/03/2025
+        ComposedMail composedMailToUser = MailFactory.createSpaceRequestEmail(spaceRequestSaved, spaceReservationSaved);
+        mailService.sendComposedEmail(composedMailToUser);
+        ComposedMail composedMailToAdmin = MailFactory.createAdminReviewSpaceRequest(spaceRequestSaved, spaceReservationSaved);
+        mailService.sendComposedEmailToAllAdmins(composedMailToAdmin);
 
         return spaceRndRMapper.toDTO(spaceRequestSaved, spaceReservationSaved);
     }
