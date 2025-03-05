@@ -22,6 +22,7 @@ public class SpaceRndRRequest {
     @NotBlank(message = "La descripción del evento es obligatoria.")
     private String eventDesc;     // Information needed for SpaceRequest
 
+    @NotNull(message = "La observación del evento es obligatoria.")
     private String eventObs;      // Information needed for SpaceRequest
 
     @NotNull(message = "El flag de uso de equipo es obligatorio.")
