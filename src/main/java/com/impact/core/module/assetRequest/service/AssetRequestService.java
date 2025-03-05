@@ -17,6 +17,7 @@ import com.impact.core.module.user.service.UserService;
 import com.impact.core.security.service.UserDetailsImpl;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.stream.Collectors;
@@ -79,5 +80,10 @@ public class AssetRequestService {
                 .map(assetRequestMapper::toDTO)
                 .collect(Collectors.toList());
     }
+    @Transactional
+    public void updateStatus(Integer status, Integer productR){
+        assetRequestRepository.updateAssetRequestStatus(status,productR);
+    }
+
 
 }
