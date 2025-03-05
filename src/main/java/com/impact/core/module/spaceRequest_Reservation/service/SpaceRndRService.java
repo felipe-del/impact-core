@@ -80,4 +80,14 @@ public class SpaceRndRService {
 
         return joinSpaceRandResponse(requests,reservations);
     }
+
+    public void cancelReservation(Integer resId){
+        Optional<SpaceReservation> sr= spaceReservationRepository.findById(resId);
+        sr.ifPresent(spaceReservationRepository::delete);
+    }
+    @Transactional
+    public void cancelRequest(Integer status,Integer reqId){
+        spaceRequestRepository.updateSpaceRequest(status,reqId);
+        cancelReservation(reqId);
+    }
 }
