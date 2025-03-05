@@ -191,10 +191,12 @@ public class MailFactory {
                 <strong>Uso de equipo:</strong> %s <br>
                 <strong>Fecha de inicio:</strong> %s <br>
                 <strong>Fecha de fin:</strong> %s <br>
+                <strong>Espacio:</strong> %s <br>
                 <br>
                 Por favor, espere a que se procese su solicitud.
                 """.formatted(spaceRequest.getEventDesc(), spaceRequest.getEventObs(),
-                spaceRequest.getUseEquipment() ? "Sí" : "No", spaceReservation.getStartTime().toString(), spaceReservation.getEndTime().toString());
+                spaceRequest.getUseEquipment() ? "Sí" : "No", spaceReservation.getStartTime().toString(), spaceReservation.getEndTime().toString(),
+                spaceRequest.getSpace().getName());
         List<MetaData> metaData = List.of(
                 new MetaData("emailTitle", "Solicitud de Espacio realizada"),
                 new MetaData("userName", spaceRequest.getUser().getName()),
@@ -213,11 +215,12 @@ public class MailFactory {
                 <strong>Uso de equipo:</strong> %s <br>
                 <strong>Fecha de inicio:</strong> %s <br>
                 <strong>Fecha de fin:</strong> %s <br>
+                <strong>Espacio:</strong> %s <br>
                 <br>
                 Por favor, revise la solicitud y tome la acción correspondiente (aceptar o rechazar).
                 """.formatted(spaceRequest.getUser().getName(), spaceRequest.getUser().getEmail(),
                 spaceRequest.getEventDesc(), spaceRequest.getEventObs(), spaceRequest.getUseEquipment() ? "Sí" : "No",
-                spaceReservation.getStartTime().toString(), spaceReservation.getEndTime().toString());
+                spaceReservation.getStartTime().toString(), spaceReservation.getEndTime().toString(), spaceRequest.getSpace().getName());
         List<MetaData> metaData = List.of(
                 new MetaData("emailTitle", "Revision de solicitud de Espacio"),
                 new MetaData("userName", "Usuario Administrador"),
