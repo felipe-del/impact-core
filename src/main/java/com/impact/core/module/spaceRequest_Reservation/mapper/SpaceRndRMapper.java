@@ -52,13 +52,14 @@ public class SpaceRndRMapper {
     public SpaceRndRResponse toDTO(SpaceRequest sReq, SpaceReservation sRes) {
         return SpaceRndRResponse.builder()
                 .space(spaceMapper.toDTO(sReq.getSpace()))
+                .reqAndResId(sReq.getId())
                 .numPeople(sReq.getNumPeople())
                 .eventDesc(sReq.getEventDesc())
                 .eventObs(sReq.getEventObs())
                 .status(resourceRequestStatusMapper.toDTO(sReq.getStatus()))
                 .useEquipment(sReq.getUseEquipment())
-                .startTime(sRes.getStartTime())
-                .endTime(sRes.getEndTime())
+                .startTime(sRes != null ? sRes.getStartTime() : null)
+                .endTime(sRes != null ? sRes.getEndTime() : null)
                 .user(myUserMapper.toDTO(sReq.getUser()))
                 .build();
     }

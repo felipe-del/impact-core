@@ -22,11 +22,13 @@ import com.impact.core.security.service.UserDetailsImpl;
 import lombok.RequiredArgsConstructor;
 import org.antlr.v4.runtime.misc.Pair;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.time.*;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Optional;
 
 @Service("spaceRndRService")
 @RequiredArgsConstructor
@@ -114,19 +116,30 @@ public class SpaceRndRService {
         Iterator<SpaceRequest> reqIterator = requests.iterator();
         Iterator<SpaceReservation> resIterator = reservations.iterator();
 
-        while(reqIterator.hasNext() && resIterator.hasNext()) {
+        while (reqIterator.hasNext()) {
             SpaceRequest req = reqIterator.next();
-            SpaceReservation res = resIterator.next();
+            SpaceReservation res = (resIterator.hasNext()) ? resIterator.next() : null;
 
             responses.add(spaceRndRMapper.toDTO(req, res));
         }
 
         return responses;
     }
+
     public List<SpaceRndRResponse> getByUser(Integer id){
         List<SpaceRequest>  requests = spaceRequestRepository.spaceRequestByUser(id);
         List<SpaceReservation> reservations = spaceReservationRepository.spaceReservationByUser(id);
 
         return joinSpaceRandResponse(requests,reservations);
+    }
+
+    public void cancelReservation(Integer resId){
+        Optional<SpaceReservation> sr= spaceReservationRepository.findById(resId);
+        sr.ifPresent(spaceReservationRepository::delete);
+    }
+    @Transactional
+    public void cancelRequest(Integer status,Integer reqId){
+        spaceRequestRepository.updateSpaceRequest(status,reqId);
+        cancelReservation(reqId);
     }
 }
