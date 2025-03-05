@@ -1,5 +1,4 @@
 package com.impact.core.module.spaceRequest_Reservation.controller;
-
 import com.impact.core.module.spaceRequest_Reservation.payload.request.SpaceRndRRequest;
 import com.impact.core.module.spaceRequest_Reservation.payload.response.SpaceRndRResponse;
 import com.impact.core.module.spaceRequest_Reservation.service.SpaceRndRService;
@@ -49,6 +48,17 @@ public class SpaceRndRController {
                         .data(responses)
                         .build()
         );
+    }
+
+    @GetMapping("/user/{id}")
+    @PreAuthorize("hasRole('ADMINISTRATOR') or hasRole('MANAGER') or hasRole('TEACHER')")
+    public ResponseEntity<ResponseWrapper<List<SpaceRndRResponse>>> getMyRequests(@PathVariable Integer id){
+        List<SpaceRndRResponse> spaceRndRRequest = spaceRndRService.getByUser(id);
+
+        return ResponseEntity.ok(ResponseWrapper.<List<SpaceRndRResponse>>builder()
+                .message("Lista de solicitudes de espacios por usuario.")
+                .data(spaceRndRRequest)
+                .build());
     }
 
 }

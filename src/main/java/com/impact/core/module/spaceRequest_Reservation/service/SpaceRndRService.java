@@ -54,6 +54,9 @@ public class SpaceRndRService {
         List<SpaceRequest>  requests = spaceRequestRepository.findAll();
         List<SpaceReservation> reservations = spaceReservationRepository.findAll();
 
+        return joinSpaceRandResponse(requests,reservations);
+    }
+    public List<SpaceRndRResponse> joinSpaceRandResponse(List<SpaceRequest> requests, List<SpaceReservation> reservations){
         List<SpaceRndRResponse> responses = new ArrayList<>();
 
         Iterator<SpaceRequest> reqIterator = requests.iterator();
@@ -67,5 +70,11 @@ public class SpaceRndRService {
         }
 
         return responses;
+    }
+    public List<SpaceRndRResponse> getByUser(Integer id){
+        List<SpaceRequest>  requests = spaceRequestRepository.spaceRequestByUser(id);
+        List<SpaceReservation> reservations = spaceReservationRepository.spaceReservationByUser(id);
+
+        return joinSpaceRandResponse(requests,reservations);
     }
 }
