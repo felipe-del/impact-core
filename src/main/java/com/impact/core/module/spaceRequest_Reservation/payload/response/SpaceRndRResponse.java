@@ -1,5 +1,6 @@
 package com.impact.core.module.spaceRequest_Reservation.payload.response;
 
+import com.impact.core.module.resource_request_status.payload.response.ResourceRequestStatusResponse;
 import com.impact.core.module.space.payload.response.SpaceResponse;
 import com.impact.core.module.spaceStatus.payload.response.SpaceStatusResponse;
 import com.impact.core.module.user.payload.response.UserResponse;
@@ -18,7 +19,7 @@ public class SpaceRndRResponse {
     private int numPeople;
     private String eventDesc;
     private String eventObs;
-    private SpaceStatusResponse status;
+    private ResourceRequestStatusResponse status;
     private Boolean useEquipment;
     private Instant startTime;
     private Instant endTime;

@@ -1,9 +1,7 @@
 package com.impact.core.module.spaceRequest_Reservation.entity;
-
 import com.impact.core.module.resource_request_status.entity.ResourceRequestStatus;
 import com.impact.core.module.space.entity.Space;
 import com.impact.core.module.spaceStatus.entity.SpaceStatus;
-import com.impact.core.module.spaceStatus.enun.ESpaceStatus;
 import com.impact.core.module.user.entity.User;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
@@ -40,7 +38,7 @@ public class SpaceRequest {
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "status_id")
-    private SpaceStatus status;
+    private ResourceRequestStatus status;
 
     @ColumnDefault("0")
     @Column(name = "use_equipment")
