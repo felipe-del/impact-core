@@ -9,11 +9,11 @@ import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 @RestController
 @RequestMapping("/api/space-request&reservation")
@@ -23,7 +23,7 @@ public class SpaceRndRController {
     public final SpaceRndRService spaceRndRService;
 
     @PostMapping
-//    @PreAuthorize("hasRole('ADMINISTRATOR') or hasRole('MANAGER') or hasRole('TEACHER')")
+    @PreAuthorize("hasRole('ADMINISTRATOR') or hasRole('MANAGER') or hasRole('TEACHER')")
     public ResponseEntity<ResponseWrapper<SpaceRndRResponse>> createSpaceRndR(
             @AuthenticationPrincipal UserDetailsImpl userDetails,
             @Valid @RequestBody SpaceRndRRequest spaceRndRRequest) {
@@ -37,5 +37,19 @@ public class SpaceRndRController {
                         .build()
         );
     }
+
+    @GetMapping("/all")
+    @PreAuthorize("hasRole('ADMINISTRATOR') or hasRole('MANAGER') or hasRole('TEACHER')")
+    public ResponseEntity<ResponseWrapper<List<SpaceRndRResponse>>> getAllSpaceRndR() {
+        List<SpaceRndRResponse> responses =  spaceRndRService.getAll();
+
+        return ResponseEntity.status(HttpStatus.OK).body(
+                ResponseWrapper.<List<SpaceRndRResponse>>builder()
+                        .message("Lista de todas las solicitudes y reservaciones")
+                        .data(responses)
+                        .build()
+        );
+    }
+
 }
 

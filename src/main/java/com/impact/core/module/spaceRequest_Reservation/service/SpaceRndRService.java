@@ -15,6 +15,10 @@ import lombok.RequiredArgsConstructor;
 import org.antlr.v4.runtime.misc.Pair;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
+import java.util.Iterator;
+import java.util.List;
+
 @Service("spaceRndRService")
 @RequiredArgsConstructor
 public class SpaceRndRService {
@@ -45,4 +49,23 @@ public class SpaceRndRService {
         return spaceRndRMapper.toDTO(spaceRequestSaved, spaceReservationSaved);
     }
 
+
+    public List<SpaceRndRResponse> getAll() {
+        List<SpaceRequest>  requests = spaceRequestRepository.findAll();
+        List<SpaceReservation> reservations = spaceReservationRepository.findAll();
+
+        List<SpaceRndRResponse> responses = new ArrayList<>();
+
+        Iterator<SpaceRequest> reqIterator = requests.iterator();
+        Iterator<SpaceReservation> resIterator = reservations.iterator();
+
+        while(reqIterator.hasNext() && resIterator.hasNext()) {
+            SpaceRequest req = reqIterator.next();
+            SpaceReservation res = resIterator.next();
+
+            responses.add(spaceRndRMapper.toDTO(req, res));
+        }
+
+        return responses;
+    }
 }
