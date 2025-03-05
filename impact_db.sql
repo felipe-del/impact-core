@@ -216,11 +216,11 @@ CREATE TABLE space_request
     num_people    INT,
     event_desc    VARCHAR(255),
     event_obs     VARCHAR(255),
-    status_id     INT,
     user_id    INT NOT NULL,
     use_equipment TINYINT(1) DEFAULT 0,
+    status_id  INT,
+    FOREIGN KEY (status_id) REFERENCES resource_request_status (id),
     FOREIGN KEY (space_id) REFERENCES space (id),
-    FOREIGN KEY (status_id) REFERENCES space_status (id),
     FOREIGN KEY (user_id) REFERENCES user (id)
 );
 
