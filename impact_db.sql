@@ -74,7 +74,8 @@ INSERT INTO resource_request_status (name, description)
 VALUES ('RESOURCE_REQUEST_STATUS_EARRING', 'Está pendiente de ser aprobado.'),
        ('RESOURCE_REQUEST_STATUS_ACCEPTED', 'Ha sido aceptado.'),
        ('RESOURCE_REQUEST_STATUS_RETURNED', 'Ha sido devuelto.'),
-       ('RESOURCE_REQUEST_STATUS_CANCELED', 'Ha sido cancelada.');
+       ('RESOURCE_REQUEST_STATUS_CANCELED', 'Ha sido cancelada.'),
+       ('RESOURCE_REQUEST_STATUS_RENEWAL', 'Pendiente de renovacion.');
 
 -- NOT NECESSARY
 -- CREATE TABLE REQUEST
@@ -424,6 +425,19 @@ CREATE TABLE asset_request
     FOREIGN KEY (user_id) REFERENCES user (id),
     CONSTRAINT unique_asset_user UNIQUE (asset_id, user_id)
 );
+
+ALTER TABLE asset_request DROP FOREIGN KEY asset_request_ibfk_1;
+ALTER TABLE asset_request DROP FOREIGN KEY asset_request_ibfk_2;
+ALTER TABLE asset_request DROP FOREIGN KEY asset_request_ibfk_3;
+ALTER TABLE asset_request DROP INDEX unique_asset_user;
+ALTER TABLE asset_request 
+ADD CONSTRAINT asset_request_ibfk_1 FOREIGN KEY (asset_id) REFERENCES asset (id);
+ALTER TABLE asset_request 
+ADD CONSTRAINT asset_request_ibfk_2 FOREIGN KEY (status_id) REFERENCES resource_request_status (id);
+ALTER TABLE asset_request 
+ADD CONSTRAINT asset_request_ibfk_3 FOREIGN KEY (user_id) REFERENCES user (id);
+
+
 
 
 -- IMPORTANT NOTE: WE DECIDED TO CHANGE THE WAY WE KEEP TRACK OF THE MOVEMENTS IN THE DATABASE

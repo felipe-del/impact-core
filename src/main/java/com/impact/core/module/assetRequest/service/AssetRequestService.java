@@ -83,6 +83,17 @@ public class AssetRequestService {
         return assetRequestMapper.toDTO(assetRequestSaved);
     }
 
+    public AssetRequestDTOResponse updateRenew(int id, AssetRequestDTORequest assetRequestDTORequest) {
+        AssetRequest assetRequest = this.findById(id);
+        AssetRequest assetRequestUpdated = assetRequestMapper.toEntityUpdate(assetRequestDTORequest);
+        assetRequestUpdated.setId(assetRequest.getId());
+        assetRequestUpdated.setUser(assetRequest.getUser());
+        assetRequestUpdated.setCreatedAt(assetRequest.getCreatedAt());
+        boolean expirationDateChanged = !assetRequest.getExpirationDate().equals(assetRequestUpdated.getExpirationDate());
+        AssetRequest assetRequestSaved = assetRequestRepository.save(assetRequestUpdated);
+        if (expirationDateChanged) {dynamicSchedulerService.scheduleNotification(assetRequestUpdated);}
+        return assetRequestMapper.toDTO(assetRequestSaved);
+    }
     public void delete(int id) {
         AssetRequest assetRequest = findById(id);
         assetRequestRepository.delete(assetRequest);

@@ -86,6 +86,17 @@ public class AssetRequestController {
                 .build());
     }
 
+    @PutMapping("/renew/{id}")
+    @PreAuthorize("hasRole('ADMINISTRATOR') or hasRole('MANAGER') or hasRole('TEACHER')")
+    public ResponseEntity<ResponseWrapper<AssetRequestDTOResponse>> updateAssetRequestRenew(
+            @PathVariable int id, @Valid @RequestBody AssetRequestDTORequest assetRequestDTORequest) {
+        AssetRequestDTOResponse assetRequestDTOResponse = assetRequestService.updateRenew(id, assetRequestDTORequest);
+
+        return ResponseEntity.ok(ResponseWrapper.<AssetRequestDTOResponse>builder()
+                .message("Solicitud de activo actualizada correctamente.")
+                .data(assetRequestDTOResponse)
+                .build());
+    }
     @DeleteMapping("/{id}")
     @PreAuthorize("hasRole('ADMINISTRATOR') or hasRole('MANAGER') or hasRole('TEACHER')")
     public ResponseEntity<ResponseWrapper<Void>> deleteAssetRequest(@PathVariable int id) {

@@ -195,10 +195,10 @@ public class MailFactory {
                 """.formatted(assetRequest.getAsset().getSubcategory().getName(), assetRequest.getReason(),
                 assetRequest.getStatus().getName(), assetRequest.getCreatedAt().toString());
         List<MetaData> metaData = List.of(
-                new MetaData("emailTitle", "Solicitud de Activo realizada"),
+                new MetaData("emailTitle", "Solicitud de Renovacion de prestamo de Activo realizada"),
                 new MetaData("userName", assetRequest.getUser().getName()),
                 new MetaData("emailContent", emailContent));
-        return createEmail(assetRequest.getUser().getEmail(), "Solicitud de activo realizada",
+        return createEmail(assetRequest.getUser().getEmail(), "Solicitud de Renovacion de prestamo de Activo realizada",
                 EMailTemplate.GENERIC_EMAIL, metaData, List.of(IMPACT_LOGO_IMAGE));
     }
 
@@ -217,7 +217,7 @@ public class MailFactory {
                 assetRequest.getAsset().getSubcategory().getName(), assetRequest.getReason(),
                 assetRequest.getStatus().getName(), assetRequest.getCreatedAt().toString());
         List<MetaData> metaData = List.of(
-                new MetaData("emailTitle", "Revision de solicitud de Activo"),
+                new MetaData("emailTitle", "Revision de solicitud de renovacion de prestamo de Activo"),
                 new MetaData("userName", "Usuario Administrador"),
                 new MetaData("emailContent", emailContent));
         return createEmail(assetRequest.getUser().getEmail(), "Revision de solicitud",

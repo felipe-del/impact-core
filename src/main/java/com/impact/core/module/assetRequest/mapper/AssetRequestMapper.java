@@ -32,6 +32,15 @@ public class AssetRequestMapper {
                 .build();
     }
 
+    public AssetRequest toEntityUpdate(AssetRequestDTORequest assetRequestDTORequest) {
+        return AssetRequest.builder()
+                .asset(assetService.findById(assetRequestDTORequest.getAssetId()))
+                .reason(assetRequestDTORequest.getReason())
+                .expirationDate(assetRequestDTORequest.getExpirationDate())
+                .status(resourceRequestStatusService.findByName(EResourceRequestStatus.RESOURCE_REQUEST_STATUS_RENEWAL))
+                .build();
+    }
+
     public AssetRequest toEntity(AssetRequestDTORenew assetRequestDTORenew) {
         return AssetRequest.builder()
                 .asset(assetService.findById(assetRequestDTORenew.getAssetId()))
