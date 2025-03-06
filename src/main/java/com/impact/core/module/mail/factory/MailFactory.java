@@ -181,6 +181,49 @@ public class MailFactory {
                 EMailTemplate.GENERIC_EMAIL, metaData, List.of(IMPACT_LOGO_IMAGE));
     }
 
+    // ASSET Renew EMAILS
+
+    public static ComposedMail createAssetRenewEmail(AssetRequest assetRequest) {
+        String emailContent = """
+                Se ha enviado una solicitud de renovacion de prestamo de activo con los siguientes detalles: <br>
+                <strong>Subcategoría del Activo:</strong> %s <br>
+                <strong>Razón:</strong> %s <br>
+                <strong>Estado de solicitud:</strong> %s <br>
+                <strong>Fecha de creación:</strong> %s <br>
+                <br>
+                Por favor, espere a que se procese su solicitud.
+                """.formatted(assetRequest.getAsset().getSubcategory().getName(), assetRequest.getReason(),
+                assetRequest.getStatus().getName(), assetRequest.getCreatedAt().toString());
+        List<MetaData> metaData = List.of(
+                new MetaData("emailTitle", "Solicitud de Activo realizada"),
+                new MetaData("userName", assetRequest.getUser().getName()),
+                new MetaData("emailContent", emailContent));
+        return createEmail(assetRequest.getUser().getEmail(), "Solicitud de activo realizada",
+                EMailTemplate.GENERIC_EMAIL, metaData, List.of(IMPACT_LOGO_IMAGE));
+    }
+
+    public static ComposedMail createAdminReviewAssetRenew(AssetRequest assetRequest) {
+        String emailContent = """
+                Se ha recibido una nueva solicitud de renovacion de prestamo de activo que requiere su revisión: <br>
+                <strong>Solicitante:</strong> %s <br>
+                <strong>Correo del solicitante:</strong> %s <br>
+                <strong>Subcategoría del Activo:</strong> %s <br>
+                <strong>Razón:</strong> %s <br>
+                <strong>Estado actual de la solicitud:</strong> %s <br>
+                <strong>Fecha de creación:</strong> %s <br>
+                <br>
+                Por favor, revise la solicitud y tome la acción correspondiente (aceptar o rechazar).
+                """.formatted(assetRequest.getUser().getName(), assetRequest.getUser().getEmail(),
+                assetRequest.getAsset().getSubcategory().getName(), assetRequest.getReason(),
+                assetRequest.getStatus().getName(), assetRequest.getCreatedAt().toString());
+        List<MetaData> metaData = List.of(
+                new MetaData("emailTitle", "Revision de solicitud de Activo"),
+                new MetaData("userName", "Usuario Administrador"),
+                new MetaData("emailContent", emailContent));
+        return createEmail(assetRequest.getUser().getEmail(), "Revision de solicitud",
+                EMailTemplate.GENERIC_EMAIL, metaData, List.of(IMPACT_LOGO_IMAGE));
+    }
+
     // SPACE Request EMAILS
 
     public static ComposedMail createSpaceRequestEmail(SpaceRequest spaceRequest, SpaceReservation spaceReservation) {

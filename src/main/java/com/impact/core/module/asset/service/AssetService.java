@@ -48,6 +48,11 @@ public class AssetService {
                 .orElseThrow(() -> new ResourceNotFoundException("El activo con el id: " + id + " no existe."));
     }
 
+    public AssetResponse findByIdR(int id) {
+        Asset asset = this.findById(id);
+        return assetMapper.toDTO(asset);
+    }
+
     public List<SumOfCurrency> getInventoryValue(LocalDate start_date, LocalDate end_date) {
         List<SumOfCurrency> sumOfCurrencies = new ArrayList<>();
 
