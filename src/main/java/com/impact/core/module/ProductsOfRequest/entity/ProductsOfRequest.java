@@ -8,7 +8,10 @@ import lombok.*;
 @Getter
 @Setter
 @Entity
+@Builder
 @Table(name = "products_of_request")
+@NoArgsConstructor
+@AllArgsConstructor
 public class ProductsOfRequest {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
