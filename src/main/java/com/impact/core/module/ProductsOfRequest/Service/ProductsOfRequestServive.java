@@ -43,4 +43,8 @@ public class ProductsOfRequestServive {
         }
     }
 
+    public ProductsOfRequest save(ProductsOfRequest productsOfRequest){
+        return productsOfRequestRepository.save(productsOfRequest);
+    }
+
 }
