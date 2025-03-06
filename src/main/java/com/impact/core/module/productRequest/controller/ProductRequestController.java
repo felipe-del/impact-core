@@ -74,7 +74,7 @@ public class ProductRequestController {
         List<ProductRequestDTOResponse> productRequestDTOResponse = productRequestService.findByUser(id);
 
         return ResponseEntity.ok(ResponseWrapper.<List<ProductRequestDTOResponse>>builder()
-                .message("Lista de solicitudes de activos por usuario.")
+                .message("Lista de solicitudes de productos por usuario.")
                 .data(productRequestDTOResponse)
                 .build());
     }
