@@ -422,22 +422,8 @@ CREATE TABLE asset_request
     created_at      DATETIME DEFAULT CURRENT_TIMESTAMP NULL,
     FOREIGN KEY (asset_id) REFERENCES asset (id),
     FOREIGN KEY (status_id) REFERENCES resource_request_status (id),
-    FOREIGN KEY (user_id) REFERENCES user (id),
-    CONSTRAINT unique_asset_user UNIQUE (asset_id, user_id)
+    FOREIGN KEY (user_id) REFERENCES user (id)
 );
-
-ALTER TABLE asset_request DROP FOREIGN KEY asset_request_ibfk_1;
-ALTER TABLE asset_request DROP FOREIGN KEY asset_request_ibfk_2;
-ALTER TABLE asset_request DROP FOREIGN KEY asset_request_ibfk_3;
-ALTER TABLE asset_request DROP INDEX unique_asset_user;
-ALTER TABLE asset_request 
-ADD CONSTRAINT asset_request_ibfk_1 FOREIGN KEY (asset_id) REFERENCES asset (id);
-ALTER TABLE asset_request 
-ADD CONSTRAINT asset_request_ibfk_2 FOREIGN KEY (status_id) REFERENCES resource_request_status (id);
-ALTER TABLE asset_request 
-ADD CONSTRAINT asset_request_ibfk_3 FOREIGN KEY (user_id) REFERENCES user (id);
-
-
 
 
 -- IMPORTANT NOTE: WE DECIDED TO CHANGE THE WAY WE KEEP TRACK OF THE MOVEMENTS IN THE DATABASE
