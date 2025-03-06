@@ -258,5 +258,26 @@ public class MailFactory {
         return createEmail(createdBy_EMAIL, "Cuenta creada en IMPACT",
                 EMailTemplate.GENERIC_EMAIL, metaData, List.of(IMPACT_LOGO_IMAGE));
     }
+  
+    // to send notification about asset expiration date request
+    public static ComposedMail composeUserNotificationExpirationDateAssetRequest(AssetRequest assetRequest){
+        String emailContent = """
+                El préstamo del activo que solicitó está próximo a vencer <br>
+                <strong>Solicitante:</strong> %s <br>
+                <strong>Categoría del Activo:</strong> %s <br>
+                <strong>Placa:</strong> %s <br>
+                <strong>Fecha de vencimiento:</strong> %s <br>
+                <br>
+                Por favor, renueve la solicitud del activo o cancele
+                """.formatted(assetRequest.getUser().getName(),
+                assetRequest.getAsset().getSubcategory().getName(),assetRequest.getAsset().getPlateNumber(),
+                assetRequest.getExpirationDate());
+        List<MetaData> metaData = List.of(
+                new MetaData("emailTitle","Notificación del vencimiento de activo prestado."),
+                new MetaData("userName",assetRequest.getUser().getName()),
+                new MetaData("emailContent", emailContent));
+        return createEmail(assetRequest.getUser().getEmail(),"Notificación de vencimiento de préstamo",
+                EMailTemplate.GENERIC_EMAIL,metaData, List.of(IMPACT_LOGO_IMAGE));
+    }
 
 }
