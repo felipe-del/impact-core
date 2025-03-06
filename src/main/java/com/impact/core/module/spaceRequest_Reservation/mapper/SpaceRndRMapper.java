@@ -1,5 +1,8 @@
 package com.impact.core.module.spaceRequest_Reservation.mapper;
 
+import com.impact.core.module.resource_request_status.enun.EResourceRequestStatus;
+import com.impact.core.module.resource_request_status.mapper.ResourceRequestStatusMapper;
+import com.impact.core.module.resource_request_status.service.ResourceRequestStatusService;
 import com.impact.core.module.space.mapper.SpaceMapper;
 import com.impact.core.module.space.service.SpaceService;
 import com.impact.core.module.spaceRequest_Reservation.entity.SpaceRequest;
@@ -20,9 +23,8 @@ public class SpaceRndRMapper {
 
     public final SpaceService spaceService;
     public final SpaceMapper spaceMapper;
-
-    public final SpaceStatusService spaceStatusService;
-    public final SpaceStatusMapper spaceStatusMapper;
+    public final ResourceRequestStatusMapper resourceRequestStatusMapper;
+    public final ResourceRequestStatusService resourceRequestStatusService;
 
     public final MyUserMapper myUserMapper;
 
@@ -33,7 +35,7 @@ public class SpaceRndRMapper {
                 .numPeople(spaceRndR_Request.getNumPeople())
                 .eventDesc(spaceRndR_Request.getEventDesc())
                 .eventObs(spaceRndR_Request.getEventObs())
-                .status(spaceStatusService.findById(spaceRndR_Request.getStatusId()))
+                .status(resourceRequestStatusService.findByName(EResourceRequestStatus.RESOURCE_REQUEST_STATUS_EARRING))
                 .useEquipment(spaceRndR_Request.getUseEquipment())
                 .build();
 
@@ -50,13 +52,14 @@ public class SpaceRndRMapper {
     public SpaceRndRResponse toDTO(SpaceRequest sReq, SpaceReservation sRes) {
         return SpaceRndRResponse.builder()
                 .space(spaceMapper.toDTO(sReq.getSpace()))
+                .reqAndResId(sReq.getId())
                 .numPeople(sReq.getNumPeople())
                 .eventDesc(sReq.getEventDesc())
                 .eventObs(sReq.getEventObs())
-                .status(spaceStatusMapper.toDTO(sReq.getStatus()))
+                .status(resourceRequestStatusMapper.toDTO(sReq.getStatus()))
                 .useEquipment(sReq.getUseEquipment())
-                .startTime(sRes.getStartTime())
-                .endTime(sRes.getEndTime())
+                .startTime(sRes != null ? sRes.getStartTime() : null)
+                .endTime(sRes != null ? sRes.getEndTime() : null)
                 .user(myUserMapper.toDTO(sReq.getUser()))
                 .build();
     }

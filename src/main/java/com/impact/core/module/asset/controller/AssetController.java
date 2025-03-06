@@ -77,4 +77,13 @@ public class AssetController {
                 .data(inventoryValues)
                 .build());
     }
+    @PutMapping("/{statusId}/{assetId}")
+    @PreAuthorize("hasRole('ADMINISTRATOR') or hasRole('MANAGER') or hasRole('TEACHER')")
+    public ResponseEntity<ResponseWrapper<Void>> updateStatus(@PathVariable Integer statusId, @PathVariable String assetId){
+        assetService.updateStatus(statusId,assetId);
+
+        return ResponseEntity.ok(ResponseWrapper.<Void>builder()
+                .message("Cambio de estado de activo a DISPONIBLE.")
+                .build());
+    }
 }

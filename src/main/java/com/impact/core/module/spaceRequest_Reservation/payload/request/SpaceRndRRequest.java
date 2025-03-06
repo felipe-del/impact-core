@@ -1,9 +1,6 @@
 package com.impact.core.module.spaceRequest_Reservation.payload.request;
 
-import jakarta.validation.constraints.Future;
-import jakarta.validation.constraints.Max;
-import jakarta.validation.constraints.NotBlank;
-import jakarta.validation.constraints.Positive;
+import jakarta.validation.constraints.*;
 import lombok.*;
 
 import java.time.Instant;
@@ -25,11 +22,10 @@ public class SpaceRndRRequest {
     @NotBlank(message = "La descripción del evento es obligatoria.")
     private String eventDesc;     // Information needed for SpaceRequest
 
+    @NotNull(message = "La observación del evento es obligatoria.")
     private String eventObs;      // Information needed for SpaceRequest
 
-    @Positive(message = "El id debe de tener un valor positivo.")
-    private Integer statusId;     // Information needed for SpaceRequest
-
+    @NotNull(message = "El flag de uso de equipo es obligatorio.")
     private Boolean useEquipment; // Information needed for SpaceRequest
 
     @Future(message = "La fecha de inicio debe ser en el futuro.")

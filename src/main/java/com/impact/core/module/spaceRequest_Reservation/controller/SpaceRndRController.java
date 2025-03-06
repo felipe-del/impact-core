@@ -1,5 +1,4 @@
 package com.impact.core.module.spaceRequest_Reservation.controller;
-
 import com.impact.core.module.spaceRequest_Reservation.payload.request.SpaceRndRRequest;
 import com.impact.core.module.spaceRequest_Reservation.payload.response.SpaceRndRResponse;
 import com.impact.core.module.spaceRequest_Reservation.service.SpaceRndRService;
@@ -7,6 +6,7 @@ import com.impact.core.security.service.UserDetailsImpl;
 import com.impact.core.util.ResponseWrapper;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.repository.query.Param;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -49,6 +49,26 @@ public class SpaceRndRController {
                         .data(responses)
                         .build()
         );
+    }
+
+    @GetMapping("/user/{id}")
+    @PreAuthorize("hasRole('ADMINISTRATOR') or hasRole('MANAGER') or hasRole('TEACHER')")
+    public ResponseEntity<ResponseWrapper<List<SpaceRndRResponse>>> getMyRequests(@PathVariable Integer id){
+        List<SpaceRndRResponse> spaceRndRRequest = spaceRndRService.getByUser(id);
+
+        return ResponseEntity.ok(ResponseWrapper.<List<SpaceRndRResponse>>builder()
+                .message("Lista de solicitudes de espacios por usuario.")
+                .data(spaceRndRRequest)
+                .build());
+    }
+
+    @DeleteMapping("/{reqId}")
+    @PreAuthorize("hasRole('ADMINISTRATOR') or hasRole('MANAGER') or hasRole('TEACHER')")
+    public ResponseEntity<ResponseWrapper<Void>> cancelRequest(@PathVariable Integer reqId){
+        spaceRndRService.cancelRequest(4,reqId);//status 4: RESOURCE_REQUEST_STATUS_CANCELED (resource_request_status)
+        return ResponseEntity.ok(ResponseWrapper.<Void>builder()
+                .message("Cambio de estado de solicitud a cancelado.")
+                .build());
     }
 
 }

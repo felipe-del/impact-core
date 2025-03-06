@@ -1,6 +1,8 @@
 package com.impact.core.module.productRequest.service;
 
 import com.impact.core.expection.customException.ResourceNotFoundException;
+import com.impact.core.module.ProductsOfRequest.Service.ProductsOfRequestServive;
+import com.impact.core.module.ProductsOfRequest.repository.ProductsOfRequestRepository;
 import com.impact.core.module.mail.factory.MailFactory;
 import com.impact.core.module.mail.payload.ComposedMail;
 import com.impact.core.module.mail.service.MailService;
@@ -21,6 +23,7 @@ import com.impact.core.module.user.service.UserService;
 import com.impact.core.security.service.UserDetailsImpl;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.stream.Collectors;
@@ -30,6 +33,7 @@ import java.util.stream.Collectors;
 public class ProductRequestService {
     public final ProductRequestRepository productRequestRepository;
     public final ProductService productService;
+    public final ProductsOfRequestServive productsOfRequestServive;
     public final ProductRepository productRepository;
     public final ProductStatusService productStatusService;
     public final ProductRequestMapper productRequestMapper;
@@ -37,7 +41,6 @@ public class ProductRequestService {
     public final MailService mailService;
 
     public ProductRequestDTOResponse save(UserDetailsImpl userDetails, ProductRequestDTORequest productRequestDTORequest) {
-
         ProductRequest productRequest = productRequestMapper.toEntity(productRequestDTORequest);
         User user = userService.findById(userDetails.getId());
         productRequest.setUser(user);
@@ -97,5 +100,9 @@ public class ProductRequestService {
                 .map(productRequestMapper::toDTO)
                 .collect(Collectors.toList());
     }
-
+    @Transactional
+    public void cancelRequest(Integer status, Integer productR, Integer productStatus){
+        productRequestRepository.updateProductRequestStatus(status,productR);
+        productsOfRequestServive.cancelRequest(productR,productStatus);
+    }
 }
