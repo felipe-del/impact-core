@@ -12,6 +12,7 @@ import com.impact.core.module.assetStatus.service.AssetStatusService;
 import com.impact.core.module.mail.factory.MailFactory;
 import com.impact.core.module.mail.payload.ComposedMail;
 import com.impact.core.module.mail.service.MailService;
+import com.impact.core.module.schedule_task.service.DynamicSchedulerService;
 import com.impact.core.module.user.entity.User;
 import com.impact.core.module.user.service.UserService;
 import com.impact.core.security.service.UserDetailsImpl;
@@ -29,6 +30,7 @@ public class AssetRequestService {
     public final AssetRequestMapper assetRequestMapper;
     public final UserService userService;
     public final MailService mailService;
+    private final DynamicSchedulerService dynamicSchedulerService;
 
 
     public AssetRequestDTOResponse save(UserDetailsImpl userDetails, AssetRequestDTORequest assetRequestDTORequest) {
@@ -40,7 +42,7 @@ public class AssetRequestService {
         User user = userService.findById(userDetails.getId());
         assetRequest.setUser(user);
         AssetRequest assetRequestSaved = assetRequestRepository.save(assetRequest);
-
+        dynamicSchedulerService.scheduleNotification(assetRequestSaved);
         ComposedMail composedMailToUser = MailFactory.createAssetRequestEmail(assetRequestSaved);
         mailService.sendComposedEmail(composedMailToUser);
         ComposedMail composedMailToAdmin = MailFactory.createAdminReviewAssetRequest(assetRequestSaved);
@@ -55,7 +57,9 @@ public class AssetRequestService {
         assetRequestUpdated.setId(assetRequest.getId());
         assetRequestUpdated.setUser(assetRequest.getUser());
         assetRequestUpdated.setCreatedAt(assetRequest.getCreatedAt());
+        boolean expirationDateChanged = !assetRequest.getExpirationDate().equals(assetRequestUpdated.getExpirationDate());
         AssetRequest assetRequestSaved = assetRequestRepository.save(assetRequestUpdated);
+        if (expirationDateChanged) {dynamicSchedulerService.scheduleNotification(assetRequestUpdated);}
         return assetRequestMapper.toDTO(assetRequestSaved);
     }
 
