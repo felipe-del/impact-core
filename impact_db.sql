@@ -74,7 +74,8 @@ INSERT INTO resource_request_status (name, description)
 VALUES ('RESOURCE_REQUEST_STATUS_EARRING', 'Está pendiente de ser aprobado.'),
        ('RESOURCE_REQUEST_STATUS_ACCEPTED', 'Ha sido aceptado.'),
        ('RESOURCE_REQUEST_STATUS_RETURNED', 'Ha sido devuelto.'),
-       ('RESOURCE_REQUEST_STATUS_CANCELED', 'Ha sido cancelada.');
+       ('RESOURCE_REQUEST_STATUS_CANCELED', 'Ha sido cancelada.'),
+       ('RESOURCE_REQUEST_STATUS_RENEWAL', 'Pendiente de renovacion.');
 
 -- NOT NECESSARY
 -- CREATE TABLE REQUEST
@@ -421,8 +422,7 @@ CREATE TABLE asset_request
     created_at      DATETIME DEFAULT CURRENT_TIMESTAMP NULL,
     FOREIGN KEY (asset_id) REFERENCES asset (id),
     FOREIGN KEY (status_id) REFERENCES resource_request_status (id),
-    FOREIGN KEY (user_id) REFERENCES user (id),
-    CONSTRAINT unique_asset_user UNIQUE (asset_id, user_id)
+    FOREIGN KEY (user_id) REFERENCES user (id)
 );
 
 

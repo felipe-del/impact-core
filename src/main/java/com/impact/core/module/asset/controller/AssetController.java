@@ -21,6 +21,17 @@ import java.util.List;
 public class AssetController {
     public final AssetService assetService;
 
+    @GetMapping("/{id}")
+    @PreAuthorize("hasRole('ADMINISTRATOR') or hasRole('MANAGER')")
+    public ResponseEntity<ResponseWrapper<AssetResponse>> getAsset(@PathVariable int id) {
+        AssetResponse assetResponse = assetService.findByIdR(id);
+
+        return ResponseEntity.ok(ResponseWrapper.<AssetResponse>builder()
+                .message("Activo encontrado.")
+                .data(assetResponse)
+                .build());
+    }
+
     @GetMapping
     @PreAuthorize("hasRole('ADMINISTRATOR') or hasRole('MANAGER')")
     public ResponseEntity<ResponseWrapper<List<AssetResponse>>> getAllAssets() {

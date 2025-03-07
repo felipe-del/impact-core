@@ -1,6 +1,8 @@
 package com.impact.core.module.assetRequest.controller;
 
 
+import com.impact.core.module.assetRequest.entity.AssetRequest;
+import com.impact.core.module.assetRequest.payload.renew.AssetRequestDTORenew;
 import com.impact.core.module.assetRequest.payload.request.AssetRequestDTORequest;
 import com.impact.core.module.assetRequest.payload.response.AssetRequestDTOResponse;
 import com.impact.core.module.assetRequest.service.AssetRequestService;
@@ -35,6 +37,30 @@ public class AssetRequestController {
                 .build());
     }
 
+    @GetMapping("/{id}")
+    @PreAuthorize("hasRole('ADMINISTRATOR') or hasRole('MANAGER') or hasRole('TEACHER')")
+    public ResponseEntity<ResponseWrapper<AssetRequestDTOResponse>> getAssetRequest(@PathVariable int id) {
+        AssetRequestDTOResponse assetRequestResponse = assetRequestService.findByIdDTO(id);
+
+        return ResponseEntity.ok(ResponseWrapper.<AssetRequestDTOResponse>builder()
+                .message("Solicitud de activo encontrada.")
+                .data(assetRequestResponse)
+                .build());
+    }
+
+    @PostMapping("/renew")
+    @PreAuthorize("hasRole('ADMINISTRATOR') or hasRole('MANAGER') or hasRole('TEACHER')")
+    public ResponseEntity<ResponseWrapper<AssetRequestDTOResponse>> saveAssetRequestRenew(
+            @AuthenticationPrincipal UserDetailsImpl userDetails,
+            @Valid @RequestBody AssetRequestDTORenew assetRequestDTORenew) {
+        AssetRequestDTOResponse assetRequestDTOResponse = assetRequestService.saveRenew(userDetails, assetRequestDTORenew);
+
+        return ResponseEntity.status(HttpStatus.CREATED).body(ResponseWrapper.<AssetRequestDTOResponse>builder()
+                .message("Solicitud de activo guardada correctamente.")
+                .data(assetRequestDTOResponse)
+                .build());
+    }
+
     @PostMapping
     @PreAuthorize("hasRole('ADMINISTRATOR') or hasRole('MANAGER') or hasRole('TEACHER')")
     public ResponseEntity<ResponseWrapper<AssetRequestDTOResponse>> saveAssetRequest(
@@ -60,6 +86,17 @@ public class AssetRequestController {
                 .build());
     }
 
+    @PutMapping("/renew/{id}")
+    @PreAuthorize("hasRole('ADMINISTRATOR') or hasRole('MANAGER') or hasRole('TEACHER')")
+    public ResponseEntity<ResponseWrapper<AssetRequestDTOResponse>> updateAssetRequestRenew(
+            @PathVariable int id, @Valid @RequestBody AssetRequestDTORequest assetRequestDTORequest) {
+        AssetRequestDTOResponse assetRequestDTOResponse = assetRequestService.updateRenew(id, assetRequestDTORequest);
+
+        return ResponseEntity.ok(ResponseWrapper.<AssetRequestDTOResponse>builder()
+                .message("Solicitud de activo actualizada correctamente.")
+                .data(assetRequestDTOResponse)
+                .build());
+    }
     @DeleteMapping("/{id}")
     @PreAuthorize("hasRole('ADMINISTRATOR') or hasRole('MANAGER') or hasRole('TEACHER')")
     public ResponseEntity<ResponseWrapper<Void>> deleteAssetRequest(@PathVariable int id) {

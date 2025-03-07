@@ -4,6 +4,7 @@ import com.impact.core.expection.customException.ResourceNotFoundException;
 import com.impact.core.module.asset.entity.Asset;
 import com.impact.core.module.assetRequest.entity.AssetRequest;
 import com.impact.core.module.assetRequest.mapper.AssetRequestMapper;
+import com.impact.core.module.assetRequest.payload.renew.AssetRequestDTORenew;
 import com.impact.core.module.assetRequest.payload.request.AssetRequestDTORequest;
 import com.impact.core.module.assetRequest.payload.response.AssetRequestDTOResponse;
 import com.impact.core.module.assetRequest.repository.AssetRequestRepository;
@@ -52,6 +53,24 @@ public class AssetRequestService {
         return assetRequestMapper.toDTO(assetRequestSaved);
     }
 
+    public AssetRequestDTOResponse saveRenew(UserDetailsImpl userDetails, AssetRequestDTORenew assetRequestDTORenew) {
+        AssetRequest assetRequest = assetRequestMapper.toEntity(assetRequestDTORenew);
+        Asset asset = assetRequest.getAsset();
+        asset.setStatus(assetStatusService.findByName(EAssetStatus.ASSET_STATUS_EARRING));
+        assetRequest.setAsset(asset);
+
+        User user = userService.findById(userDetails.getId());
+        assetRequest.setUser(user);
+        AssetRequest assetRequestSaved = assetRequestRepository.save(assetRequest);
+        dynamicSchedulerService.scheduleNotification(assetRequestSaved);
+        ComposedMail composedMailToUser = MailFactory.createAssetRenewEmail(assetRequestSaved);
+        mailService.sendComposedEmail(composedMailToUser);
+        ComposedMail composedMailToAdmin = MailFactory.createAdminReviewAssetRenew(assetRequestSaved);
+        mailService.sendComposedEmailToAllAdmins(composedMailToAdmin);
+
+        return assetRequestMapper.toDTO(assetRequestSaved);
+    }
+
     public AssetRequestDTOResponse update(int id, AssetRequestDTORequest assetRequestDTORequest) {
         AssetRequest assetRequest = this.findById(id);
         AssetRequest assetRequestUpdated = assetRequestMapper.toEntity(assetRequestDTORequest);
@@ -64,6 +83,17 @@ public class AssetRequestService {
         return assetRequestMapper.toDTO(assetRequestSaved);
     }
 
+    public AssetRequestDTOResponse updateRenew(int id, AssetRequestDTORequest assetRequestDTORequest) {
+        AssetRequest assetRequest = this.findById(id);
+        AssetRequest assetRequestUpdated = assetRequestMapper.toEntityUpdate(assetRequestDTORequest);
+        assetRequestUpdated.setId(assetRequest.getId());
+        assetRequestUpdated.setUser(assetRequest.getUser());
+        assetRequestUpdated.setCreatedAt(assetRequest.getCreatedAt());
+        boolean expirationDateChanged = !assetRequest.getExpirationDate().equals(assetRequestUpdated.getExpirationDate());
+        AssetRequest assetRequestSaved = assetRequestRepository.save(assetRequestUpdated);
+        if (expirationDateChanged) {dynamicSchedulerService.scheduleNotification(assetRequestUpdated);}
+        return assetRequestMapper.toDTO(assetRequestSaved);
+    }
     public void delete(int id) {
         AssetRequest assetRequest = findById(id);
         assetRequestRepository.delete(assetRequest);
@@ -72,6 +102,11 @@ public class AssetRequestService {
     public AssetRequest findById(int id) {
         return assetRequestRepository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("Solicitud con id: " + id + " no encontrada."));
+    }
+
+    public AssetRequestDTOResponse findByIdDTO(int id) {
+        AssetRequest assetRequest = findById(id);
+        return assetRequestMapper.toDTO(assetRequest);
     }
 
     public List<AssetRequestDTOResponse> findAll() {

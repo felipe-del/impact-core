@@ -3,6 +3,7 @@ package com.impact.core.module.assetRequest.mapper;
 import com.impact.core.module.asset.mapper.AssetMapper;
 import com.impact.core.module.asset.service.AssetService;
 import com.impact.core.module.assetRequest.entity.AssetRequest;
+import com.impact.core.module.assetRequest.payload.renew.AssetRequestDTORenew;
 import com.impact.core.module.assetRequest.payload.request.AssetRequestDTORequest;
 import com.impact.core.module.assetRequest.payload.response.AssetRequestDTOResponse;
 import com.impact.core.module.resource_request_status.enun.EResourceRequestStatus;
@@ -27,6 +28,25 @@ public class AssetRequestMapper {
                 .asset(assetService.findById(assetRequestDTORequest.getAssetId()))
                 .reason(assetRequestDTORequest.getReason())
                 .expirationDate(assetRequestDTORequest.getExpirationDate())
+                .status(resourceRequestStatusService.findByName(EResourceRequestStatus.RESOURCE_REQUEST_STATUS_EARRING))
+                .build();
+    }
+
+    public AssetRequest toEntityUpdate(AssetRequestDTORequest assetRequestDTORequest) {
+        return AssetRequest.builder()
+                .asset(assetService.findById(assetRequestDTORequest.getAssetId()))
+                .reason(assetRequestDTORequest.getReason())
+                .expirationDate(assetRequestDTORequest.getExpirationDate())
+                .status(resourceRequestStatusService.findByName(EResourceRequestStatus.RESOURCE_REQUEST_STATUS_RENEWAL))
+                .build();
+    }
+
+    public AssetRequest toEntity(AssetRequestDTORenew assetRequestDTORenew) {
+        return AssetRequest.builder()
+                .asset(assetService.findById(assetRequestDTORenew.getAssetId()))
+                .reason(assetRequestDTORenew.getReason())
+                .expirationDate(assetRequestDTORenew.getExpirationDate())
+                .createdAt(assetRequestDTORenew.getCreatedAt().atStartOfDay())
                 .status(resourceRequestStatusService.findByName(EResourceRequestStatus.RESOURCE_REQUEST_STATUS_EARRING))
                 .build();
     }
