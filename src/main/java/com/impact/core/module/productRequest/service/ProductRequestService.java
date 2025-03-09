@@ -102,11 +102,11 @@ public class ProductRequestService {
                 .collect(Collectors.toList());
     }
     @Transactional
-    public void cancelRequest(Integer status, Integer productRequestId, Integer productStatus){
+    public void cancelRequest(Integer status, Integer productRequestId, Integer productStatus, String cancelReason){
         ProductRequest productRequest = findById(productRequestId);
-        ComposedMail composedMailToUser = MailFactory.composeUserNotificationCancelProductRequest(productRequest);
+        ComposedMail composedMailToUser = MailFactory.composeUserNotificationCancelProductRequest(productRequest, cancelReason);
         mailService.sendComposedEmail(composedMailToUser);
-        ComposedMail composedMailToAdmin = MailFactory.composeAdminNotificationCancelProductRequest(productRequest);
+        ComposedMail composedMailToAdmin = MailFactory.composeAdminNotificationCancelProductRequest(productRequest, cancelReason);
         mailService.sendComposedEmailToAllAdmins(composedMailToAdmin);
 
         productRequestRepository.updateProductRequestStatus(status,productRequestId);
