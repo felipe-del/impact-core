@@ -66,6 +66,7 @@ public class SpaceRndRController {
     @PreAuthorize("hasRole('ADMINISTRATOR') or hasRole('MANAGER') or hasRole('TEACHER')")
     public ResponseEntity<ResponseWrapper<Void>> cancelRequest(@PathVariable Integer reqId){
         spaceRndRService.cancelRequest(4,reqId);//status 4: RESOURCE_REQUEST_STATUS_CANCELED (resource_request_status)
+
         return ResponseEntity.ok(ResponseWrapper.<Void>builder()
                 .message("Cambio de estado de solicitud a cancelado.")
                 .build());
