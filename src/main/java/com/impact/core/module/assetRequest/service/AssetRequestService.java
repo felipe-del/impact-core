@@ -120,11 +120,11 @@ public class AssetRequestService {
                 .collect(Collectors.toList());
     }
     @Transactional
-    public void updateStatus(Integer status, Integer assetRequestId){
+    public void updateStatus(Integer status, Integer assetRequestId, String cancelReason){
         AssetRequest assetRequest = findById(assetRequestId);
-        ComposedMail composedMailToUser = MailFactory.composeUserNotificationCancelAssetRequest(assetRequest);
+        ComposedMail composedMailToUser = MailFactory.composeUserNotificationCancelAssetRequest(assetRequest, cancelReason);
         mailService.sendComposedEmail(composedMailToUser);
-        ComposedMail composedMailToAdmin = MailFactory.composeAdminNotificationCancelAssetRequest(assetRequest);
+        ComposedMail composedMailToAdmin = MailFactory.composeAdminNotificationCancelAssetRequest(assetRequest, cancelReason);
         mailService.sendComposedEmailToAllAdmins(composedMailToAdmin);
 
         assetRequestRepository.updateAssetRequestStatus(status, assetRequestId);
