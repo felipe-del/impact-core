@@ -3,6 +3,7 @@ package com.impact.core.module.productRequest.controller;
 import com.impact.core.module.productRequest.payload.request.ProductRequestDTORequest;
 import com.impact.core.module.productRequest.payload.response.ProductRequestDTOResponse;
 import com.impact.core.module.productRequest.service.ProductRequestService;
+import com.impact.core.module.resource_request_status.payload.request.CancelRequestDTO;
 import com.impact.core.security.service.UserDetailsImpl;
 import com.impact.core.util.ResponseWrapper;
 import jakarta.validation.Valid;
@@ -80,8 +81,9 @@ public class ProductRequestController {
     }
     @PutMapping("/cancel/{productRId}")
     @PreAuthorize("hasRole('ADMINISTRATOR') or hasRole('MANAGER') or hasRole('TEACHER')")
-    public ResponseEntity<ResponseWrapper<Void>> cancelRequest(@PathVariable Integer productRId){
-        productRequestService.cancelRequest(4,productRId, 1); //status 4: RESOURCE_REQUEST_STATUS_CANCELED (resource_request_status)
+    public ResponseEntity<ResponseWrapper<Void>> cancelRequest(@PathVariable Integer productRId,
+                                                               @Valid @RequestBody CancelRequestDTO cancelReason){
+        productRequestService.cancelRequest(4,productRId, 1, cancelReason.getCancelReason()); //status 4: RESOURCE_REQUEST_STATUS_CANCELED (resource_request_status)
                                                                                 //status 1: PRODUCT_STATUS_AVAILABLE (product_status)
         return ResponseEntity.ok(ResponseWrapper.<Void>builder()
                 .message("Cambio de estado de solicitud a cancelado.")

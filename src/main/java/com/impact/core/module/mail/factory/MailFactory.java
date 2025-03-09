@@ -326,16 +326,17 @@ public class MailFactory {
 
     // CANCEL ASSET REQUEST EMAIL
 
-    public static ComposedMail composeUserNotificationCancelAssetRequest(AssetRequest assetRequest){
+    public static ComposedMail composeUserNotificationCancelAssetRequest(AssetRequest assetRequest, String cancelReason){
         String emailContent = """
                 La solicitud de activo ha sido cancelada <br>
+                <strong>Motivo de cancelación:</strong> %s <br>
                 <strong>Solicitante:</strong> %s <br>
                 <strong>Subcategoría del Activo:</strong> %s <br>
                 <strong>Placa:</strong> %s <br>
                 <strong>Fecha de vencimiento:</strong> %s <br>
                 <br>
                 Por favor, contacte al administrador para más información
-                """.formatted(assetRequest.getUser().getName(),
+                """.formatted(cancelReason, assetRequest.getUser().getName(),
                 assetRequest.getAsset().getSubcategory().getName(),
                 assetRequest.getAsset().getPlateNumber(),
                 assetRequest.getExpirationDate());
@@ -347,16 +348,17 @@ public class MailFactory {
                 EMailTemplate.GENERIC_EMAIL,metaData, List.of(IMPACT_LOGO_IMAGE));
     }
 
-    public static ComposedMail composeAdminNotificationCancelAssetRequest(AssetRequest assetRequest){
+    public static ComposedMail composeAdminNotificationCancelAssetRequest(AssetRequest assetRequest, String cancelReason){
         String emailContent = """
                 La solicitud de activo ha sido cancelada <br>
+                <strong>Motivo de cancelación:</strong> %s <br>
                 <strong>Solicitante:</strong> %s <br>
                 <strong>Subcategoría del Activo:</strong> %s <br>
                 <strong>Placa:</strong> %s <br>
                 <strong>Fecha de vencimiento:</strong> %s <br>
                 <br>
                 Por favor, contacte al solicitante para más información
-                """.formatted(assetRequest.getUser().getName(),
+                """.formatted(cancelReason, assetRequest.getUser().getName(),
                 assetRequest.getAsset().getSubcategory().getName(),
                 assetRequest.getAsset().getPlateNumber(),
                 assetRequest.getExpirationDate());
@@ -370,15 +372,16 @@ public class MailFactory {
 
     // CANCEL PRODUCT REQUEST EMAIL
 
-    public static ComposedMail composeUserNotificationCancelProductRequest(ProductRequest productRequest){
+    public static ComposedMail composeUserNotificationCancelProductRequest(ProductRequest productRequest, String cancelReason){
         String emailContent = """
                 La solicitud de producto ha sido cancelada <br>
+                <strong>Motivo de cancelación:</strong> %s <br>
                 <strong>Solicitante:</strong> %s <br>
                 <strong>Categoría del Producto:</strong> %s <br>
                 <strong>Fecha de solicitud:</strong> %s <br>
                 <br>
                 Por favor, contacte al administrador para más información
-                """.formatted(productRequest.getUser().getName(),
+                """.formatted(cancelReason, productRequest.getUser().getName(),
                 productRequest.getProduct().getCategory().getName(),
                 productRequest.getCreatedAt());
         List<MetaData> metaData = List.of(
@@ -389,15 +392,16 @@ public class MailFactory {
                 EMailTemplate.GENERIC_EMAIL,metaData, List.of(IMPACT_LOGO_IMAGE));
     }
 
-    public static ComposedMail composeAdminNotificationCancelProductRequest(ProductRequest productRequest){
+    public static ComposedMail composeAdminNotificationCancelProductRequest(ProductRequest productRequest, String cancelReason){
         String emailContent = """
                 La solicitud de producto ha sido cancelada <br>
+                <strong>Motivo de cancelación:</strong> %s <br>
                 <strong>Solicitante:</strong> %s <br>
                 <strong>Categoría del Producto:</strong> %s <br>
                 <strong>Fecha de solicitud:</strong> %s <br>
                 <br>
                 Por favor, contacte al solicitante para más información
-                """.formatted(productRequest.getUser().getName(),
+                """.formatted(cancelReason, productRequest.getUser().getName(),
                 productRequest.getProduct().getCategory().getName(),
                 productRequest.getCreatedAt());
         List<MetaData> metaData = List.of(
@@ -410,14 +414,15 @@ public class MailFactory {
 
     // CANCEL SPACE REQUEST EMAIL
 
-    public static ComposedMail composeUserNotificationCancelSpaceRequest(SpaceRequest spaceRequest) {
+    public static ComposedMail composeUserNotificationCancelSpaceRequest(SpaceRequest spaceRequest, String cancelReason) {
         String emailContent = """
                 La solicitud de espacio ha sido cancelada <br>
+                <strong>Motivo de cancelación:</strong> %s <br>
                 <strong>Solicitante:</strong> %s <br>
                 <strong>Motivo de Solicitud:</strong> %s <br>
                 <br>
                 Por favor, contacte al administrador para más información
-                """.formatted(spaceRequest.getUser().getName(),
+                """.formatted(cancelReason, spaceRequest.getUser().getName(),
                 spaceRequest.getEventDesc());
         List<MetaData> metaData = List.of(
                 new MetaData("emailTitle","Notificación de cancelación de solicitud de espacio."),
@@ -427,14 +432,15 @@ public class MailFactory {
                 EMailTemplate.GENERIC_EMAIL,metaData, List.of(IMPACT_LOGO_IMAGE));
     }
 
-    public static ComposedMail composeAdminNotificationCancelSpaceRequest(SpaceRequest spaceRequest) {
+    public static ComposedMail composeAdminNotificationCancelSpaceRequest(SpaceRequest spaceRequest, String cancelReason) {
         String emailContent = """
                 La solicitud de espacio ha sido cancelada <br>
+                <strong>Motivo de cancelación:</strong> %s <br>
                 <strong>Solicitante:</strong> %s <br>
                 <strong>Motivo de Solicitud:</strong> %s <br>
                 <br>
                 Por favor, contacte al solicitante para más información
-                """.formatted(spaceRequest.getUser().getName(),
+                """.formatted(cancelReason, spaceRequest.getUser().getName(),
                 spaceRequest.getEventDesc());
         List<MetaData> metaData = List.of(
                 new MetaData("emailTitle","Notificación de cancelación de solicitud de espacio."),
