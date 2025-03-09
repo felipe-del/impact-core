@@ -118,10 +118,10 @@ public class AssetRequestController {
                 .build());
     }
 
-    @PutMapping("/{statusId}/{assetRId}")
+    @PutMapping("/{statusId}/{assetRequestId}")
     @PreAuthorize("hasRole('ADMINISTRATOR') or hasRole('MANAGER') or hasRole('TEACHER')")
-    public ResponseEntity<ResponseWrapper<Void>> updateStatus(@PathVariable Integer statusId, @PathVariable Integer assetRId){
-        assetRequestService.updateStatus(statusId,assetRId);
+    public ResponseEntity<ResponseWrapper<Void>> updateStatus(@PathVariable Integer statusId, @PathVariable Integer assetRequestId){
+        assetRequestService.updateStatus(statusId,assetRequestId);
 
         return ResponseEntity.ok(ResponseWrapper.<Void>builder()
                 .message("Cambio de estado de solicitud a cancelado.")

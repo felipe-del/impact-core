@@ -1,6 +1,8 @@
 package com.impact.core.module.spaceRequest_Reservation.service;
 
 import com.impact.core.expection.customException.ConflictException;
+import com.impact.core.expection.customException.ResourceNotFoundException;
+import com.impact.core.module.assetRequest.entity.AssetRequest;
 import com.impact.core.module.mail.factory.MailFactory;
 import com.impact.core.module.mail.payload.ComposedMail;
 import com.impact.core.module.mail.service.MailService;
@@ -137,8 +139,20 @@ public class SpaceRndRService {
         Optional<SpaceReservation> sr= spaceReservationRepository.findById(resId);
         sr.ifPresent(spaceReservationRepository::delete);
     }
+
+    public SpaceRequest findById(int id) {
+        return spaceRequestRepository.findById(id)
+                .orElseThrow(() -> new ResourceNotFoundException("La solicitud de espacio con el id: " + id + " no existe en la base de datos."));
+    }
+
     @Transactional
     public void cancelRequest(Integer status,Integer reqId){
+        SpaceRequest spaceRequest = findById(reqId);
+        ComposedMail composedMailToUser = MailFactory.composeUserNotificationCancelSpaceRequest(spaceRequest);
+        mailService.sendComposedEmail(composedMailToUser);
+        ComposedMail composedMailToAdmin = MailFactory.composeAdminNotificationCancelSpaceRequest(spaceRequest);
+        mailService.sendComposedEmailToAllAdmins(composedMailToAdmin);
+
         spaceRequestRepository.updateSpaceRequest(status,reqId);
         cancelReservation(reqId);
     }

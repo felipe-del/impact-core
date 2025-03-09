@@ -224,12 +224,13 @@ public class MailFactory {
                 EMailTemplate.GENERIC_EMAIL, metaData, List.of(IMPACT_LOGO_IMAGE));
     }
 
+
     // SPACE Request EMAILS
 
     public static ComposedMail createSpaceRequestEmail(SpaceRequest spaceRequest, SpaceReservation spaceReservation) {
         String emailContent = """
                 Se ha enviado una solicitud de espacio con los siguientes detalles: <br>
-                <strong>Descripción del evento:</strong> %s <br>
+                <strong>Motivo del evento:</strong> %s <br>
                 <strong>Observaciones del evento:</strong> %s <br>
                 <strong>Uso de equipo:</strong> %s <br>
                 <strong>Fecha de inicio:</strong> %s <br>
@@ -253,7 +254,7 @@ public class MailFactory {
                 Se ha recibido una nueva solicitud de espacio que requiere su revisión: <br>
                 <strong>Solicitante:</strong> %s <br>
                 <strong>Correo del solicitante:</strong> %s <br>
-                <strong>Descripción del evento:</strong> %s <br>
+                <strong>Motivo del evento:</strong> %s <br>
                 <strong>Observaciones del evento:</strong> %s <br>
                 <strong>Uso de equipo:</strong> %s <br>
                 <strong>Fecha de inicio:</strong> %s <br>
@@ -320,6 +321,126 @@ public class MailFactory {
                 new MetaData("userName",assetRequest.getUser().getName()),
                 new MetaData("emailContent", emailContent));
         return createEmail(assetRequest.getUser().getEmail(),"Notificación de vencimiento de préstamo",
+                EMailTemplate.GENERIC_EMAIL,metaData, List.of(IMPACT_LOGO_IMAGE));
+    }
+
+    // CANCEL ASSET REQUEST EMAIL
+
+    public static ComposedMail composeUserNotificationCancelAssetRequest(AssetRequest assetRequest){
+        String emailContent = """
+                La solicitud de activo ha sido cancelada <br>
+                <strong>Solicitante:</strong> %s <br>
+                <strong>Subcategoría del Activo:</strong> %s <br>
+                <strong>Placa:</strong> %s <br>
+                <strong>Fecha de vencimiento:</strong> %s <br>
+                <br>
+                Por favor, contacte al administrador para más información
+                """.formatted(assetRequest.getUser().getName(),
+                assetRequest.getAsset().getSubcategory().getName(),
+                assetRequest.getAsset().getPlateNumber(),
+                assetRequest.getExpirationDate());
+        List<MetaData> metaData = List.of(
+                new MetaData("emailTitle","Notificación de cancelación de solicitud de activo."),
+                new MetaData("userName",assetRequest.getUser().getName()),
+                new MetaData("emailContent", emailContent));
+        return createEmail(assetRequest.getUser().getEmail(),"Notificación de cancelación de solicitud",
+                EMailTemplate.GENERIC_EMAIL,metaData, List.of(IMPACT_LOGO_IMAGE));
+    }
+
+    public static ComposedMail composeAdminNotificationCancelAssetRequest(AssetRequest assetRequest){
+        String emailContent = """
+                La solicitud de activo ha sido cancelada <br>
+                <strong>Solicitante:</strong> %s <br>
+                <strong>Subcategoría del Activo:</strong> %s <br>
+                <strong>Placa:</strong> %s <br>
+                <strong>Fecha de vencimiento:</strong> %s <br>
+                <br>
+                Por favor, contacte al solicitante para más información
+                """.formatted(assetRequest.getUser().getName(),
+                assetRequest.getAsset().getSubcategory().getName(),
+                assetRequest.getAsset().getPlateNumber(),
+                assetRequest.getExpirationDate());
+        List<MetaData> metaData = List.of(
+                new MetaData("emailTitle","Notificación de cancelación de solicitud de activo."),
+                new MetaData("userName","Usuario Administrador"),
+                new MetaData("emailContent", emailContent));
+        return createEmail(assetRequest.getUser().getEmail(),"Notificación de cancelación de solicitud",
+                EMailTemplate.GENERIC_EMAIL,metaData, List.of(IMPACT_LOGO_IMAGE));
+    }
+
+    // CANCEL PRODUCT REQUEST EMAIL
+
+    public static ComposedMail composeUserNotificationCancelProductRequest(ProductRequest productRequest){
+        String emailContent = """
+                La solicitud de producto ha sido cancelada <br>
+                <strong>Solicitante:</strong> %s <br>
+                <strong>Categoría del Producto:</strong> %s <br>
+                <strong>Fecha de solicitud:</strong> %s <br>
+                <br>
+                Por favor, contacte al administrador para más información
+                """.formatted(productRequest.getUser().getName(),
+                productRequest.getProduct().getCategory().getName(),
+                productRequest.getCreatedAt());
+        List<MetaData> metaData = List.of(
+                new MetaData("emailTitle","Notificación de cancelación de solicitud de producto."),
+                new MetaData("userName",productRequest.getUser().getName()),
+                new MetaData("emailContent", emailContent));
+        return createEmail(productRequest.getUser().getEmail(),"Notificación de cancelación de solicitud",
+                EMailTemplate.GENERIC_EMAIL,metaData, List.of(IMPACT_LOGO_IMAGE));
+    }
+
+    public static ComposedMail composeAdminNotificationCancelProductRequest(ProductRequest productRequest){
+        String emailContent = """
+                La solicitud de producto ha sido cancelada <br>
+                <strong>Solicitante:</strong> %s <br>
+                <strong>Categoría del Producto:</strong> %s <br>
+                <strong>Fecha de solicitud:</strong> %s <br>
+                <br>
+                Por favor, contacte al solicitante para más información
+                """.formatted(productRequest.getUser().getName(),
+                productRequest.getProduct().getCategory().getName(),
+                productRequest.getCreatedAt());
+        List<MetaData> metaData = List.of(
+                new MetaData("emailTitle","Notificación de cancelación de solicitud de producto."),
+                new MetaData("userName","Usuario Administrador"),
+                new MetaData("emailContent", emailContent));
+        return createEmail(productRequest.getUser().getEmail(),"Notificación de cancelación de solicitud",
+                EMailTemplate.GENERIC_EMAIL,metaData, List.of(IMPACT_LOGO_IMAGE));
+    }
+
+    // CANCEL SPACE REQUEST EMAIL
+
+    public static ComposedMail composeUserNotificationCancelSpaceRequest(SpaceRequest spaceRequest) {
+        String emailContent = """
+                La solicitud de espacio ha sido cancelada <br>
+                <strong>Solicitante:</strong> %s <br>
+                <strong>Motivo de Solicitud:</strong> %s <br>
+                <br>
+                Por favor, contacte al administrador para más información
+                """.formatted(spaceRequest.getUser().getName(),
+                spaceRequest.getEventDesc());
+        List<MetaData> metaData = List.of(
+                new MetaData("emailTitle","Notificación de cancelación de solicitud de espacio."),
+                new MetaData("userName",spaceRequest.getUser().getName()),
+                new MetaData("emailContent", emailContent));
+        return createEmail(spaceRequest.getUser().getEmail(),"Notificación de cancelación de solicitud",
+                EMailTemplate.GENERIC_EMAIL,metaData, List.of(IMPACT_LOGO_IMAGE));
+    }
+
+    public static ComposedMail composeAdminNotificationCancelSpaceRequest(SpaceRequest spaceRequest) {
+        String emailContent = """
+                La solicitud de espacio ha sido cancelada <br>
+                <strong>Solicitante:</strong> %s <br>
+                <strong>Motivo de Solicitud:</strong> %s <br>
+                <br>
+                Por favor, contacte al solicitante para más información
+                """.formatted(spaceRequest.getUser().getName(),
+                spaceRequest.getEventDesc());
+        List<MetaData> metaData = List.of(
+                new MetaData("emailTitle","Notificación de cancelación de solicitud de espacio."),
+                new MetaData("userName","Usuario Administrador"),
+                new MetaData("emailContent", emailContent));
+        return createEmail(spaceRequest.getUser().getEmail(),"Notificación de cancelación de solicitud",
                 EMailTemplate.GENERIC_EMAIL,metaData, List.of(IMPACT_LOGO_IMAGE));
     }
 
