@@ -1,4 +1,5 @@
 package com.impact.core.module.spaceRequest_Reservation.controller;
+import com.impact.core.module.resource_request_status.payload.request.CancelRequestDTO;
 import com.impact.core.module.spaceRequest_Reservation.payload.request.SpaceRndRRequest;
 import com.impact.core.module.spaceRequest_Reservation.payload.response.SpaceRndRResponse;
 import com.impact.core.module.spaceRequest_Reservation.service.SpaceRndRService;
@@ -62,10 +63,10 @@ public class SpaceRndRController {
                 .build());
     }
 
-    @DeleteMapping("/{reqId}")
+    @PutMapping("/{reqId}")
     @PreAuthorize("hasRole('ADMINISTRATOR') or hasRole('MANAGER') or hasRole('TEACHER')")
-    public ResponseEntity<ResponseWrapper<Void>> cancelRequest(@PathVariable Integer reqId){
-        spaceRndRService.cancelRequest(4,reqId);//status 4: RESOURCE_REQUEST_STATUS_CANCELED (resource_request_status)
+    public ResponseEntity<ResponseWrapper<Void>> cancelRequest(@PathVariable Integer reqId, @Valid @RequestBody CancelRequestDTO cancelRequestDTO){
+        spaceRndRService.cancelRequest(4, reqId, cancelRequestDTO.getCancelReason());//status 4: RESOURCE_REQUEST_STATUS_CANCELED (resource_request_status)
 
         return ResponseEntity.ok(ResponseWrapper.<Void>builder()
                 .message("Cambio de estado de solicitud a cancelado.")
