@@ -3,6 +3,7 @@ package com.impact.core.module.productRequest.service;
 import com.impact.core.expection.customException.ResourceNotFoundException;
 import com.impact.core.module.ProductsOfRequest.Service.ProductsOfRequestServive;
 import com.impact.core.module.ProductsOfRequest.repository.ProductsOfRequestRepository;
+import com.impact.core.module.assetRequest.entity.AssetRequest;
 import com.impact.core.module.mail.factory.MailFactory;
 import com.impact.core.module.mail.payload.ComposedMail;
 import com.impact.core.module.mail.service.MailService;
@@ -101,8 +102,14 @@ public class ProductRequestService {
                 .collect(Collectors.toList());
     }
     @Transactional
-    public void cancelRequest(Integer status, Integer productR, Integer productStatus){
-        productRequestRepository.updateProductRequestStatus(status,productR);
-        productsOfRequestServive.cancelRequest(productR,productStatus);
+    public void cancelRequest(Integer status, Integer productRequestId, Integer productStatus){
+        ProductRequest productRequest = findById(productRequestId);
+        ComposedMail composedMailToUser = MailFactory.composeUserNotificationCancelProductRequest(productRequest);
+        mailService.sendComposedEmail(composedMailToUser);
+        ComposedMail composedMailToAdmin = MailFactory.composeAdminNotificationCancelProductRequest(productRequest);
+        mailService.sendComposedEmailToAllAdmins(composedMailToAdmin);
+
+        productRequestRepository.updateProductRequestStatus(status,productRequestId);
+        productsOfRequestServive.cancelRequest(productRequestId,productStatus);
     }
 }
