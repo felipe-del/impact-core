@@ -146,11 +146,11 @@ public class SpaceRndRService {
     }
 
     @Transactional
-    public void cancelRequest(Integer status,Integer reqId){
+    public void cancelRequest(Integer status,Integer reqId, String cancelReason){
         SpaceRequest spaceRequest = findById(reqId);
-        ComposedMail composedMailToUser = MailFactory.composeUserNotificationCancelSpaceRequest(spaceRequest);
+        ComposedMail composedMailToUser = MailFactory.composeUserNotificationCancelSpaceRequest(spaceRequest, cancelReason);
         mailService.sendComposedEmail(composedMailToUser);
-        ComposedMail composedMailToAdmin = MailFactory.composeAdminNotificationCancelSpaceRequest(spaceRequest);
+        ComposedMail composedMailToAdmin = MailFactory.composeAdminNotificationCancelSpaceRequest(spaceRequest, cancelReason);
         mailService.sendComposedEmailToAllAdmins(composedMailToAdmin);
 
         spaceRequestRepository.updateSpaceRequest(status,reqId);
