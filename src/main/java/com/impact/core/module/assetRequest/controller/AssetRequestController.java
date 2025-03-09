@@ -6,6 +6,7 @@ import com.impact.core.module.assetRequest.payload.renew.AssetRequestDTORenew;
 import com.impact.core.module.assetRequest.payload.request.AssetRequestDTORequest;
 import com.impact.core.module.assetRequest.payload.response.AssetRequestDTOResponse;
 import com.impact.core.module.assetRequest.service.AssetRequestService;
+import com.impact.core.module.resource_request_status.payload.request.CancelRequestDTO;
 import com.impact.core.security.service.UserDetailsImpl;
 import com.impact.core.util.ResponseWrapper;
 import jakarta.validation.Valid;
@@ -120,8 +121,9 @@ public class AssetRequestController {
 
     @PutMapping("/{statusId}/{assetRequestId}")
     @PreAuthorize("hasRole('ADMINISTRATOR') or hasRole('MANAGER') or hasRole('TEACHER')")
-    public ResponseEntity<ResponseWrapper<Void>> updateStatus(@PathVariable Integer statusId, @PathVariable Integer assetRequestId){
-        assetRequestService.updateStatus(statusId,assetRequestId);
+    public ResponseEntity<ResponseWrapper<Void>> updateStatus(@PathVariable Integer statusId, @PathVariable Integer assetRequestId,
+                                                              @Valid @RequestBody CancelRequestDTO cancelRequestDTO){
+        assetRequestService.updateStatus(statusId,assetRequestId, cancelRequestDTO.getCancelReason());
 
         return ResponseEntity.ok(ResponseWrapper.<Void>builder()
                 .message("Cambio de estado de solicitud a cancelado.")
