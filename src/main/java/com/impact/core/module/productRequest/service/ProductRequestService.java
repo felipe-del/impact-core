@@ -2,6 +2,7 @@ package com.impact.core.module.productRequest.service;
 
 import com.impact.core.expection.customException.ResourceNotFoundException;
 import com.impact.core.module.ProductsOfRequest.Service.ProductsOfRequestServive;
+import com.impact.core.module.ProductsOfRequest.entity.ProductsOfRequest;
 import com.impact.core.module.ProductsOfRequest.repository.ProductsOfRequestRepository;
 import com.impact.core.module.assetRequest.entity.AssetRequest;
 import com.impact.core.module.mail.factory.MailFactory;
@@ -46,6 +47,8 @@ public class ProductRequestService {
         User user = userService.findById(userDetails.getId());
         productRequest.setUser(user);
 
+
+
         Product productToRequest = productService.findProductById(productRequestDTORequest.getProductId());
         int requestedQuantity = productRequestDTORequest.getQuantity();
         List<Product> availableProducts =
@@ -55,12 +58,19 @@ public class ProductRequestService {
             throw new ResourceNotFoundException("No hay suficientes productos disponibles en esta categoría.");
         }
 
+        ProductRequest productRequestSaved = productRequestRepository.save(productRequest);
+
         availableProducts.stream().limit(requestedQuantity).forEach(product -> {
             product.setStatus(productStatusService.findByName(EProductStatus.PRODUCT_STATUS_EARRING));
             productRepository.save(product);
+
+            // Crear relación en `products_of_request`
+            ProductsOfRequest productsOfRequest = new ProductsOfRequest();
+            productsOfRequest.setProduct(product);
+            productsOfRequest.setProductRequest(productRequestSaved);
+            productsOfRequestServive.save(productsOfRequest);
         });
 
-        ProductRequest productRequestSaved = productRequestRepository.save(productRequest);
 
         ComposedMail composedMailToUser = MailFactory.createProductRequestEmail(productRequestSaved);
         mailService.sendComposedEmail(composedMailToUser);
