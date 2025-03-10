@@ -33,7 +33,7 @@ public class DynamicSchedulerService {
 
         try {
             LocalDate expirationDate = assetRequest.getExpirationDate();
-            LocalDate notificationDate = expirationDate.minusDays(2);
+            LocalDate notificationDate = expirationDate.minusMonths(1);
             Instant notificationInstant = notificationDate.atStartOfDay(ZoneId.systemDefault()).toInstant();
             Instant now = Instant.now();
 
