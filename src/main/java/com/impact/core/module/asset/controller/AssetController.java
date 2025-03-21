@@ -33,7 +33,7 @@ public class AssetController {
     }
 
     @GetMapping
-    @PreAuthorize("hasRole('ADMINISTRATOR') or hasRole('MANAGER')")
+    @PreAuthorize("hasRole('ADMINISTRATOR') or hasRole('MANAGER') or hasRole('TEACHER')")
     public ResponseEntity<ResponseWrapper<List<AssetResponse>>> getAllAssets() {
         List<AssetResponse> assetResponses = assetService.findAll();
 
@@ -77,7 +77,7 @@ public class AssetController {
     }
 
     @GetMapping("/inventory-value")
-    @PreAuthorize("hasRole('ADMINISTRATOR') or hasRole('MANAGER')")
+    @PreAuthorize("hasRole('ADMINISTRATOR') or hasRole('MANAGER') or hasRole('TEACHER')")
     public ResponseEntity<ResponseWrapper<List<SumOfCurrency>>> getInventoryValue(
             @RequestParam("start_date") LocalDate start_date,
             @RequestParam("end_date") LocalDate end_date) {
