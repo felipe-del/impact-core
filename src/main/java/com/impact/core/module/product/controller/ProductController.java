@@ -73,4 +73,14 @@ public class ProductController {
                 .message("Cambio de estado de producto a DISPONIBLE.")
                 .build());
     }
+
+    @PutMapping("{productId}")
+    @PreAuthorize("hasRole('ADMINISTRATOR') or hasRole('MANAGER') ")
+    public ResponseEntity<ResponseWrapper<Void>> updateStatusAccepted(@PathVariable Integer productId){
+        productService.updateStatus(3,productId); //status 3: ASSET_STATUS_LOANED
+
+        return ResponseEntity.ok(ResponseWrapper.<Void>builder()
+                .message("Cambio de estado de producto a PRESTADO.")
+                .build());
+    }
 }

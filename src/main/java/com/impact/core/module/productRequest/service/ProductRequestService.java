@@ -122,4 +122,12 @@ public class ProductRequestService {
         productRequestRepository.updateProductRequestStatus(status,productRequestId);
         productsOfRequestServive.cancelRequest(productRequestId,productStatus);
     }
+    @Transactional
+    public void acceptRequest(Integer status, Integer productRequestId){
+        productRequestRepository.updateProductRequestStatus(status,productRequestId);
+    }
+
+    public List<ProductRequest> findByPending(){
+        return productRequestRepository.productsRequestByStatus(1); //status 1-> RESOURCE_REQUEST_STATUS_EARRING
+    }
 }
