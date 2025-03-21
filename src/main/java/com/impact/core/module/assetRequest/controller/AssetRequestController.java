@@ -130,4 +130,13 @@ public class AssetRequestController {
                 .build());
     }
 
+    @PutMapping("/{assetRequestId}")
+    @PreAuthorize("hasRole('ADMINISTRATOR') or hasRole('MANAGER')")
+    public ResponseEntity<ResponseWrapper<Void>> updateStatusAccepted(@PathVariable Integer assetRequestId){
+        assetRequestService.updateStatusAccepted(2,assetRequestId);
+
+        return ResponseEntity.ok(ResponseWrapper.<Void>builder()
+                .message("Cambio de estado de solicitud a aceptado.")
+                .build());
+    }
 }

@@ -97,4 +97,14 @@ public class AssetController {
                 .message("Cambio de estado de activo a DISPONIBLE.")
                 .build());
     }
+
+    @PutMapping("/{assetId}")
+    @PreAuthorize("hasRole('ADMINISTRATOR') or hasRole('MANAGER') ")
+    public ResponseEntity<ResponseWrapper<Void>> updateStatusAccepted( @PathVariable String assetId){
+        assetService.updateStatus(3,assetId); //status 3: ASSET_STATUS_LOANED
+
+        return ResponseEntity.ok(ResponseWrapper.<Void>builder()
+                .message("Cambio de estado de activo a PRESTADO.")
+                .build());
+    }
 }
