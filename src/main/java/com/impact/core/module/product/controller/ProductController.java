@@ -21,7 +21,7 @@ public class ProductController {
     public final ProductService productService;
 
     @GetMapping
-    @PreAuthorize("hasRole('ADMINISTRATOR') or hasRole('MANAGER')")
+    @PreAuthorize("hasRole('ADMINISTRATOR') or hasRole('MANAGER') or hasRole('TEACHER')")
     public ResponseEntity<ResponseWrapper<List<ProductResponseDTO>>> getAllProducts() {
         List<ProductResponseDTO> productResponsDTOS = productService.findAll();
 
