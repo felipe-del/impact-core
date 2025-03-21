@@ -1,4 +1,4 @@
-package com.impact.core.module.ProductsOfRequest.entity;
+package com.impact.core.module.productsOfRequest.entity;
 
 import com.impact.core.module.product.entity.Product;
 import com.impact.core.module.productRequest.entity.ProductRequest;
