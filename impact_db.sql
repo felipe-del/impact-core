@@ -11,9 +11,9 @@ CREATE TABLE user_role
 );
 
 INSERT INTO user_role (name, description)
-VALUES ('ROLE_ADMINISTRATOR', 'TODO'),
-       ('ROLE_MANAGER', 'TODO'),
-       ('ROLE_TEACHER', 'TODO');
+VALUES ('ROLE_ADMINISTRATOR', 'Acceso total al sistema, gestión de usuarios, configuraciones y seguridad.'),
+       ('ROLE_MANAGER', 'Supervisa procesos y aprueba/rechaza solicitudes.'),
+       ('ROLE_TEACHER', 'Solicita Espacios, Activos o Productos.');
 
 CREATE TABLE user_state
 (
