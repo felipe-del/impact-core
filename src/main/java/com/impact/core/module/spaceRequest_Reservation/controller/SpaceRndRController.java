@@ -73,7 +73,7 @@ public class SpaceRndRController {
                 .build());
     }
 
-    @PutMapping("/{reqId}")
+    @PutMapping("/accept/{reqId}")
     @PreAuthorize("hasRole('ADMINISTRATOR') or hasRole('MANAGER')")
     public ResponseEntity<ResponseWrapper<Void>> acceptRequest(@PathVariable Integer reqId){
         spaceRndRService.acceptRequest(4, reqId);//status 2: RESOURCE_REQUEST_STATUS_ACCEPTED (resource_request_status)
