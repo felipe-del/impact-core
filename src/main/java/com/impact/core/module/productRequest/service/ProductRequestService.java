@@ -1,15 +1,12 @@
 package com.impact.core.module.productRequest.service;
 
 import com.impact.core.expection.customException.ResourceNotFoundException;
-import com.impact.core.module.ProductsOfRequest.Service.ProductsOfRequestServive;
-import com.impact.core.module.ProductsOfRequest.entity.ProductsOfRequest;
-import com.impact.core.module.ProductsOfRequest.repository.ProductsOfRequestRepository;
-import com.impact.core.module.assetRequest.entity.AssetRequest;
+import com.impact.core.module.productsOfRequest.Service.ProductsOfRequestServive;
+import com.impact.core.module.productsOfRequest.entity.ProductsOfRequest;
 import com.impact.core.module.mail.factory.MailFactory;
 import com.impact.core.module.mail.payload.ComposedMail;
 import com.impact.core.module.mail.service.MailService;
 import com.impact.core.module.product.entity.Product;
-import com.impact.core.module.product.payload.request.ProductRequestDTO;
 import com.impact.core.module.product.repository.ProductRepository;
 import com.impact.core.module.product.service.ProductService;
 import com.impact.core.module.productRequest.entity.ProductRequest;
@@ -18,7 +15,6 @@ import com.impact.core.module.productRequest.payload.request.ProductRequestDTORe
 import com.impact.core.module.productRequest.payload.response.ProductRequestDTOResponse;
 import com.impact.core.module.productRequest.repository.ProductRequestRepository;
 import com.impact.core.module.productStatus.enun.EProductStatus;
-import com.impact.core.module.productStatus.repository.ProductStatusRepository;
 import com.impact.core.module.productStatus.service.ProductStatusService;
 import com.impact.core.module.user.entity.User;
 import com.impact.core.module.user.service.UserService;

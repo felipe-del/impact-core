@@ -20,7 +20,7 @@ public class SpaceController {
     public final SpaceService spaceService;
 
     @GetMapping
-    @PreAuthorize("hasRole('ADMINISTRATOR') or hasRole('MANAGER')")
+    @PreAuthorize("hasRole('ADMINISTRATOR') or hasRole('MANAGER') or hasRole('TEACHER')")
     public ResponseEntity<ResponseWrapper<List<SpaceResponse>>> getAllSpaces() {
         return ResponseEntity.ok(ResponseWrapper.<List<SpaceResponse>>builder()
                 .message("Listado de espacios.")

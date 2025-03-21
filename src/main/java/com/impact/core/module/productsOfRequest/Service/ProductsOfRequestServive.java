@@ -1,17 +1,14 @@
-package com.impact.core.module.ProductsOfRequest.Service;
+package com.impact.core.module.productsOfRequest.Service;
 
-import com.impact.core.module.ProductsOfRequest.entity.ProductsOfRequest;
-import com.impact.core.module.ProductsOfRequest.repository.ProductsOfRequestRepository;
+import com.impact.core.module.productsOfRequest.entity.ProductsOfRequest;
+import com.impact.core.module.productsOfRequest.repository.ProductsOfRequestRepository;
 import com.impact.core.module.product.entity.Product;
 import com.impact.core.module.product.repository.ProductRepository;
-import com.impact.core.module.spaceRequest_Reservation.entity.SpaceRequest;
-import com.impact.core.module.spaceRequest_Reservation.entity.SpaceReservation;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Optional;
 
