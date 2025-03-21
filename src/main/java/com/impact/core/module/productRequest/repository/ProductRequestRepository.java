@@ -15,6 +15,9 @@ public interface ProductRequestRepository extends JpaRepository<ProductRequest, 
     @Query("SELECT p FROM ProductRequest p WHERE p.user.id = :userId")
     List<ProductRequest> productsRequestByUser(@Param("userId") Integer userId);
 
+    @Query("SELECT p FROM ProductRequest p WHERE p.status.id = :status")
+    List<ProductRequest> productsRequestByStatus(@Param("status") Integer status);
+
     @Modifying
     @Query("UPDATE ProductRequest p SET p.status.id = :statusId WHERE p.id= :productId")
     void updateProductRequestStatus(@Param("statusId") Integer statusId, @Param("productId") Integer productId);

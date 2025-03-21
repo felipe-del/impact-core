@@ -130,5 +130,14 @@ public class AssetRequestService {
         assetRequestRepository.updateAssetRequestStatus(status, assetRequestId);
     }
 
+    @Transactional
+    public void updateStatusAccepted(Integer status, Integer assetRequestId){
+        AssetRequest assetRequest = findById(assetRequestId);
+
+        assetRequestRepository.updateAssetRequestStatus(status, assetRequestId);
+    }
+    public List<AssetRequest> findByPending(){
+        return assetRequestRepository.assetsRequestByStatus(1); //status 1-> RESOURCE_REQUEST_STATUS_EARRING
+    }
 
 }

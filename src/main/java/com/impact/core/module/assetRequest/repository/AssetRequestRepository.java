@@ -14,7 +14,8 @@ public interface AssetRequestRepository extends JpaRepository<AssetRequest, Inte
 
     @Query("SELECT a FROM AssetRequest a WHERE a.user.id = :userId")
     List<AssetRequest> assetsRequestByUser(@Param("userId") Integer userId);
-
+    @Query("SELECT a FROM AssetRequest a WHERE a.status.id = :status")
+    List<AssetRequest> assetsRequestByStatus(@Param("status") Integer status);
     @Modifying
     @Query("UPDATE AssetRequest a SET a.status.id = :statusId WHERE a.id= :assetId")
     void updateAssetRequestStatus(@Param("statusId") Integer statusId, @Param("assetId") Integer assetId);
