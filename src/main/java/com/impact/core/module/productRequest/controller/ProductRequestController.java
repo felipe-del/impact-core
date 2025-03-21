@@ -90,7 +90,7 @@ public class ProductRequestController {
                 .message("Cambio de estado de solicitud a cancelado.")
                 .build());
     }
-    @PutMapping("/cancel/{productRId}")
+    @PutMapping("/accept/{productRId}")
     @PreAuthorize("hasRole('ADMINISTRATOR') or hasRole('MANAGER') ")
     public ResponseEntity<ResponseWrapper<Void>> acceptRequest(@PathVariable Integer productRId){
         productRequestService.acceptRequest(2,productRId); //status 4: RESOURCE_REQUEST_STATUS_ACCEPTED (resource_request_status)
