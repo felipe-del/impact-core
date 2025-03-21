@@ -15,6 +15,8 @@ public interface SpaceRequestRepository extends JpaRepository<SpaceRequest, Inte
     @Query("SELECT s FROM SpaceRequest s WHERE s.user.id = :userId")
     List<SpaceRequest> spaceRequestByUser(@Param("userId") Integer userId);
 
+    @Query("SELECT s FROM SpaceRequest s WHERE s.status.id = :status")
+    List<SpaceRequest> spaceRequestByStatus(@Param("status") Integer status);
     @Modifying
     @Query("UPDATE SpaceRequest r SET r.status.id = :statusId WHERE r.id= :requestId")
     void updateSpaceRequest(@Param("statusId") Integer statusId, @Param("requestId") Integer productId);

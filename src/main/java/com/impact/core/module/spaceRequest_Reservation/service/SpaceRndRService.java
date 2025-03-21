@@ -156,4 +156,14 @@ public class SpaceRndRService {
         spaceRequestRepository.updateSpaceRequest(status,reqId);
         cancelReservation(reqId);
     }
+
+    @Transactional
+    public void acceptRequest(Integer status,Integer reqId){
+
+        spaceRequestRepository.updateSpaceRequest(status,reqId);
+    }
+
+    public List<SpaceRequest> findByPending(){
+        return spaceRequestRepository.spaceRequestByStatus(1); //status 1-> RESOURCE_REQUEST_STATUS_EARRING
+    }
 }
