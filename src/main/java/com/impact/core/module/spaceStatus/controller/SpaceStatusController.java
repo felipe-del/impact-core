@@ -19,7 +19,7 @@ public class SpaceStatusController {
     public final SpaceStatusService spaceStatusService;
 
     @GetMapping
-    @PreAuthorize("hasRole('ADMINISTRATOR') or hasRole('MANAGER')")
+    @PreAuthorize("hasRole('ADMINISTRATOR') or hasRole('MANAGER') or hasRole('TEACHER')")
     public ResponseEntity<ResponseWrapper<List<SpaceStatusResponse>>> getAllSpaceStatus() {
         List<SpaceStatusResponse> spaceStatusResponses = spaceStatusService.findAll();
 
