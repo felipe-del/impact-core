@@ -41,7 +41,7 @@ public class ProductRequestStatisticsByDateController {
                 productRequestStatisticsByDateService.requestsStatisticsInARange(startDate, endDate);
 
         return ResponseEntity.ok(ResponseWrapper.<List<ProductRequestStatisticsByDateResponse>>builder()
-                .message("Estadísticas de solicitudes entre" + startDate + " y " + endDate)
+                .message("Estadísticas de solicitudes entre " + startDate + " y " + endDate)
                 .data(requestStatisticsByDateResponses)
                 .build());
     }
