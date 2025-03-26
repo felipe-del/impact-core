@@ -425,6 +425,30 @@ CREATE TABLE asset_request
     FOREIGN KEY (user_id) REFERENCES user (id)
 );
 
+-- =============================================================================================== --
+-- CREATED VIEWS FOR PRODUCT STATISTICS
+CREATE VIEW product_request_statistics_by_date AS
+SELECT
+    pc.id AS category_id,
+    pc.category_type AS category_type,
+    pr.status_id,
+    pr.id AS product_request_id,
+    COUNT(por.product_id) AS total_products_requested,
+        DATE(pr.created_at) AS request_date
+        FROM product_request pr
+        JOIN products_of_request por ON pr.id = por.product_request_id
+        JOIN product p ON por.product_id = p.id
+        JOIN product_category pc ON p.category_id = pc.id
+        GROUP BY pr.id, pc.id, pr.status_id, pr.created_at;
+
+CREATE VIEW product_entries_by_date AS
+SELECT
+    p.category_id,
+    COUNT(*) AS total_ingresos,
+    p.purchase_date
+FROM product p
+WHERE p.purchase_date IS NOT NULL
+GROUP BY p.purchase_date, p.category_id;
 
 -- IMPORTANT NOTE: WE DECIDED TO CHANGE THE WAY WE KEEP TRACK OF THE MOVEMENTS IN THE DATABASE
 -- WE IMPLEMENTED THE AUDIT LOG TABLE TO KEEP TRACK OF ALL THE CHANGES MADE IN THE DATABASE
