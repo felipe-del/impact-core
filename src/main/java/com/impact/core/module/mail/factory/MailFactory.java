@@ -15,6 +15,8 @@ import java.util.List;
 public class MailFactory {
 
     private static final String IMPACT_LOGO_IMAGE = "IMPACT_BLACK_LOGO.png";
+    private static final String IMPACT_LOGO_IMAGE_WHITE = "NEW_IMPACT_WHITE_LOGO.jpg";
+    private static final String UCR_CIMPA_BANNER_LOGO = "UCR_CIMPA_BANNER_LOGO.jpg";
 
     private static ComposedMail createEmail(String recipient, String subject, EMailTemplate template,
                                             List<MetaData> metaData, List<String> imageNames) {
@@ -36,7 +38,7 @@ public class MailFactory {
                 new MetaData("userName", user.getName()),
                 new MetaData("emailContent", emailContent));
         return createEmail(user.getEmail(), "Cambio de rol de usuario",
-                EMailTemplate.GENERIC_EMAIL, metaData, List.of(IMPACT_LOGO_IMAGE));
+                EMailTemplate.GENERIC_EMAIL, metaData, List.of(IMPACT_LOGO_IMAGE_WHITE, UCR_CIMPA_BANNER_LOGO));
     }
 
     public static ComposedMail createChangeUserStateEmail(String adminName, User user) {
@@ -48,7 +50,7 @@ public class MailFactory {
                 new MetaData("userName", user.getName()),
                 new MetaData("emailContent", emailContent));
         return createEmail(user.getEmail(), "Cambio de estado de usuario",
-                EMailTemplate.GENERIC_EMAIL, metaData, List.of(IMPACT_LOGO_IMAGE));
+                EMailTemplate.GENERIC_EMAIL, metaData, List.of(IMPACT_LOGO_IMAGE_WHITE, UCR_CIMPA_BANNER_LOGO));
     }
 
     public static ComposedMail createWelcomeEmail(User user) {
@@ -58,7 +60,7 @@ public class MailFactory {
                 new MetaData("userName", user.getName()),
                 new MetaData("emailContent", emailContent));
         return createEmail(user.getEmail(), "Bienvenido a IMPACT",
-                EMailTemplate.GENERIC_EMAIL, metaData, List.of(IMPACT_LOGO_IMAGE));
+                EMailTemplate.GENERIC_EMAIL, metaData, List.of(IMPACT_LOGO_IMAGE_WHITE, UCR_CIMPA_BANNER_LOGO));
     }
 
     public static ComposedMail createForgotPasswordEmail(UserToken userToken) {
@@ -71,7 +73,7 @@ public class MailFactory {
                 new MetaData("userName", userToken.getUser().getName()),
                 new MetaData("emailContent", emailContent));
         return createEmail(userToken.getUser().getEmail(), "Restablecer contraseña",
-                EMailTemplate.GENERIC_EMAIL, metaData, List.of(IMPACT_LOGO_IMAGE));
+                EMailTemplate.GENERIC_EMAIL, metaData, List.of(IMPACT_LOGO_IMAGE_WHITE, UCR_CIMPA_BANNER_LOGO));
     }
 
     public static ComposedMail createPasswordResetEmail(User user) {
@@ -81,7 +83,7 @@ public class MailFactory {
                 new MetaData("userName", user.getName()),
                 new MetaData("emailContent", emailContent));
         return createEmail(user.getEmail(), "Contraseña restablecida",
-                EMailTemplate.GENERIC_EMAIL, metaData, List.of(IMPACT_LOGO_IMAGE));
+                EMailTemplate.GENERIC_EMAIL, metaData, List.of(IMPACT_LOGO_IMAGE_WHITE, UCR_CIMPA_BANNER_LOGO));
     }
 
     public static ComposedMail createPasswordChangedEmail(User user) {
@@ -91,7 +93,7 @@ public class MailFactory {
                 new MetaData("userName", user.getName()),
                 new MetaData("emailContent", emailContent));
         return createEmail(user.getEmail(), "Contraseña cambiada",
-                EMailTemplate.GENERIC_EMAIL, metaData, List.of(IMPACT_LOGO_IMAGE));
+                EMailTemplate.GENERIC_EMAIL, metaData, List.of(IMPACT_LOGO_IMAGE_WHITE, UCR_CIMPA_BANNER_LOGO));
     }
 
     // PRODUCT Request EMAILS
@@ -113,7 +115,7 @@ public class MailFactory {
                 new MetaData("emailContent", emailContent));
 
         return createEmail(productRequest.getUser().getEmail(), "Solicitud de producto realizada",
-                EMailTemplate.GENERIC_EMAIL, metaData, List.of(IMPACT_LOGO_IMAGE));
+                EMailTemplate.GENERIC_EMAIL, metaData, List.of(IMPACT_LOGO_IMAGE_WHITE, UCR_CIMPA_BANNER_LOGO));
     }
 
     public static ComposedMail createAdminReviewProductRequest(ProductRequest productRequest) {
@@ -135,7 +137,7 @@ public class MailFactory {
                 new MetaData("userName", "Usuario Administrador"),
                 new MetaData("emailContent", emailContent));
         return createEmail(productRequest.getUser().getEmail(), "Revision de solicitud",
-                EMailTemplate.GENERIC_EMAIL, metaData, List.of(IMPACT_LOGO_IMAGE));
+                EMailTemplate.GENERIC_EMAIL, metaData, List.of(IMPACT_LOGO_IMAGE_WHITE, UCR_CIMPA_BANNER_LOGO));
     }
 
     // ASSET Request EMAILS
@@ -156,7 +158,7 @@ public class MailFactory {
                 new MetaData("userName", assetRequest.getUser().getName()),
                 new MetaData("emailContent", emailContent));
         return createEmail(assetRequest.getUser().getEmail(), "Solicitud de activo realizada",
-                EMailTemplate.GENERIC_EMAIL, metaData, List.of(IMPACT_LOGO_IMAGE));
+                EMailTemplate.GENERIC_EMAIL, metaData, List.of(IMPACT_LOGO_IMAGE_WHITE, UCR_CIMPA_BANNER_LOGO));
     }
 
     public static ComposedMail createAdminReviewAssetRequest(AssetRequest assetRequest) {
@@ -178,7 +180,7 @@ public class MailFactory {
                 new MetaData("userName", "Usuario Administrador"),
                 new MetaData("emailContent", emailContent));
         return createEmail(assetRequest.getUser().getEmail(), "Revision de solicitud",
-                EMailTemplate.GENERIC_EMAIL, metaData, List.of(IMPACT_LOGO_IMAGE));
+                EMailTemplate.GENERIC_EMAIL, metaData, List.of(IMPACT_LOGO_IMAGE_WHITE, UCR_CIMPA_BANNER_LOGO));
     }
 
     // ASSET Renew EMAILS
@@ -199,7 +201,7 @@ public class MailFactory {
                 new MetaData("userName", assetRequest.getUser().getName()),
                 new MetaData("emailContent", emailContent));
         return createEmail(assetRequest.getUser().getEmail(), "Solicitud de Renovacion de prestamo de Activo realizada",
-                EMailTemplate.GENERIC_EMAIL, metaData, List.of(IMPACT_LOGO_IMAGE));
+                EMailTemplate.GENERIC_EMAIL, metaData, List.of(IMPACT_LOGO_IMAGE_WHITE, UCR_CIMPA_BANNER_LOGO));
     }
 
     public static ComposedMail createAdminReviewAssetRenew(AssetRequest assetRequest) {
@@ -221,7 +223,7 @@ public class MailFactory {
                 new MetaData("userName", "Usuario Administrador"),
                 new MetaData("emailContent", emailContent));
         return createEmail(assetRequest.getUser().getEmail(), "Revision de solicitud",
-                EMailTemplate.GENERIC_EMAIL, metaData, List.of(IMPACT_LOGO_IMAGE));
+                EMailTemplate.GENERIC_EMAIL, metaData, List.of(IMPACT_LOGO_IMAGE_WHITE, UCR_CIMPA_BANNER_LOGO));
     }
 
 
@@ -246,7 +248,7 @@ public class MailFactory {
                 new MetaData("userName", spaceRequest.getUser().getName()),
                 new MetaData("emailContent", emailContent));
         return createEmail(spaceRequest.getUser().getEmail(), "Solicitud de espacio realizada",
-                EMailTemplate.GENERIC_EMAIL, metaData, List.of(IMPACT_LOGO_IMAGE));
+                EMailTemplate.GENERIC_EMAIL, metaData, List.of(IMPACT_LOGO_IMAGE_WHITE, UCR_CIMPA_BANNER_LOGO));
     }
 
     public static ComposedMail createAdminReviewSpaceRequest(SpaceRequest spaceRequest, SpaceReservation spaceReservation) {
@@ -270,7 +272,7 @@ public class MailFactory {
                 new MetaData("userName", "Usuario Administrador"),
                 new MetaData("emailContent", emailContent));
         return createEmail(spaceRequest.getUser().getEmail(), "Revision de solicitud",
-                EMailTemplate.GENERIC_EMAIL, metaData, List.of(IMPACT_LOGO_IMAGE));
+                EMailTemplate.GENERIC_EMAIL, metaData, List.of(IMPACT_LOGO_IMAGE_WHITE, UCR_CIMPA_BANNER_LOGO));
     }
 
     // to new user with password random
@@ -288,7 +290,7 @@ public class MailFactory {
                 new MetaData("userName", user.getName()),
                 new MetaData("emailContent", emailContent));
         return createEmail(user.getEmail(), "Cuenta creada en IMPACT",
-                EMailTemplate.GENERIC_EMAIL, metaData, List.of(IMPACT_LOGO_IMAGE));
+                EMailTemplate.GENERIC_EMAIL, metaData, List.of(IMPACT_LOGO_IMAGE_WHITE, UCR_CIMPA_BANNER_LOGO));
     }
     // to send a admin that create a new user
     public static ComposedMail composeAdminNotificationForNewUser(User user, String createdBy_NAME, String createdBy_EMAIL) {
@@ -300,7 +302,7 @@ public class MailFactory {
                 new MetaData("userName", createdBy_NAME),
                 new MetaData("emailContent", emailContent));
         return createEmail(createdBy_EMAIL, "Cuenta creada en IMPACT",
-                EMailTemplate.GENERIC_EMAIL, metaData, List.of(IMPACT_LOGO_IMAGE));
+                EMailTemplate.GENERIC_EMAIL, metaData, List.of(IMPACT_LOGO_IMAGE_WHITE, UCR_CIMPA_BANNER_LOGO));
     }
   
     // to send notification about asset expiration date request
@@ -321,7 +323,7 @@ public class MailFactory {
                 new MetaData("userName",assetRequest.getUser().getName()),
                 new MetaData("emailContent", emailContent));
         return createEmail(assetRequest.getUser().getEmail(),"Notificación de vencimiento de préstamo",
-                EMailTemplate.GENERIC_EMAIL,metaData, List.of(IMPACT_LOGO_IMAGE));
+                EMailTemplate.GENERIC_EMAIL,metaData, List.of(IMPACT_LOGO_IMAGE_WHITE, UCR_CIMPA_BANNER_LOGO));
     }
 
     // CANCEL ASSET REQUEST EMAIL
@@ -345,7 +347,7 @@ public class MailFactory {
                 new MetaData("userName",assetRequest.getUser().getName()),
                 new MetaData("emailContent", emailContent));
         return createEmail(assetRequest.getUser().getEmail(),"Notificación de cancelación de solicitud",
-                EMailTemplate.GENERIC_EMAIL,metaData, List.of(IMPACT_LOGO_IMAGE));
+                EMailTemplate.GENERIC_EMAIL,metaData, List.of(IMPACT_LOGO_IMAGE_WHITE, UCR_CIMPA_BANNER_LOGO));
     }
 
     public static ComposedMail composeAdminNotificationCancelAssetRequest(AssetRequest assetRequest, String cancelReason){
@@ -367,7 +369,7 @@ public class MailFactory {
                 new MetaData("userName","Usuario Administrador"),
                 new MetaData("emailContent", emailContent));
         return createEmail(assetRequest.getUser().getEmail(),"Notificación de cancelación de solicitud",
-                EMailTemplate.GENERIC_EMAIL,metaData, List.of(IMPACT_LOGO_IMAGE));
+                EMailTemplate.GENERIC_EMAIL,metaData, List.of(IMPACT_LOGO_IMAGE_WHITE, UCR_CIMPA_BANNER_LOGO));
     }
 
     // CANCEL PRODUCT REQUEST EMAIL
@@ -389,7 +391,7 @@ public class MailFactory {
                 new MetaData("userName",productRequest.getUser().getName()),
                 new MetaData("emailContent", emailContent));
         return createEmail(productRequest.getUser().getEmail(),"Notificación de cancelación de solicitud",
-                EMailTemplate.GENERIC_EMAIL,metaData, List.of(IMPACT_LOGO_IMAGE));
+                EMailTemplate.GENERIC_EMAIL,metaData, List.of(IMPACT_LOGO_IMAGE_WHITE, UCR_CIMPA_BANNER_LOGO));
     }
 
     public static ComposedMail composeAdminNotificationCancelProductRequest(ProductRequest productRequest, String cancelReason){
@@ -409,7 +411,7 @@ public class MailFactory {
                 new MetaData("userName","Usuario Administrador"),
                 new MetaData("emailContent", emailContent));
         return createEmail(productRequest.getUser().getEmail(),"Notificación de cancelación de solicitud",
-                EMailTemplate.GENERIC_EMAIL,metaData, List.of(IMPACT_LOGO_IMAGE));
+                EMailTemplate.GENERIC_EMAIL,metaData, List.of(IMPACT_LOGO_IMAGE_WHITE, UCR_CIMPA_BANNER_LOGO));
     }
 
     // CANCEL SPACE REQUEST EMAIL
@@ -429,7 +431,7 @@ public class MailFactory {
                 new MetaData("userName",spaceRequest.getUser().getName()),
                 new MetaData("emailContent", emailContent));
         return createEmail(spaceRequest.getUser().getEmail(),"Notificación de cancelación de solicitud",
-                EMailTemplate.GENERIC_EMAIL,metaData, List.of(IMPACT_LOGO_IMAGE));
+                EMailTemplate.GENERIC_EMAIL,metaData, List.of(IMPACT_LOGO_IMAGE_WHITE, UCR_CIMPA_BANNER_LOGO));
     }
 
     public static ComposedMail composeAdminNotificationCancelSpaceRequest(SpaceRequest spaceRequest, String cancelReason) {
@@ -447,7 +449,7 @@ public class MailFactory {
                 new MetaData("userName","Usuario Administrador"),
                 new MetaData("emailContent", emailContent));
         return createEmail(spaceRequest.getUser().getEmail(),"Notificación de cancelación de solicitud",
-                EMailTemplate.GENERIC_EMAIL,metaData, List.of(IMPACT_LOGO_IMAGE));
+                EMailTemplate.GENERIC_EMAIL,metaData, List.of(IMPACT_LOGO_IMAGE_WHITE, UCR_CIMPA_BANNER_LOGO));
     }
 
 }
