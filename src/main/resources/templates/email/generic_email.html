@@ -8,7 +8,7 @@
       margin: 0;
       padding: 0;
       background-color: #ffffff;
-      font-family: Georgia, 'Times New Roman', Times, serif;
+      font-family: "Lato", Arial, sans-serif;
     }
 
     .email-container {
@@ -32,12 +32,12 @@
       text-align: left;
       font-size: 24px;
       font-weight: bold;
-      font-family: "Times New Roman", Times,serif;
+      font-family: "Lato", Arial, sans-serif;
       color: #191919;
     }
 
     .header .img {
-      width: 75px;
+      width: 125px;
       height: auto;
     }
 
@@ -58,21 +58,30 @@
       border-top: 1px solid #ddd;
     }
 
-    .footer p {
-      margin: 5px 0;
-      font-size: 12px;
-      font-family: Arial, sans-serif;
-      color: #191919;
+    .img-container {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      width: 100%;
+      text-align: center;
     }
 
-    .footer a {
-      color: #6499b4;
-      text-decoration: none;
+    #cimpa-logo {
+      width: 80%;
+      height: 70px;
+      object-fit: cover;
+      border-radius: 10px;
+      display: block;
+      margin: 0 auto;
     }
 
-    .footer a:hover {
-      text-decoration: underline;
+
+    #impact-logo {
+      object-fit: cover;
+      border-radius: 10px;
+      display: block;
     }
+
   </style>
 </head>
 <body>
@@ -82,7 +91,7 @@
       <tr>
         <td class="title" th:text="${emailTitle}"></td>
         <td class="img" style="text-align: right;">
-          <img class="img" src="cid:IMPACT_BLACK_LOGO.png" alt="IMPACT Logo" />
+          <img class="img" id="impact-logo" src="cid:NEW_IMPACT_WHITE_LOGO.jpg" alt="IMPACT LOGO" />
         </td>
       </tr>
     </table>
@@ -92,7 +101,9 @@
     <p th:utext="${emailContent}"></p>
   </div>
   <div class="footer">
-    <p>&copy; 2025 IMPACT.</p>
+    <div class="img-container">
+      <img id="cimpa-logo" src="cid:UCR_CIMPA_BANNER_LOGO.jpg" alt="CIMPA LOGO" />
+    </div>
   </div>
 </div>
 </body>
