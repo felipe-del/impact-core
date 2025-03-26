@@ -1,84 +1,110 @@
-# 📦 Backend para la App IMPACT
+# 📦 IMPACT - Sistema de Gestión de Recursos para CIMPA - Backend
 
-![Spring Boot](https://img.shields.io/badge/Spring%20Boot-3.3.3-green) ![License](https://img.shields.io/badge/license-MIT-blue)
+![Spring Boot](https://img.shields.io/badge/Spring%20Boot-3.3.3-green)
+![MySQL](https://img.shields.io/badge/MySQL-8.0-orange)
+![License](https://img.shields.io/badge/license-MIT-blue)
 
-## Descripción General
+## 🌟 Descripción General
 
-El Backend para la App IMPACT es un proyecto desarrollado para el "CIMPA", destinado a la gestión de recursos. La aplicación está construida con Spring Boot, lo que garantiza una arquitectura robusta y escalable, y ofrece servicios RESTful eficientes.
+IMPACT (Integrated Management Platform and Control Tracker) es un sistema desarrollado para la Universidad de Costa Rica, específicamente para el CIMPA (Centro de Investigación de Matemática Pura y Aplicada), que optimiza la administración y control de recursos materiales mediante una solución tecnológica integral.
 
-## 🚀 Objetivos del Proyecto
+## 🎯 Objetivos del Proyecto
 
-1. Gestión de Recursos:
-    - Creación, actualización, eliminación y consulta de recursos.
-    - Consultas de recursos detalladamente.
+1. **Gestión Integral de Recursos**:
+    - Administración centralizada de activos, productos y espacios
+    - Control de inventario con seguimiento en tiempo real
+    - Sistema de préstamos y devoluciones
 
-2. Inventario:
-    - Seguimiento de stock, control de entradas y salidas.
-    - Alertas para la reposición de inventario.
+2. **Sistema de Solicitudes**:
+    - Flujo completo de solicitudes (creación, aprobación, seguimiento)
+    - Notificaciones automáticas de estado
+    - Gestión de vencimientos y renovaciones
 
-3. Usuarios y Roles:
-    - Sistema de autenticación y autorización con diferentes niveles de permisos.
+3. **Seguridad y Control de Acceso**:
+    - Autenticación robusta con JWT
+    - Autorización basada en roles (Administrador, Gestor, Docente)
+    - Bitácora completa de transacciones
 
-4. Historial de Transacciones:
-    - Registro de todas las transacciones y movimientos de activos e inventarios.
+4. **Reportes y Auditoría**:
+    - Generación de reportes de movimientos
+    - Trazabilidad completa de operaciones
+    - Logs de sistema para diagnóstico
 
-5. Notificaciones:
-    - Envío de notificaciones automáticas para eventos críticos.
+## 🏗️ Arquitectura del Sistema
 
-## 🛠️ Tecnologías Utilizadas
+### Estructura Cliente-Servidor (Three-Tier)
+- **Frontend**: React + Vite (Interfaz de usuario dinámica)
+- **Backend**: Spring Boot (Lógica de negocio y API RESTful)
+- **Base de Datos**: MySQL (Almacenamiento persistente)
 
-- Spring Boot: Framework para el desarrollo del backend.
-- Spring Security: Gestión de autenticación y autorización.
-- JPA/Hibernate: Capa de persistencia para la interacción con la base de datos.
-- MySQL: Base de datos relacional.
-- JavaDoc: Documentación de la API.
+### Patrones Implementados
+- MVC (Modelo-Vista-Controlador)
+- Repository Pattern
+- DTO (Data Transfer Objects)
 
-## 🎨 Características Clave
+## 🛠️ Tecnologías Clave
 
-- API RESTful:
-    - Servicios para la gestión de recursos, usuarios y roles.
-    - Accesibles de manera segura a través de llamadas HTTP.
+- **Backend**:
+    - Spring Boot 3
+    - Spring Security
+    - Spring Data JPA
+    - Hibernate
+    - JavaDoc
+    - Swagger
 
-- Autenticación y Autorización:
-    - Seguridad basada en roles para proteger datos sensibles.
+- **Base de Datos**:
+    - MySQL 8.0
 
-- Escalabilidad y Mantenibilidad:
-    - Arquitectura modular para facilitar el escalado y mantenimiento.
+- **Otros**:
+    - JWT (Autenticación)
+    - JavaMail (Notificaciones)
+    - Spring Scheduler (Tareas programadas)
 
-- Documentación y Soporte:
-    - Documentación completa de la API y guías de uso.
+## 📌 Características Principales
 
-## 🎯 Beneficios del Proyecto
+### Módulo de Gestión de Recursos
+- CRUD completo para activos, productos y espacios
+- Búsqueda avanzada con filtros
+- Asignación de recursos a usuarios
 
-- Eficiencia Operacional:
-    - Mejora la gestión y seguimiento de recursos.
+### Sistema de Solicitudes
+- Flujo completo de aprobación
+- Historial de solicitudes por usuario
+- Renovación de préstamos
 
-- Seguridad de la Información:
-    - Protección de datos sensibles mediante políticas de seguridad.
+### Seguridad Avanzada
+- Registro con aprobación administrativa
+- Políticas de contraseñas robustas
+- Recuperación segura de credenciales
 
-- Escalabilidad:
-    - Capacidad de adaptarse a nuevas necesidades sin comprometer el rendimiento.
+### Notificaciones Automáticas
+- Recordatorios de vencimientos
+- Confirmación de operaciones
+- Alertas del sistema
 
-- Transparencia y Control:
-    - Registros detallados de todas las operaciones, facilitando auditorías.
+## 📄 Documentación Completa
 
-## 📄 Documentación
+La documentación técnica detallada se encuentra disponible en:
+- [Documento de Arquitectura](#) (Ver sección completa en el repositorio)
+- [Swagger API](http://localhost:8080/swagger-ui.html) (Acceso local)
+- [JavaDoc API](#)
+- [Manual de Usuario](#)
 
-La documentación completa del proyecto, incluyendo la API y las guías de instalación, está disponible en el archivo [JAVAdoc](#) y en la carpeta docs/.
+## 👥 Equipo de Desarrollo
 
-## 📞 Contacto
+| Nombre | Rol | Contacto |
+|--------|-----|----------|
+| Isaac Brenes | Full Stack Dev | [isaacfelibrenes1904@gmail.com](mailto:isaacfelibrenes1904@gmail.com) |
+| Raquel Alfaro | Full Stack Dev | [raquealfaba@gmail.com](mailto:raquealfaba@gmail.com) |
+| Maria González | Full Stack Dev | [maria.gonzalez.benavides@est.una.ac.cr](mailto:maria.gonzalez.benavides@est.una.ac.cr) |
+| Dilan Hernández | Full Stack Dev | [dilan.hernandez.ulate@est.una.ac.cr](mailto:dilan.hernandez.ulate@est.una.ac.cr) |
+| Marco Leandro | Full Stack Dev | [marco.leandro.chacon@est.una.ac.cr](mailto:marco.leandro.chacon@est.una.ac.cr) |
+| Joel Ramírez | Full Stack Dev | [joelramva07@gmail.com](mailto:joelramva07@gmail.com) |
 
-Para más información o contribuciones, por favor contactar a:
+## 📜 Licencia
 
-- *Isaac Felipe Brenes Calderon*
-    - Correo: [isaacfelibrenes1904@gmail.com](mailto:isaacfelibrenes1904@gmail.com)
-- *Dilan Hernández Ulate*
-    - Correo: [dilan.hernandez.ulate@est.una.ac.cr](mailto:dilan.hernandez.ulate@est.una.ac.cr)
-- *Marco Leandro Chacón*
-    - Correo: [marco.leandro.chacon@est.una.ac.cr](mailto:marco.leandro.chacon@est.una.ac.cr)
-- *Joel Ramírez Vargas*
-    - Correo: [joelramva07@gmail.com](mailto:joelramva07@gmail.com)
-- *Raquel Alfaro Barrantes*
-    - Correo: [raquealfaba@gmail.com](mailto:raquealfaba@gmail.com)
+Este proyecto no cuenta con una licencia profesional específica. El uso y distribución del código están sujetos a los términos establecidos por el autor. Se recomienda revisar el código y contactar con el propietario del proyecto para obtener detalles adicionales sobre el uso permitido.
 
 ---
+
+> **Nota**: Este sistema fue desarrollado como parte del curso de Ingenieria en Sistemas I, II y II de la Escuela de Informática de la Universidad Nacional de Costa Rica.
