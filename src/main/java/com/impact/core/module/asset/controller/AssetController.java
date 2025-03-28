@@ -98,7 +98,7 @@ public class AssetController {
                 .build());
     }
 
-    @PutMapping("/{assetId}")
+    @PutMapping("/assetRequestAccept/{assetId}")
     @PreAuthorize("hasRole('ADMINISTRATOR') or hasRole('MANAGER') ")
     public ResponseEntity<ResponseWrapper<Void>> updateStatusAccepted( @PathVariable String assetId){
         assetService.updateStatus(3,assetId); //status 3: ASSET_STATUS_LOANED
