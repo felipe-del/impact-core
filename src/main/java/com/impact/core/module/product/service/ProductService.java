@@ -6,6 +6,8 @@ import com.impact.core.module.product.mapper.ProductMapper;
 import com.impact.core.module.product.payload.request.ProductRequestDTO;
 import com.impact.core.module.product.payload.response.ProductResponseDTO;
 import com.impact.core.module.product.repository.ProductRepository;
+import com.impact.core.module.productStatus.enun.EProductStatus;
+import com.impact.core.module.productStatus.service.ProductStatusService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -19,6 +21,7 @@ import java.util.stream.Collectors;
 public class ProductService {
     public final ProductRepository productRepository;
     public final ProductMapper productMapper;
+    private final ProductStatusService productStatusService;
 
     public ArrayList<ProductResponseDTO> save(ProductRequestDTO productRequestDTO) {
         int quantity = productRequestDTO.getQuantity();
@@ -58,6 +61,9 @@ public class ProductService {
                 .collect(Collectors.toList());
     }
 
+    public Long remainingProductsInInventory() {
+        return productRepository.remainingProducts(productStatusService.findByName(EProductStatus.PRODUCT_STATUS_AVAILABLE).getId());
+    }
     // HELPER METHODS
 
     public List<Product> getAvailableProductsByCategory(String categoryName, int quantity) {
