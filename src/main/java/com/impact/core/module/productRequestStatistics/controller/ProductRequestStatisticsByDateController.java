@@ -27,7 +27,7 @@ public class ProductRequestStatisticsByDateController {
         List<ProductRequestStatisticsByDateResponse> requestStatisticsResponses = productRequestStatisticsByDateService.findAll();
 
         return ResponseEntity.ok(ResponseWrapper.<List<ProductRequestStatisticsByDateResponse>>builder()
-                .message("Lista de estadisiticas de solicitudes de productos")
+                .message("Lista de estadísticas de solicitudes de productos")
                 .data(requestStatisticsResponses)
                 .build());
     }
@@ -41,7 +41,7 @@ public class ProductRequestStatisticsByDateController {
                 productRequestStatisticsByDateService.requestsStatisticsInARange(startDate, endDate);
 
         return ResponseEntity.ok(ResponseWrapper.<List<ProductRequestStatisticsByDateResponse>>builder()
-                .message("Estadísticas de solicitudes entre" + startDate + " y " + endDate)
+                .message("Estadísticas de solicitudes entre " + startDate + " y " + endDate)
                 .data(requestStatisticsByDateResponses)
                 .build());
     }
