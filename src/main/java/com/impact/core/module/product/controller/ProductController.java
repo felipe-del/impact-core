@@ -83,4 +83,15 @@ public class ProductController {
                 .message("Cambio de estado de producto a PRESTADO.")
                 .build());
     }
+
+    @GetMapping("/remaining-products")
+    @PreAuthorize("hasRole('ADMINISTRATOR') or hasRole('MANAGER') ")
+    public ResponseEntity<ResponseWrapper<Long>>  remainingProductsInInventory() {
+        Long remainingProducts = productService.remainingProductsInInventory();
+
+        return ResponseEntity.ok(ResponseWrapper.<Long>builder()
+                .message("Cantidad de productos disponibles en el inventario")
+                .data(remainingProducts)
+                .build());
+    }
 }
