@@ -16,4 +16,7 @@ public interface ProductRepository extends JpaRepository<Product, Integer> {
     @Modifying
     @Query("UPDATE Product p SET p.status.id= :statusId WHERE p.id= :productId")
     void updateProdductStatus(@Param("statusId") Integer statusId, @Param("productId") Integer productId);
+
+    @Query("SELECT COUNT(p) FROM Product p WHERE p.status.id = :status_id")
+    Long remainingProducts(@Param("status_id")Integer status_id);
 }
