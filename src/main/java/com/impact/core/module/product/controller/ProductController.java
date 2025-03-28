@@ -74,7 +74,7 @@ public class ProductController {
                 .build());
     }
 
-    @PutMapping("{productId}")
+    @PutMapping("/productRequestAccept/{productId}")
     @PreAuthorize("hasRole('ADMINISTRATOR') or hasRole('MANAGER') ")
     public ResponseEntity<ResponseWrapper<Void>> updateStatusAccepted(@PathVariable Integer productId){
         productService.updateStatus(3,productId); //status 3: ASSET_STATUS_LOANED
