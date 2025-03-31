@@ -24,7 +24,7 @@ public class ProductMapper {
     public Product toEntity(ProductRequestDTO productRequestDTO) {
         return Product.builder()
                 .purchaseDate(productRequestDTO.getPurchaseDate())
-                .expiryDate(productRequestDTO.getExpiryDate())
+                .expiryDate(productRequestDTO.getExpiryDate() != null ? productRequestDTO.getExpiryDate() : null)
                 .category(productCategoryService.findById(productRequestDTO.getCategoryId()))
                 .status(productStatusService.findByName(EProductStatus.PRODUCT_STATUS_AVAILABLE))
                 .build();
@@ -34,7 +34,7 @@ public class ProductMapper {
         return ProductResponseDTO.builder()
                 .id(product.getId())
                 .purchaseDate(product.getPurchaseDate())
-                .expiryDate(product.getExpiryDate())
+                .expiryDate(product.getExpiryDate() != null ? product.getExpiryDate() : null)
                 .category(productCategoryMapper.toDTO(productCategoryService.findById(product.getCategory().getId())))
                 .status(productStatusMapper.toDTO(product.getStatus()))
                 .build();
