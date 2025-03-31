@@ -1,5 +1,6 @@
 package com.impact.core.module.product.payload.request;
 
+import io.micrometer.common.lang.Nullable;
 import jakarta.validation.constraints.*;
 import lombok.*;
 
@@ -20,8 +21,8 @@ public class ProductRequestDTO {
     @PastOrPresent(message = "La fecha de compra no puede ser en el futuro.")
     private LocalDate purchaseDate;
 
-    @NotNull(message = "La fecha de vencimiento es requerida.")
     @Future(message = "La fecha de vencimiento debe ser en el futuro.")
+    @Nullable
     private LocalDate expiryDate;
 
     @NotNull(message = "El id de la categoría es requerido.")
