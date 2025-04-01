@@ -14,8 +14,13 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
+import java.time.YearMonth;
+import java.time.format.TextStyle;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Locale;
+import java.util.Map;
+import java.util.stream.Collectors;
 
 @Service("assetService")
 @RequiredArgsConstructor
@@ -80,5 +85,23 @@ public class AssetService {
         assetRepository.updateAssetStatus(status,asset);
     }
 
+
+    public Map<String, Long> getAssetsByPurchaseDate(LocalDate startDate, LocalDate endDate) {
+        List<Asset> assets = assetRepository.findAllByPurchaseDateBetween(startDate, endDate);
+
+        // Contar los activos por mes y año
+        Map<YearMonth, Long> monthlyCounts = assets.stream()
+                .collect(Collectors.groupingBy(
+                        asset -> YearMonth.from(asset.getPurchaseDate()),
+                        Collectors.counting()
+                ));
+
+        // Convertir a formato String para el frontend (Ejemplo: "Ene 2024")
+        return monthlyCounts.entrySet().stream()
+                .collect(Collectors.toMap(
+                        entry -> entry.getKey().getMonth().getDisplayName(TextStyle.SHORT, Locale.getDefault()) + " " + entry.getKey().getYear(),
+                        Map.Entry::getValue
+                ));
+    }
 
 }

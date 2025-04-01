@@ -426,6 +426,19 @@ CREATE TABLE asset_request
 );
 
 -- =============================================================================================== --
+-- CREATED VIEWS FOR STATISTICS STATISTICS
+CREATE VIEW asset_request_statistics_by_date AS
+SELECT
+    a.status_id,
+    ar.status_id AS request_status_id,
+    ar.id AS asset_request_id,
+    COUNT(ar.asset_id) AS total_assets_requested,
+        DATE(ar.created_at) AS request_date
+        FROM asset_request ar
+        JOIN asset a ON ar.asset_id = a.id
+        GROUP BY ar.id, a.status_id, ar.status_id, ar.created_at;
+
+
 -- CREATED VIEWS FOR PRODUCT STATISTICS
 CREATE VIEW product_request_statistics_by_date AS
 SELECT
@@ -449,6 +462,9 @@ SELECT
 FROM product p
 WHERE p.purchase_date IS NOT NULL
 GROUP BY p.purchase_date, p.category_id;
+
+
+
 
 -- IMPORTANT NOTE: WE DECIDED TO CHANGE THE WAY WE KEEP TRACK OF THE MOVEMENTS IN THE DATABASE
 -- WE IMPLEMENTED THE AUDIT LOG TABLE TO KEEP TRACK OF ALL THE CHANGES MADE IN THE DATABASE

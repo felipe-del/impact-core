@@ -19,4 +19,9 @@ public interface AssetRepository extends JpaRepository<Asset, Integer> {
     @Modifying
     @Query("UPDATE Asset a SET a.status.id= :statusId WHERE a.plateNumber= :assetId")
     void updateAssetStatus(@Param("statusId") Integer statusId, @Param("assetId") String assetId);
+
+    @Query("SELECT a FROM Asset a WHERE a.purchaseDate BETWEEN :startDate AND :endDate")
+    List<Asset> findAllByPurchaseDateBetween(@Param("startDate") LocalDate startDate, @Param("endDate") LocalDate endDate);
+
+
 }
