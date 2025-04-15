@@ -140,4 +140,9 @@ public class AssetRequestService {
         return assetRequestRepository.assetsRequestByStatus(1); //status 1-> RESOURCE_REQUEST_STATUS_EARRING
     }
 
+    public List<AssetRequestDTOResponse> findAllRenewal() {
+        return assetRequestRepository.assetsRequestByStatus(5).stream()
+                .map(assetRequestMapper::toDTO)
+                .collect(Collectors.toList());
+    }
 }
