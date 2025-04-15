@@ -38,6 +38,17 @@ public class AssetRequestController {
                 .build());
     }
 
+    @GetMapping("/request-renewal")
+    @PreAuthorize("hasRole('ADMINISTRATOR') or hasRole('MANAGER')")
+    public ResponseEntity<ResponseWrapper<List<AssetRequestDTOResponse>>> getAllAssetRequestsRenewal() {
+        List<AssetRequestDTOResponse> assetRequestDTOResponses = assetRequestService.findAllRenewal();
+
+        return ResponseEntity.ok(ResponseWrapper.<List<AssetRequestDTOResponse>>builder()
+                .message("Lista de solicitudes de renovación de activos.")
+                .data(assetRequestDTOResponses)
+                .build());
+    }
+
     @GetMapping("/{id}")
     @PreAuthorize("hasRole('ADMINISTRATOR') or hasRole('MANAGER') or hasRole('TEACHER')")
     public ResponseEntity<ResponseWrapper<AssetRequestDTOResponse>> getAssetRequest(@PathVariable int id) {
