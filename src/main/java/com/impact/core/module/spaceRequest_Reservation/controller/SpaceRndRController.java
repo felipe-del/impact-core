@@ -1,4 +1,5 @@
 package com.impact.core.module.spaceRequest_Reservation.controller;
+import com.impact.core.module.assetRequest.payload.response.AssetRequestDTOResponse;
 import com.impact.core.module.resource_request_status.payload.request.CancelRequestDTO;
 import com.impact.core.module.spaceRequest_Reservation.payload.request.SpaceRndRRequest;
 import com.impact.core.module.spaceRequest_Reservation.payload.response.SpaceRndRResponse;
@@ -73,13 +74,44 @@ public class SpaceRndRController {
                 .build());
     }
 
-    @PutMapping("/accept/{reqId}")
-    @PreAuthorize("hasRole('ADMINISTRATOR') or hasRole('MANAGER')")
-    public ResponseEntity<ResponseWrapper<Void>> acceptRequest(@PathVariable Integer reqId){
-        spaceRndRService.acceptRequest(4, reqId);//status 2: RESOURCE_REQUEST_STATUS_ACCEPTED (resource_request_status)
+    /**
+     * Get all space requests and reservations excluding EARRING and RENEWAL statuses.
+     * @return List of space requests and reservations excluding EARRING and RENEWAL statuses.
+     */
+    @GetMapping("/filter/excluding-earring-renewal")
+    @PreAuthorize("hasRole('ADMINISTRATOR') or hasRole('MANAGER') or hasRole('TEACHER')")
+    public ResponseEntity<ResponseWrapper<List<SpaceRndRResponse>>> getSpaceRequestsExcludingEarringAndRenewal() {
+        List<SpaceRndRResponse> filteredRequests = spaceRndRService.findAllExcludingEarringAndRenewal();
 
-        return ResponseEntity.ok(ResponseWrapper.<Void>builder()
-                .message("Cambio de estado de solicitud a aceptado.")
+        return ResponseEntity.ok(ResponseWrapper.<List<SpaceRndRResponse>>builder()
+                .message("Lista de solicitudes de espacios excluyendo estados EARRING y RENEWAL.")
+                .data(filteredRequests)
+                .build());
+    }
+
+    /**
+     * Get all space requests and reservations with EARRING status.
+     * @return List of space requests and reservations with EARRING status.
+     */
+    @GetMapping("/filter/earring")
+    @PreAuthorize("hasRole('ADMINISTRATOR') or hasRole('MANAGER') or hasRole('TEACHER')")
+    public ResponseEntity<ResponseWrapper<List<SpaceRndRResponse>>> getSpaceRequestsWithEarring() {
+        List<SpaceRndRResponse> filteredRequests = spaceRndRService.findAllWithEarring();
+
+        return ResponseEntity.ok(ResponseWrapper.<List<SpaceRndRResponse>>builder()
+                .message("Lista de solicitudes de espacios con estado EARRING.")
+                .data(filteredRequests)
+                .build());
+    }
+
+    @PutMapping("/accept/{spaceRequestId}")
+    @PreAuthorize("hasRole('ADMINISTRATOR') or hasRole('MANAGER') ")
+    public ResponseEntity<ResponseWrapper<SpaceRndRResponse>> acceptSpaceRequest(@PathVariable Integer spaceRequestId){
+        SpaceRndRResponse response = spaceRndRService.acceptRequest(spaceRequestId);
+
+        return ResponseEntity.ok(ResponseWrapper.<SpaceRndRResponse>builder()
+                .message("Solicitud de espacio aceptada.")
+                .data(response)
                 .build());
     }
 

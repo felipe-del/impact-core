@@ -2,10 +2,15 @@ package com.impact.core.module.spaceRequest_Reservation.service;
 
 import com.impact.core.expection.customException.ConflictException;
 import com.impact.core.expection.customException.ResourceNotFoundException;
+import com.impact.core.module.asset.entity.Asset;
 import com.impact.core.module.assetRequest.entity.AssetRequest;
+import com.impact.core.module.assetRequest.payload.response.AssetRequestDTOResponse;
+import com.impact.core.module.assetStatus.enun.EAssetStatus;
 import com.impact.core.module.mail.factory.MailFactory;
 import com.impact.core.module.mail.payload.ComposedMail;
 import com.impact.core.module.mail.service.MailService;
+import com.impact.core.module.resource_request_status.enun.EResourceRequestStatus;
+import com.impact.core.module.resource_request_status.service.ResourceRequestStatusService;
 import com.impact.core.module.space.entity.Space;
 import com.impact.core.module.space.respository.SpaceRepository;
 import com.impact.core.module.space.service.SpaceService;
@@ -31,6 +36,7 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Service("spaceRndRService")
 @RequiredArgsConstructor
@@ -43,6 +49,7 @@ public class SpaceRndRService {
     public final MailService mailService;
     private final SpaceStatusService spaceStatusService;
     private final SpaceRepository spaceRepository;
+    private final ResourceRequestStatusService resourceRequestStatusService;
 
     public SpaceRndRResponse save(UserDetailsImpl userDetails, SpaceRndRRequest spaceRndRRequest) {
         // Because of how pair works, (a = SpaceRequest, b = SpaceReservation)
@@ -166,4 +173,48 @@ public class SpaceRndRService {
     public List<SpaceRequest> findByPending(){
         return spaceRequestRepository.spaceRequestByStatus(1); //status 1-> RESOURCE_REQUEST_STATUS_EARRING
     }
+
+    public List<SpaceRndRResponse> findAllExcludingEarringAndRenewal() {
+        List<SpaceRequest> allRequests = spaceRequestRepository.findAll();
+
+        return allRequests.stream()
+                .filter(request -> {
+                    EResourceRequestStatus statusEnum = request.getStatus().getName();
+                    return statusEnum != EResourceRequestStatus.RESOURCE_REQUEST_STATUS_EARRING &&
+                            statusEnum != EResourceRequestStatus.RESOURCE_REQUEST_STATUS_RENEWAL;
+                })
+                .map(request -> spaceRndRMapper.toDTO(request, null))
+                .toList();
+    }
+
+    public List<SpaceRndRResponse> findAllWithEarring() {
+        List<SpaceRequest> allRequests = spaceRequestRepository.findAll();
+
+        return allRequests.stream()
+                .filter(request -> request.getStatus().getName() == EResourceRequestStatus.RESOURCE_REQUEST_STATUS_EARRING)
+                .map(request -> spaceRndRMapper.toDTO(request, null))
+                .collect(Collectors.toList());
+    }
+
+    public SpaceRndRResponse acceptRequest(Integer spaceRequestId) {
+        SpaceRequest spaceRequest = findById(spaceRequestId);
+        List<SpaceReservation> spaceReservations = spaceReservationRepository.findAllBySpace(spaceRequest.getSpace());
+        if(spaceRequest.getStatus().getName() != EResourceRequestStatus.RESOURCE_REQUEST_STATUS_EARRING){
+            throw new ConflictException("La solicitud de espacio con el id: " + spaceRequestId + " no está en espera.");
+        }
+        spaceRequest.setStatus(
+                resourceRequestStatusService.findByName(EResourceRequestStatus.RESOURCE_REQUEST_STATUS_ACCEPTED)
+        );
+        Space space = spaceRequest.getSpace();
+        space.setStatus(
+                spaceStatusService.findByName(ESpaceStatus.SPACE_STATUS_LOANED)
+        );
+        SpaceRequest saved = spaceRequestRepository.save(spaceRequest);
+
+        ComposedMail composedMailToUser = MailFactory.createSpaceRequestAcceptEmail(spaceRequest);
+        mailService.sendComposedEmail(composedMailToUser);
+
+        return spaceRndRMapper.toDTO(saved, spaceReservations.getFirst());
+    }
+
 }

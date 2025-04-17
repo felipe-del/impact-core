@@ -218,13 +218,16 @@ CREATE TABLE space_request
     num_people    INT,
     event_desc    VARCHAR(255),
     event_obs     VARCHAR(255),
-    user_id    INT NOT NULL,
+    user_id       INT NOT NULL,
     use_equipment TINYINT(1) DEFAULT 0,
-    status_id  INT,
+    status_id     INT,
+    created_at    TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     FOREIGN KEY (status_id) REFERENCES resource_request_status (id),
     FOREIGN KEY (space_id) REFERENCES space (id),
     FOREIGN KEY (user_id) REFERENCES user (id)
 );
+
+
 
 CREATE TABLE location_type
 (
