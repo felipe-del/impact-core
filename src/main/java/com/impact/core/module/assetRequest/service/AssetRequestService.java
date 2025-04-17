@@ -2,6 +2,7 @@ package com.impact.core.module.assetRequest.service;
 
 import com.impact.core.expection.customException.ResourceNotFoundException;
 import com.impact.core.module.asset.entity.Asset;
+import com.impact.core.module.asset.service.AssetService;
 import com.impact.core.module.assetRequest.entity.AssetRequest;
 import com.impact.core.module.assetRequest.mapper.AssetRequestMapper;
 import com.impact.core.module.assetRequest.payload.renew.AssetRequestDTORenew;
@@ -13,6 +14,8 @@ import com.impact.core.module.assetStatus.service.AssetStatusService;
 import com.impact.core.module.mail.factory.MailFactory;
 import com.impact.core.module.mail.payload.ComposedMail;
 import com.impact.core.module.mail.service.MailService;
+import com.impact.core.module.resource_request_status.enun.EResourceRequestStatus;
+import com.impact.core.module.resource_request_status.service.ResourceRequestStatusService;
 import com.impact.core.module.schedule_task.service.DynamicSchedulerService;
 import com.impact.core.module.user.entity.User;
 import com.impact.core.module.user.service.UserService;
@@ -22,6 +25,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
+import java.util.function.Function;
 import java.util.stream.Collectors;
 
 @Service("assetRequestService")
@@ -30,10 +34,11 @@ public class AssetRequestService {
     public final AssetRequestRepository assetRequestRepository;
     public final AssetStatusService assetStatusService;
     public final AssetRequestMapper assetRequestMapper;
+    public final AssetService assetService;
     public final UserService userService;
     public final MailService mailService;
     private final DynamicSchedulerService dynamicSchedulerService;
-
+    private final ResourceRequestStatusService resourceRequestStatusService;
 
     public AssetRequestDTOResponse save(UserDetailsImpl userDetails, AssetRequestDTORequest assetRequestDTORequest) {
         AssetRequest assetRequest = assetRequestMapper.toEntity(assetRequestDTORequest);
@@ -43,8 +48,10 @@ public class AssetRequestService {
 
         User user = userService.findById(userDetails.getId());
         assetRequest.setUser(user);
+
         AssetRequest assetRequestSaved = assetRequestRepository.save(assetRequest);
         dynamicSchedulerService.scheduleNotification(assetRequestSaved);
+
         ComposedMail composedMailToUser = MailFactory.createAssetRequestEmail(assetRequestSaved);
         mailService.sendComposedEmail(composedMailToUser);
         ComposedMail composedMailToAdmin = MailFactory.createAdminReviewAssetRequest(assetRequestSaved);
@@ -54,15 +61,17 @@ public class AssetRequestService {
     }
 
     public AssetRequestDTOResponse saveRenew(UserDetailsImpl userDetails, AssetRequestDTORenew assetRequestDTORenew) {
-        AssetRequest assetRequest = assetRequestMapper.toEntity(assetRequestDTORenew);
+        AssetRequest assetRequest = assetRequestMapper.toEntityWaitingRenewal(assetRequestDTORenew);
         Asset asset = assetRequest.getAsset();
         asset.setStatus(assetStatusService.findByName(EAssetStatus.ASSET_STATUS_EARRING));
         assetRequest.setAsset(asset);
 
         User user = userService.findById(userDetails.getId());
         assetRequest.setUser(user);
+
         AssetRequest assetRequestSaved = assetRequestRepository.save(assetRequest);
         dynamicSchedulerService.scheduleNotification(assetRequestSaved);
+
         ComposedMail composedMailToUser = MailFactory.createAssetRenewEmail(assetRequestSaved);
         mailService.sendComposedEmail(composedMailToUser);
         ComposedMail composedMailToAdmin = MailFactory.createAdminReviewAssetRenew(assetRequestSaved);
@@ -72,28 +81,32 @@ public class AssetRequestService {
     }
 
     public AssetRequestDTOResponse update(int id, AssetRequestDTORequest assetRequestDTORequest) {
-        AssetRequest assetRequest = this.findById(id);
-        AssetRequest assetRequestUpdated = assetRequestMapper.toEntity(assetRequestDTORequest);
-        assetRequestUpdated.setId(assetRequest.getId());
-        assetRequestUpdated.setUser(assetRequest.getUser());
-        assetRequestUpdated.setCreatedAt(assetRequest.getCreatedAt());
-        boolean expirationDateChanged = !assetRequest.getExpirationDate().equals(assetRequestUpdated.getExpirationDate());
-        AssetRequest assetRequestSaved = assetRequestRepository.save(assetRequestUpdated);
-        if (expirationDateChanged) {dynamicSchedulerService.scheduleNotification(assetRequestUpdated);}
-        return assetRequestMapper.toDTO(assetRequestSaved);
+        return updateInternalLogic(id, assetRequestDTORequest, assetRequestMapper::toEntity);
     }
 
     public AssetRequestDTOResponse updateRenew(int id, AssetRequestDTORequest assetRequestDTORequest) {
-        AssetRequest assetRequest = this.findById(id);
-        AssetRequest assetRequestUpdated = assetRequestMapper.toEntityUpdate(assetRequestDTORequest);
-        assetRequestUpdated.setId(assetRequest.getId());
-        assetRequestUpdated.setUser(assetRequest.getUser());
-        assetRequestUpdated.setCreatedAt(assetRequest.getCreatedAt());
-        boolean expirationDateChanged = !assetRequest.getExpirationDate().equals(assetRequestUpdated.getExpirationDate());
-        AssetRequest assetRequestSaved = assetRequestRepository.save(assetRequestUpdated);
-        if (expirationDateChanged) {dynamicSchedulerService.scheduleNotification(assetRequestUpdated);}
-        return assetRequestMapper.toDTO(assetRequestSaved);
+        return updateInternalLogic(id, assetRequestDTORequest, assetRequestMapper::toEntityRenewal);
     }
+
+    private AssetRequestDTOResponse updateInternalLogic(int id, AssetRequestDTORequest assetRequestDTORequest,
+                                                        Function<AssetRequestDTORequest, AssetRequest> mappingFunction) {
+        AssetRequest original = this.findById(id);
+        AssetRequest updated = mappingFunction.apply(assetRequestDTORequest);
+
+        updated.setId(original.getId());
+        updated.setUser(original.getUser());
+        updated.setCreatedAt(original.getCreatedAt());
+
+        boolean expirationDateChanged = !original.getExpirationDate().equals(updated.getExpirationDate());
+        AssetRequest saved = assetRequestRepository.save(updated);
+
+        if (expirationDateChanged) {
+            dynamicSchedulerService.scheduleNotification(updated);
+        }
+
+        return assetRequestMapper.toDTO(saved);
+    }
+
     public void delete(int id) {
         AssetRequest assetRequest = findById(id);
         assetRequestRepository.delete(assetRequest);
@@ -119,9 +132,11 @@ public class AssetRequestService {
                 .map(assetRequestMapper::toDTO)
                 .collect(Collectors.toList());
     }
+
     @Transactional
     public void updateStatus(Integer status, Integer assetRequestId, String cancelReason){
         AssetRequest assetRequest = findById(assetRequestId);
+
         ComposedMail composedMailToUser = MailFactory.composeUserNotificationCancelAssetRequest(assetRequest, cancelReason);
         mailService.sendComposedEmail(composedMailToUser);
         ComposedMail composedMailToAdmin = MailFactory.composeAdminNotificationCancelAssetRequest(assetRequest, cancelReason);
@@ -131,18 +146,75 @@ public class AssetRequestService {
     }
 
     @Transactional
-    public void updateStatusAccepted(Integer status, Integer assetRequestId){
-        AssetRequest assetRequest = findById(assetRequestId);
+    public void updateRenewalStatusAccepted(Integer assetRequestId){
+        AssetRequest originalAssetRequest = findById(assetRequestId);
+        AssetRequest renewedAssetRequest = getValidatedRenewedRequest(originalAssetRequest);
 
-        assetRequestRepository.updateAssetRequestStatus(status, assetRequestId);
+        assetRequestRepository.updateAssetRequestStatus(
+                resourceRequestStatusService.findByName(EResourceRequestStatus.RESOURCE_REQUEST_STATUS_ACCEPTED).getId(),
+                renewedAssetRequest.getId());
+
+        assetRequestRepository.updateAssetRequestStatus(
+                resourceRequestStatusService.findByName(EResourceRequestStatus.RESOURCE_REQUEST_STATUS_CANCELED).getId(),
+                originalAssetRequest.getId());
+
+        ComposedMail composedMailToUser = MailFactory.composeUserNotificationAcceptAssetRenewalRequest(renewedAssetRequest);
+        mailService.sendComposedEmail(composedMailToUser);
     }
-    public List<AssetRequest> findByPending(){
+
+    @Transactional
+    public void updateRenewalStatusRejected(Integer assetRequestId){
+        AssetRequest originalAssetRequest = findById(assetRequestId);
+        AssetRequest rejectingRenewedAssetRequest = getValidatedRenewedRequest(originalAssetRequest);
+
+        assetRequestRepository.updateAssetRequestStatus(
+                resourceRequestStatusService.findByName(EResourceRequestStatus.RESOURCE_REQUEST_STATUS_CANCELED).getId(),
+                rejectingRenewedAssetRequest.getId());
+
+        assetRequestRepository.updateAssetRequestStatus(
+                resourceRequestStatusService.findByName(EResourceRequestStatus.RESOURCE_REQUEST_STATUS_ACCEPTED).getId(),
+                originalAssetRequest.getId());
+
+        ComposedMail composedMailToUser = MailFactory.composeUserNotificationRejectAssetRenewalRequest(rejectingRenewedAssetRequest);
+        mailService.sendComposedEmail(composedMailToUser);
+    }
+
+    private AssetRequest getValidatedRenewedRequest(AssetRequest originalAssetRequest){
+        Asset asset = assetService.findById(originalAssetRequest.getAsset().getId());
+
+        AssetRequest renewedAssetRequest = findWaitingOnRenewal(asset.getPlateNumber(),
+                originalAssetRequest.getReason(),
+                originalAssetRequest.getUser().getId());
+
+        asset.setStatus(assetStatusService.findByName(EAssetStatus.ASSET_STATUS_LOANED));
+
+        if (renewedAssetRequest == null) {
+            throw new ResourceNotFoundException("No existe una solicitud en espera de renovación de otra solicitud para el activo con placa: "
+                    + asset.getPlateNumber());
+        }
+
+        return renewedAssetRequest;
+    }
+
+    public List<AssetRequest> findByPending() {
         return assetRequestRepository.assetsRequestByStatus(1); //status 1-> RESOURCE_REQUEST_STATUS_EARRING
     }
 
     public List<AssetRequestDTOResponse> findAllRenewal() {
-        return assetRequestRepository.assetsRequestByStatus(5).stream()
+        return assetRequestRepository.assetsRequestByStatus(
+                resourceRequestStatusService.findByName(EResourceRequestStatus.RESOURCE_REQUEST_STATUS_RENEWAL).getId())
+                .stream()
                 .map(assetRequestMapper::toDTO)
                 .collect(Collectors.toList());
+    }
+
+    private AssetRequest findWaitingOnRenewal(String plateNumber, String reason, Integer userId) {
+        for(AssetRequest a : assetRequestRepository.assetsRequestByStatus(resourceRequestStatusService.findByName(
+                EResourceRequestStatus.RESOURCE_REQUEST_STATUS_WAITING_ON_RENEWAL).getId())){
+            if(a.getAsset().getPlateNumber().equals(plateNumber) && a.getReason().equals(reason) && a.getUser().getId().equals(userId)){
+                return a;
+            }
+        }
+        return null;
     }
 }
