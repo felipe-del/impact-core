@@ -83,5 +83,21 @@ public class SpaceRndRController {
                 .build());
     }
 
+    /**
+     * Get all space requests and reservations excluding EARRING and RENEWAL statuses.
+     * @return List of space requests and reservations excluding EARRING and RENEWAL statuses.
+     */
+    @GetMapping("/filter/excluding-earring-renewal")
+    @PreAuthorize("hasRole('ADMINISTRATOR') or hasRole('MANAGER') or hasRole('TEACHER')")
+    public ResponseEntity<ResponseWrapper<List<SpaceRndRResponse>>> getSpaceRequestsExcludingEarringAndRenewal() {
+        List<SpaceRndRResponse> filteredRequests = spaceRndRService.findAllExcludingEarringAndRenewal();
+
+        return ResponseEntity.ok(ResponseWrapper.<List<SpaceRndRResponse>>builder()
+                .message("Lista de solicitudes de espacios excluyendo estados EARRING y RENEWAL.")
+                .data(filteredRequests)
+                .build());
+    }
+
+
 }
 
