@@ -6,6 +6,7 @@ import com.impact.core.module.assetRequest.payload.renew.AssetRequestDTORenew;
 import com.impact.core.module.assetRequest.payload.request.AssetRequestDTORequest;
 import com.impact.core.module.assetRequest.payload.response.AssetRequestDTOResponse;
 import com.impact.core.module.assetRequest.service.AssetRequestService;
+import com.impact.core.module.productRequest.payload.response.ProductRequestDTOResponse;
 import com.impact.core.module.resource_request_status.payload.request.CancelRequestDTO;
 import com.impact.core.security.service.UserDetailsImpl;
 import com.impact.core.util.ResponseWrapper;
@@ -165,4 +166,31 @@ public class AssetRequestController {
                 .data(filteredAssetRequests)
                 .build());
     }
+
+    /**
+     * Get all asset requests with EARRING status.
+     * @return List of asset requests with EARRING status.
+     */
+    @GetMapping("/filter/earring")
+    @PreAuthorize("hasRole('ADMINISTRATOR') or hasRole('MANAGER') or hasRole('TEACHER')")
+    public ResponseEntity<ResponseWrapper<List<AssetRequestDTOResponse>>> getAssetRequestsWithEarring() {
+        List<AssetRequestDTOResponse> filteredAssetRequests = assetRequestService.findAllWithEarring();
+
+        return ResponseEntity.ok(ResponseWrapper.<List<AssetRequestDTOResponse>>builder()
+                .message("Lista de solicitudes de activos con estado EARRING.")
+                .data(filteredAssetRequests)
+                .build());
+    }
+
+    @PutMapping("/accept/{assetRequestId}")
+    @PreAuthorize("hasRole('ADMINISTRATOR') or hasRole('MANAGER') ")
+    public ResponseEntity<ResponseWrapper<AssetRequestDTOResponse>> acceptAssetRequest(@PathVariable Integer assetRequestId){
+        AssetRequestDTOResponse response = assetRequestService.acceptRequest(assetRequestId);
+
+        return ResponseEntity.ok(ResponseWrapper.<AssetRequestDTOResponse>builder()
+                .message("Solicitud de activo aceptada.")
+                .data(response)
+                .build());
+    }
+
 }
