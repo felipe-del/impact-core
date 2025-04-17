@@ -6,6 +6,7 @@ import com.impact.core.module.assetRequest.entity.AssetRequest;
 import com.impact.core.module.mail.factory.MailFactory;
 import com.impact.core.module.mail.payload.ComposedMail;
 import com.impact.core.module.mail.service.MailService;
+import com.impact.core.module.resource_request_status.enun.EResourceRequestStatus;
 import com.impact.core.module.space.entity.Space;
 import com.impact.core.module.space.respository.SpaceRepository;
 import com.impact.core.module.space.service.SpaceService;
@@ -166,4 +167,18 @@ public class SpaceRndRService {
     public List<SpaceRequest> findByPending(){
         return spaceRequestRepository.spaceRequestByStatus(1); //status 1-> RESOURCE_REQUEST_STATUS_EARRING
     }
+
+    public List<SpaceRndRResponse> findAllExcludingEarringAndRenewal() {
+        List<SpaceRequest> allRequests = spaceRequestRepository.findAll();
+
+        return allRequests.stream()
+                .filter(request -> {
+                    EResourceRequestStatus statusEnum = request.getStatus().getName();
+                    return statusEnum != EResourceRequestStatus.RESOURCE_REQUEST_STATUS_EARRING &&
+                            statusEnum != EResourceRequestStatus.RESOURCE_REQUEST_STATUS_RENEWAL;
+                })
+                .map(request -> spaceRndRMapper.toDTO(request, null))
+                .toList();
+    }
+
 }

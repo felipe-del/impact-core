@@ -51,6 +51,7 @@ public class SpaceRndRMapper {
 
     public SpaceRndRResponse toDTO(SpaceRequest sReq, SpaceReservation sRes) {
         return SpaceRndRResponse.builder()
+                .id(sReq.getId())
                 .space(spaceMapper.toDTO(sReq.getSpace()))
                 .reqAndResId(sReq.getId())
                 .numPeople(sReq.getNumPeople())
@@ -61,6 +62,7 @@ public class SpaceRndRMapper {
                 .startTime(sRes != null ? sRes.getStartTime() : null)
                 .endTime(sRes != null ? sRes.getEndTime() : null)
                 .user(myUserMapper.toDTO(sReq.getUser()))
+                .createdAt(sReq.getCreatedAt().toString())
                 .build();
     }
 }

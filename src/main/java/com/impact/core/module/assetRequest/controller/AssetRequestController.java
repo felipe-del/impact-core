@@ -150,4 +150,19 @@ public class AssetRequestController {
                 .message("Cambio de estado de solicitud a aceptado.")
                 .build());
     }
+
+    /**
+     * Get all asset requests excluding EARRING and RENEWAL statuses.
+     * @return List of asset requests excluding EARRING and RENEWAL statuses.
+     */
+    @GetMapping("/filter/excluding-earring-renewal")
+    @PreAuthorize("hasRole('ADMINISTRATOR') or hasRole('MANAGER') or hasRole('TEACHER')")
+    public ResponseEntity<ResponseWrapper<List<AssetRequestDTOResponse>>> getAssetRequestsExcludingEarringAndRenewal() {
+        List<AssetRequestDTOResponse> filteredAssetRequests = assetRequestService.findAllExcludingEarringAndRenewal();
+
+        return ResponseEntity.ok(ResponseWrapper.<List<AssetRequestDTOResponse>>builder()
+                .message("Lista de solicitudes de activos excluyendo estados EARRING y RENEWAL.")
+                .data(filteredAssetRequests)
+                .build());
+    }
 }
