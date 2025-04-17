@@ -99,4 +99,19 @@ public class ProductRequestController {
                 .message("Cambio de estado de solicitud a aceptado.")
                 .build());
     }
+    /**
+     * Get all product requests excluding EARRING and RENEWAL statuses.
+     * @return List of product requests excluding EARRING and RENEWAL statuses.
+     */
+    @GetMapping("/filter/excluding-earring-renewal")
+    @PreAuthorize("hasRole('ADMINISTRATOR') or hasRole('MANAGER') or hasRole('TEACHER')")
+    public ResponseEntity<ResponseWrapper<List<ProductRequestDTOResponse>>> getProductRequestsExcludingEarringAndRenewal() {
+        List<ProductRequestDTOResponse> filteredProductRequests = productRequestService.findAllExcludingEarringAndRenewal();
+
+        return ResponseEntity.ok(ResponseWrapper.<List<ProductRequestDTOResponse>>builder()
+                .message("Lista de solicitudes de productos excluyendo estados EARRING y RENEWAL.")
+                .data(filteredProductRequests)
+                .build());
+    }
+
 }
