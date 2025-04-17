@@ -15,6 +15,7 @@ import java.time.Instant;
 @NoArgsConstructor
 @AllArgsConstructor
 public class SpaceRndRResponse {
+    private Integer id;
     private SpaceResponse space;
     private int reqAndResId;
     private int numPeople;
@@ -25,5 +26,5 @@ public class SpaceRndRResponse {
     private Instant startTime;
     private Instant endTime;
     private UserResponse user;
-
+    private String createdAt;
 }
