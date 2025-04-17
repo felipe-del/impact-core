@@ -75,7 +75,8 @@ VALUES ('RESOURCE_REQUEST_STATUS_EARRING', 'Está pendiente de ser aprobado.'),
        ('RESOURCE_REQUEST_STATUS_ACCEPTED', 'Ha sido aceptado.'),
        ('RESOURCE_REQUEST_STATUS_RETURNED', 'Ha sido devuelto.'),
        ('RESOURCE_REQUEST_STATUS_CANCELED', 'Ha sido cancelada.'),
-       ('RESOURCE_REQUEST_STATUS_RENEWAL', 'Pendiente de renovacion.');
+       ('RESOURCE_REQUEST_STATUS_RENEWAL', 'Pendiente de renovacion.'),
+       ('RESOURCE_REQUEST_STATUS_WAITING_ON_RENEWAL', 'En espera de la renovación de otra solicitud.');
 
 -- NOT NECESSARY
 -- CREATE TABLE REQUEST
