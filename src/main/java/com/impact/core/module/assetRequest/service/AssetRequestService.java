@@ -13,6 +13,7 @@ import com.impact.core.module.assetStatus.service.AssetStatusService;
 import com.impact.core.module.mail.factory.MailFactory;
 import com.impact.core.module.mail.payload.ComposedMail;
 import com.impact.core.module.mail.service.MailService;
+import com.impact.core.module.resource_request_status.enun.EResourceRequestStatus;
 import com.impact.core.module.schedule_task.service.DynamicSchedulerService;
 import com.impact.core.module.user.entity.User;
 import com.impact.core.module.user.service.UserService;
@@ -145,4 +146,19 @@ public class AssetRequestService {
                 .map(assetRequestMapper::toDTO)
                 .collect(Collectors.toList());
     }
+
+    public List<AssetRequestDTOResponse> findAllExcludingEarringAndRenewal() {
+        List<AssetRequest> allRequests = assetRequestRepository.findAll();
+
+        return allRequests.stream()
+                .filter(request -> {
+                    EResourceRequestStatus statusEnum = request.getStatus().getName();
+                    return statusEnum != EResourceRequestStatus.RESOURCE_REQUEST_STATUS_EARRING &&
+                            statusEnum != EResourceRequestStatus.RESOURCE_REQUEST_STATUS_RENEWAL;
+                })
+                .map(assetRequestMapper::toDTO)
+                .toList();
+    }
+
+
 }
