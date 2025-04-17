@@ -32,7 +32,7 @@ public class AssetRequestMapper {
                 .build();
     }
 
-    public AssetRequest toEntityUpdate(AssetRequestDTORequest assetRequestDTORequest) {
+    public AssetRequest toEntityRenewal(AssetRequestDTORequest assetRequestDTORequest) {
         return AssetRequest.builder()
                 .asset(assetService.findById(assetRequestDTORequest.getAssetId()))
                 .reason(assetRequestDTORequest.getReason())
@@ -41,13 +41,12 @@ public class AssetRequestMapper {
                 .build();
     }
 
-    public AssetRequest toEntity(AssetRequestDTORenew assetRequestDTORenew) {
+    public AssetRequest toEntityWaitingRenewal(AssetRequestDTORenew assetRequestDTORenew) {
         return AssetRequest.builder()
                 .asset(assetService.findById(assetRequestDTORenew.getAssetId()))
                 .reason(assetRequestDTORenew.getReason())
                 .expirationDate(assetRequestDTORenew.getExpirationDate())
-                .createdAt(assetRequestDTORenew.getCreatedAt().atStartOfDay())
-                .status(resourceRequestStatusService.findByName(EResourceRequestStatus.RESOURCE_REQUEST_STATUS_EARRING))
+                .status(resourceRequestStatusService.findByName(EResourceRequestStatus.RESOURCE_REQUEST_STATUS_WAITING_ON_RENEWAL))
                 .build();
     }
 
