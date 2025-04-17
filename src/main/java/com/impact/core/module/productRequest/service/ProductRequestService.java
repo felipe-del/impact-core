@@ -16,6 +16,7 @@ import com.impact.core.module.productRequest.payload.response.ProductRequestDTOR
 import com.impact.core.module.productRequest.repository.ProductRequestRepository;
 import com.impact.core.module.productStatus.enun.EProductStatus;
 import com.impact.core.module.productStatus.service.ProductStatusService;
+import com.impact.core.module.resource_request_status.enun.EResourceRequestStatus;
 import com.impact.core.module.user.entity.User;
 import com.impact.core.module.user.service.UserService;
 import com.impact.core.security.service.UserDetailsImpl;
@@ -125,5 +126,18 @@ public class ProductRequestService {
 
     public List<ProductRequest> findByPending(){
         return productRequestRepository.productsRequestByStatus(1); //status 1-> RESOURCE_REQUEST_STATUS_EARRING
+    }
+
+    public List<ProductRequestDTOResponse> findAllExcludingEarringAndRenewal() {
+        List<ProductRequest> allRequests = productRequestRepository.findAll();
+
+        return allRequests.stream()
+                .filter(request -> {
+                    EResourceRequestStatus statusEnum = request.getStatus().getName();
+                    return statusEnum != EResourceRequestStatus.RESOURCE_REQUEST_STATUS_EARRING &&
+                            statusEnum != EResourceRequestStatus.RESOURCE_REQUEST_STATUS_RENEWAL;
+                })
+                .map(productRequestMapper::toDTO)
+                .toList();
     }
 }
