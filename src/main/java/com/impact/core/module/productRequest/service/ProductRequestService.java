@@ -1,6 +1,8 @@
 package com.impact.core.module.productRequest.service;
 
+import com.impact.core.expection.customException.ConflictException;
 import com.impact.core.expection.customException.ResourceNotFoundException;
+import com.impact.core.module.product.payload.request.ProductRequestDTO;
 import com.impact.core.module.productsOfRequest.Service.ProductsOfRequestServive;
 import com.impact.core.module.productsOfRequest.entity.ProductsOfRequest;
 import com.impact.core.module.mail.factory.MailFactory;
@@ -16,7 +18,9 @@ import com.impact.core.module.productRequest.payload.response.ProductRequestDTOR
 import com.impact.core.module.productRequest.repository.ProductRequestRepository;
 import com.impact.core.module.productStatus.enun.EProductStatus;
 import com.impact.core.module.productStatus.service.ProductStatusService;
+import com.impact.core.module.resource_request_status.entity.ResourceRequestStatus;
 import com.impact.core.module.resource_request_status.enun.EResourceRequestStatus;
+import com.impact.core.module.resource_request_status.service.ResourceRequestStatusService;
 import com.impact.core.module.user.entity.User;
 import com.impact.core.module.user.service.UserService;
 import com.impact.core.security.service.UserDetailsImpl;
@@ -38,6 +42,7 @@ public class ProductRequestService {
     public final ProductRequestMapper productRequestMapper;
     public final UserService userService;
     public final MailService mailService;
+    public final ResourceRequestStatusService resourceRequestStatusService;
 
     public ProductRequestDTOResponse save(UserDetailsImpl userDetails, ProductRequestDTORequest productRequestDTORequest) {
         ProductRequest productRequest = productRequestMapper.toEntity(productRequestDTORequest);
@@ -116,12 +121,8 @@ public class ProductRequestService {
         ComposedMail composedMailToAdmin = MailFactory.composeAdminNotificationCancelProductRequest(productRequest, cancelReason);
         mailService.sendComposedEmailToAllAdmins(composedMailToAdmin);
 
-        productRequestRepository.updateProductRequestStatus(status,productRequestId);
+        //productRequestRepository.updateProductRequestStatus(status,productRequestId);
         productsOfRequestServive.cancelRequest(productRequestId,productStatus);
-    }
-    @Transactional
-    public void acceptRequest(Integer status, Integer productRequestId){
-        productRequestRepository.updateProductRequestStatus(status,productRequestId);
     }
 
     public List<ProductRequest> findByPending(){
@@ -140,4 +141,34 @@ public class ProductRequestService {
                 .map(productRequestMapper::toDTO)
                 .toList();
     }
+
+    public List<ProductRequestDTOResponse> findAllWithEarring() {
+        List<ProductRequest> allRequests = productRequestRepository.findAll();
+
+        return allRequests.stream()
+                .filter(request -> request.getStatus().getName() == EResourceRequestStatus.RESOURCE_REQUEST_STATUS_EARRING)
+                .map(productRequestMapper::toDTO)
+                .collect(Collectors.toList());
+    }
+
+    public ProductRequestDTOResponse acceptRequest(Integer productRequestId){
+        ProductRequest productRequest = findById(productRequestId);
+        if(productRequest.getStatus().getName() != EResourceRequestStatus.RESOURCE_REQUEST_STATUS_EARRING){
+            throw new ConflictException("La solicitud de producto con el id: " + productRequestId + " no está en espera.");
+        }
+        productRequest.setStatus(
+                resourceRequestStatusService.findByName(EResourceRequestStatus.RESOURCE_REQUEST_STATUS_ACCEPTED)
+        );
+        Product product = productRequest.getProduct();
+        product.setStatus(
+                productStatusService.findByName(EProductStatus.PRODUCT_STATUS_LOANED)
+        );
+        ProductRequest saved = productRequestRepository.save(productRequest);
+
+        ComposedMail composedMailToUser = MailFactory.createProductRequestAcceptedEmail(productRequest);
+        mailService.sendComposedEmail(composedMailToUser);
+
+        return productRequestMapper.toDTO(saved);
+    }
+
 }

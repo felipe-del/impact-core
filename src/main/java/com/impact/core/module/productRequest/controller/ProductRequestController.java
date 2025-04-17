@@ -1,5 +1,6 @@
 package com.impact.core.module.productRequest.controller;
 
+import com.impact.core.module.product.service.ProductService;
 import com.impact.core.module.productRequest.payload.request.ProductRequestDTORequest;
 import com.impact.core.module.productRequest.payload.response.ProductRequestDTOResponse;
 import com.impact.core.module.productRequest.service.ProductRequestService;
@@ -90,15 +91,7 @@ public class ProductRequestController {
                 .message("Cambio de estado de solicitud a cancelado.")
                 .build());
     }
-    @PutMapping("/accept/{productRId}")
-    @PreAuthorize("hasRole('ADMINISTRATOR') or hasRole('MANAGER') ")
-    public ResponseEntity<ResponseWrapper<Void>> acceptRequest(@PathVariable Integer productRId){
-        productRequestService.acceptRequest(2,productRId); //status 4: RESOURCE_REQUEST_STATUS_ACCEPTED (resource_request_status)
 
-        return ResponseEntity.ok(ResponseWrapper.<Void>builder()
-                .message("Cambio de estado de solicitud a aceptado.")
-                .build());
-    }
     /**
      * Get all product requests excluding EARRING and RENEWAL statuses.
      * @return List of product requests excluding EARRING and RENEWAL statuses.
@@ -111,6 +104,32 @@ public class ProductRequestController {
         return ResponseEntity.ok(ResponseWrapper.<List<ProductRequestDTOResponse>>builder()
                 .message("Lista de solicitudes de productos excluyendo estados EARRING y RENEWAL.")
                 .data(filteredProductRequests)
+                .build());
+    }
+
+    /**
+     * Get all product requests with EARRING status.
+     * @return List of product requests with EARRING status.
+     */
+    @GetMapping("/filter/earring")
+    @PreAuthorize("hasRole('ADMINISTRATOR') or hasRole('MANAGER') or hasRole('TEACHER')")
+    public ResponseEntity<ResponseWrapper<List<ProductRequestDTOResponse>>> getProductRequestsWithEarring() {
+        List<ProductRequestDTOResponse> filteredProductRequests = productRequestService.findAllWithEarring();
+
+        return ResponseEntity.ok(ResponseWrapper.<List<ProductRequestDTOResponse>>builder()
+                .message("Lista de solicitudes de productos con estado EARRING.")
+                .data(filteredProductRequests)
+                .build());
+    }
+
+    @PutMapping("/accept/{productRequestId}")
+    @PreAuthorize("hasRole('ADMINISTRATOR') or hasRole('MANAGER') ")
+    public ResponseEntity<ResponseWrapper<ProductRequestDTOResponse>> acceptProductRequest(@PathVariable Integer productRequestId){
+        ProductRequestDTOResponse response = productRequestService.acceptRequest(productRequestId);
+
+        return ResponseEntity.ok(ResponseWrapper.<ProductRequestDTOResponse>builder()
+                .message("Solicitud de producto aceptada.")
+                .data(response)
                 .build());
     }
 

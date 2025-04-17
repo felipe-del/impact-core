@@ -1,5 +1,6 @@
 package com.impact.core.module.assetRequest.service;
 
+import com.impact.core.expection.customException.ConflictException;
 import com.impact.core.expection.customException.ResourceNotFoundException;
 import com.impact.core.module.asset.entity.Asset;
 import com.impact.core.module.assetRequest.entity.AssetRequest;
@@ -13,7 +14,12 @@ import com.impact.core.module.assetStatus.service.AssetStatusService;
 import com.impact.core.module.mail.factory.MailFactory;
 import com.impact.core.module.mail.payload.ComposedMail;
 import com.impact.core.module.mail.service.MailService;
+import com.impact.core.module.product.entity.Product;
+import com.impact.core.module.productRequest.entity.ProductRequest;
+import com.impact.core.module.productRequest.payload.response.ProductRequestDTOResponse;
+import com.impact.core.module.productStatus.enun.EProductStatus;
 import com.impact.core.module.resource_request_status.enun.EResourceRequestStatus;
+import com.impact.core.module.resource_request_status.service.ResourceRequestStatusService;
 import com.impact.core.module.schedule_task.service.DynamicSchedulerService;
 import com.impact.core.module.user.entity.User;
 import com.impact.core.module.user.service.UserService;
@@ -34,6 +40,7 @@ public class AssetRequestService {
     public final UserService userService;
     public final MailService mailService;
     private final DynamicSchedulerService dynamicSchedulerService;
+    private final ResourceRequestStatusService resourceRequestStatusService;
 
 
     public AssetRequestDTOResponse save(UserDetailsImpl userDetails, AssetRequestDTORequest assetRequestDTORequest) {
@@ -160,5 +167,33 @@ public class AssetRequestService {
                 .toList();
     }
 
+    public List<AssetRequestDTOResponse> findAllWithEarring() {
+        List<AssetRequest> allRequests = assetRequestRepository.findAll();
+
+        return allRequests.stream()
+                .filter(request -> request.getStatus().getName() == EResourceRequestStatus.RESOURCE_REQUEST_STATUS_EARRING)
+                .map(assetRequestMapper::toDTO)
+                .collect(Collectors.toList());
+    }
+
+    public AssetRequestDTOResponse acceptRequest(Integer assetRequestId){
+        AssetRequest assetRequest = findById(assetRequestId);
+        if(assetRequest.getStatus().getName() != EResourceRequestStatus.RESOURCE_REQUEST_STATUS_EARRING){
+            throw new ConflictException("La solicitud de activo con el id: " + assetRequestId + " no está en espera.");
+        }
+        assetRequest.setStatus(
+                resourceRequestStatusService.findByName(EResourceRequestStatus.RESOURCE_REQUEST_STATUS_ACCEPTED)
+        );
+        Asset asset = assetRequest.getAsset();
+        asset.setStatus(
+                assetStatusService.findByName(EAssetStatus.ASSET_STATUS_LOANED)
+        );
+        AssetRequest saved = assetRequestRepository.save(assetRequest);
+
+        ComposedMail composedMailToUser = MailFactory.createAssetRequestAcceptedEmail(assetRequest);
+        mailService.sendComposedEmail(composedMailToUser);
+
+        return assetRequestMapper.toDTO(saved);
+    }
 
 }
