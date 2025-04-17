@@ -452,4 +452,69 @@ public class MailFactory {
                 EMailTemplate.GENERIC_EMAIL,metaData, List.of(IMPACT_LOGO_IMAGE_WHITE, UCR_CIMPA_BANNER));
     }
 
+    // Accept Request Email
+
+    public static ComposedMail createProductRequestAcceptedEmail(ProductRequest productRequest) {
+        String emailContent = """
+                Su solicitud de producto ha sido aceptada con los siguientes detalles: <br>
+                <strong>Producto (Categoría):</strong> %s <br>
+                <strong>Razón:</strong> %s <br>
+                <strong>Estado de solicitud:</strong> %s <br>
+                <strong>Fecha de creación:</strong> %s <br>
+                <br>
+                Por favor, contacte al administrador para más información.
+                """.formatted(productRequest.getProduct().getCategory().getName(), productRequest.getReason(),
+                productRequest.getStatus().getName(), productRequest.getCreatedAt().toString());
+        List<MetaData> metaData = List.of(
+                new MetaData("emailTitle", "Solicitud de Producto aceptada"),
+                new MetaData("userName", productRequest.getUser().getName()),
+                new MetaData("emailContent", emailContent));
+
+        return createEmail(productRequest.getUser().getEmail(), "Solicitud de producto aceptada",
+                EMailTemplate.GENERIC_EMAIL, metaData, List.of(IMPACT_LOGO_IMAGE_WHITE, UCR_CIMPA_BANNER));
+    }
+
+    public static ComposedMail createAssetRequestAcceptedEmail(AssetRequest assetRequest){
+        String emailContent = """
+                Su solicitud de activo ha sido aceptada con los siguientes detalles: <br>
+                <strong>Subcategoría del Activo:</strong> %s <br>
+                <strong>Razón:</strong> %s <br>
+                <strong>Estado de solicitud:</strong> %s <br>
+                <strong>Fecha de creación:</strong> %s <br>
+                <br>
+                Por favor, contacte al administrador para más información.
+                """.formatted(assetRequest.getAsset().getSubcategory().getName(), assetRequest.getReason(),
+                assetRequest.getStatus().getName(), assetRequest.getCreatedAt().toString());
+        List<MetaData> metaData = List.of(
+                new MetaData("emailTitle", "Solicitud de Activo aceptada"),
+                new MetaData("userName", assetRequest.getUser().getName()),
+                new MetaData("emailContent", emailContent));
+
+        return createEmail(assetRequest.getUser().getEmail(), "Solicitud de activo aceptada",
+                EMailTemplate.GENERIC_EMAIL, metaData, List.of(IMPACT_LOGO_IMAGE_WHITE, UCR_CIMPA_BANNER));
+    }
+
+    public static ComposedMail createSpaceRequestAcceptEmail(SpaceRequest spaceRequest){
+        String emailContent = """
+                Su solicitud de espacio ha sido aceptada con los siguientes detalles: <br>
+                <strong>Motivo del evento:</strong> %s <br>
+                <strong>Observaciones del evento:</strong> %s <br>
+                <strong>Uso de equipo:</strong> %s <br>
+                <strong>Fecha de inicio:</strong> %s <br>
+                <strong>Fecha de fin:</strong> %s <br>
+                <strong>Espacio:</strong> %s <br>
+                <br>
+                Por favor, contacte al administrador para más información.
+                """.formatted(spaceRequest.getEventDesc(), spaceRequest.getEventObs(),
+                spaceRequest.getUseEquipment() ? "Sí" : "No", spaceRequest.getCreatedAt().toString(), spaceRequest.getCreatedAt().toString(),
+                spaceRequest.getSpace().getName());
+        List<MetaData> metaData = List.of(
+                new MetaData("emailTitle", "Solicitud de Espacio aceptada"),
+                new MetaData("userName", spaceRequest.getUser().getName()),
+                new MetaData("emailContent", emailContent));
+
+        return createEmail(spaceRequest.getUser().getEmail(), "Solicitud de espacio aceptada",
+                EMailTemplate.GENERIC_EMAIL, metaData, List.of(IMPACT_LOGO_IMAGE_WHITE, UCR_CIMPA_BANNER));
+    }
+
 }
