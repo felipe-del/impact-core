@@ -350,6 +350,45 @@ public class MailFactory {
                 EMailTemplate.GENERIC_EMAIL,metaData, List.of(IMPACT_LOGO_IMAGE_WHITE, UCR_CIMPA_BANNER));
     }
 
+    public static ComposedMail composeUserNotificationAcceptAssetRenewalRequest(AssetRequest assetRequest) {
+        String emailContent = """
+                Su solicitud de renovación de préstamo ha sido aceptada <br>
+                <strong>Solicitante:</strong> %s <br>
+                <strong>Subcategoría del Activo:</strong> %s <br>
+                <strong>Placa:</strong> %s <br>
+                <strong>Fecha de vencimiento actualizada:</strong> %s <br>
+                """.formatted(assetRequest.getUser().getName(), assetRequest.getAsset().getSubcategory().getName(),
+                              assetRequest.getAsset().getPlateNumber(), assetRequest.getExpirationDate());
+        List<MetaData> metaData = List.of(
+                new MetaData("emailTitle", "Notificación de renovación de solicitud de activo."),
+                new MetaData("userName", assetRequest.getUser().getName()),
+                new MetaData("emailContent", emailContent)
+        );
+        return createEmail(assetRequest.getUser().getEmail(), "Notificación de renovación de solicitud",
+                EMailTemplate.GENERIC_EMAIL, metaData, List.of(IMPACT_LOGO_IMAGE_WHITE, UCR_CIMPA_BANNER));
+    }
+
+    public static ComposedMail composeUserNotificationRejectAssetRenewalRequest(AssetRequest assetRequest) {
+        String emailContent = """
+                Su solicitud de renovación de préstamo ha sido denegada <br>
+                <strong>Solicitante:</strong> %s <br>
+                <strong>Subcategoría del Activo:</strong> %s <br>
+                <strong>Placa:</strong> %s <br>
+                <strong>Fecha de vencimiento:</strong> %s <br>
+                Por favor, contacte al administrador para más información.
+                """.formatted(assetRequest.getUser().getName(),
+                assetRequest.getAsset().getSubcategory().getName(),
+                assetRequest.getAsset().getPlateNumber(),
+                assetRequest.getExpirationDate());
+        List<MetaData> metaData = List.of(
+                new MetaData("emailTitle", "Notificación de cancelación de renovación de solicitud de activo."),
+                new MetaData("userName", assetRequest.getUser().getName()),
+                new MetaData("emailContent", emailContent)
+        );
+        return createEmail(assetRequest.getUser().getEmail(), "Notificación de renovación de solicitud",
+                EMailTemplate.GENERIC_EMAIL, metaData, List.of(IMPACT_LOGO_IMAGE_WHITE, UCR_CIMPA_BANNER));
+    }
+
     public static ComposedMail composeAdminNotificationCancelAssetRequest(AssetRequest assetRequest, String cancelReason){
         String emailContent = """
                 La solicitud de activo ha sido cancelada <br>

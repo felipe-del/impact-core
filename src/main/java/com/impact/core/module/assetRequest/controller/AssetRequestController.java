@@ -1,7 +1,6 @@
 package com.impact.core.module.assetRequest.controller;
 
 
-import com.impact.core.module.assetRequest.entity.AssetRequest;
 import com.impact.core.module.assetRequest.payload.renew.AssetRequestDTORenew;
 import com.impact.core.module.assetRequest.payload.request.AssetRequestDTORequest;
 import com.impact.core.module.assetRequest.payload.response.AssetRequestDTOResponse;
@@ -39,7 +38,7 @@ public class AssetRequestController {
                 .build());
     }
 
-    @GetMapping("/request-renewal")
+    @GetMapping("/renewal-request")
     @PreAuthorize("hasRole('ADMINISTRATOR') or hasRole('MANAGER')")
     public ResponseEntity<ResponseWrapper<List<AssetRequestDTOResponse>>> getAllAssetRequestsRenewal() {
         List<AssetRequestDTOResponse> assetRequestDTOResponses = assetRequestService.findAllRenewal();
@@ -110,6 +109,7 @@ public class AssetRequestController {
                 .data(assetRequestDTOResponse)
                 .build());
     }
+
     @DeleteMapping("/{id}")
     @PreAuthorize("hasRole('ADMINISTRATOR') or hasRole('MANAGER') or hasRole('TEACHER')")
     public ResponseEntity<ResponseWrapper<Void>> deleteAssetRequest(@PathVariable int id) {
@@ -135,20 +135,34 @@ public class AssetRequestController {
     @PreAuthorize("hasRole('ADMINISTRATOR') or hasRole('MANAGER') or hasRole('TEACHER')")
     public ResponseEntity<ResponseWrapper<Void>> updateStatus(@PathVariable Integer statusId, @PathVariable Integer assetRequestId,
                                                               @Valid @RequestBody CancelRequestDTO cancelRequestDTO){
-        assetRequestService.updateStatus(statusId,assetRequestId, cancelRequestDTO.getCancelReason());
+        assetRequestService.updateStatus(statusId, assetRequestId, cancelRequestDTO.getCancelReason());
 
         return ResponseEntity.ok(ResponseWrapper.<Void>builder()
                 .message("Cambio de estado de solicitud a cancelado.")
                 .build());
     }
 
-    @PutMapping("/{assetRequestId}")
+    @PutMapping("/accept-renewal/{assetRequestId}")
     @PreAuthorize("hasRole('ADMINISTRATOR') or hasRole('MANAGER')")
-    public ResponseEntity<ResponseWrapper<Void>> updateStatusAccepted(@PathVariable Integer assetRequestId){
-        assetRequestService.updateStatusAccepted(2,assetRequestId);
+    public ResponseEntity<ResponseWrapper<AssetRequestDTOResponse>> renewUpdateStatusAccepted(@PathVariable Integer assetRequestId){
+        assetRequestService.updateRenewalStatusAccepted(assetRequestId);
+        AssetRequestDTOResponse assetRequestResponseAfterUpdate = assetRequestService.findByIdDTO(assetRequestId);
 
-        return ResponseEntity.ok(ResponseWrapper.<Void>builder()
-                .message("Cambio de estado de solicitud a aceptado.")
+        return ResponseEntity.ok(ResponseWrapper.<AssetRequestDTOResponse>builder()
+                .data(assetRequestResponseAfterUpdate)
+                .message("La renovación de solicitud de activo fue aceptada.")
+                .build());
+    }
+
+    @PutMapping("/reject-renewal/{assetRequestId}")
+    @PreAuthorize("hasRole('ADMINISTRATOR') or hasRole('MANAGER')")
+    public ResponseEntity<ResponseWrapper<AssetRequestDTOResponse>> renewUpdateStatusRejected(@PathVariable Integer assetRequestId){
+        assetRequestService.updateRenewalStatusRejected(assetRequestId);
+        AssetRequestDTOResponse assetRequestResponseAfterUpdate = assetRequestService.findByIdDTO(assetRequestId);
+
+        return ResponseEntity.ok(ResponseWrapper.<AssetRequestDTOResponse>builder()
+                .data(assetRequestResponseAfterUpdate)
+                .message("La renovación de solicitud de activo fue denegada.")
                 .build());
     }
 
