@@ -265,4 +265,29 @@ public class AssetRequestService {
         return assetRequestMapper.toDTO(saved);
     }
 
+    public AssetRequestDTOResponse rejectRequest(Integer assetRequestId){
+        AssetRequest assetRequest = findById(assetRequestId);
+        if(assetRequest.getStatus().getName() == EResourceRequestStatus.RESOURCE_REQUEST_STATUS_ACCEPTED){
+            System.out.println(assetRequest.getStatus().getName());
+            throw new ConflictException("La solicitud de activo con el id: " + assetRequestId + " ya fué aceptada.");
+        }
+        if(assetRequest.getStatus().getName() == EResourceRequestStatus.RESOURCE_REQUEST_STATUS_CANCELED){
+            System.out.println(assetRequest.getStatus().getName());
+            throw new ConflictException("La solicitud de activo con el id: " + assetRequestId + " ya fué cancelado.");
+        }
+        assetRequest.setStatus(
+                resourceRequestStatusService.findByName(EResourceRequestStatus.RESOURCE_REQUEST_STATUS_CANCELED)
+        );
+        Asset asset = assetRequest.getAsset();
+        asset.setStatus(
+                assetStatusService.findByName(EAssetStatus.ASSET_STATUS_AVAILABLE)
+        );
+        AssetRequest saved = assetRequestRepository.save(assetRequest);
+
+        ComposedMail composedMailToUser = MailFactory.createAssetRequestRejectEmail(assetRequest);
+        mailService.sendComposedEmail(composedMailToUser);
+
+        return assetRequestMapper.toDTO(saved);
+    }
+
 }
