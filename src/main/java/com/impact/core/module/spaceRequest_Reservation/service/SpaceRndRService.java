@@ -58,14 +58,18 @@ public class SpaceRndRService {
         Space space = requestAndReservation.a.getSpace();
         LocalTime openTime = space.getOpenTime();
         LocalTime closeTime = space.getCloseTime();
+
         Instant startTime = requestAndReservation.b.getStartTime();
         Instant endTime = requestAndReservation.b.getEndTime();
 
-        // Convertir los Instant a LocalTime directamente, sin usar ZoneId
-        LocalTime startLocalTime = LocalTime.ofInstant(startTime, ZoneOffset.UTC);  // Suponiendo que los Instant están en UTC
-        LocalTime endLocalTime = LocalTime.ofInstant(endTime, ZoneOffset.UTC);  // Suponiendo que los Instant están en UTC
+        // Convertir Instant a LocalDateTime (incluye fecha y hora)
+        LocalDateTime startDateTime = LocalDateTime.ofInstant(startTime, ZoneOffset.UTC);
+        LocalDateTime endDateTime = LocalDateTime.ofInstant(endTime, ZoneOffset.UTC);
 
-        // Validar si la reserva está dentro del horario permitido
+        // Validar que la hora de inicio y fin estén dentro del horario permitido
+        LocalTime startLocalTime = startDateTime.toLocalTime();
+        LocalTime endLocalTime = endDateTime.toLocalTime();
+
         if (startLocalTime.isBefore(openTime) || endLocalTime.isAfter(closeTime)) {
             throw new ConflictException(String.format(
                     "El espacio '%s' solo está disponible de %s a %s.",
@@ -73,22 +77,18 @@ public class SpaceRndRService {
             ));
         }
 
-        // Obtener reservas activas en el mismo espacio
+        // Validar conflictos de reserva usando fecha y hora completa
         List<SpaceReservation> reservations = spaceReservationRepository.findAllBySpace(space);
 
         for (SpaceReservation reservation : reservations) {
-            Instant reservedStart = reservation.getStartTime();
-            Instant reservedEnd = reservation.getEndTime();
+            LocalDateTime reservedStartDateTime = LocalDateTime.ofInstant(reservation.getStartTime(), ZoneOffset.UTC);
+            LocalDateTime reservedEndDateTime = LocalDateTime.ofInstant(reservation.getEndTime(), ZoneOffset.UTC);
 
-            // Convertir los Instant de las reservas existentes a LocalTime
-            LocalTime reservedStartLocal = LocalTime.ofInstant(reservedStart, ZoneOffset.UTC);
-            LocalTime reservedEndLocal = LocalTime.ofInstant(reservedEnd, ZoneOffset.UTC);
-
-            // Verificar si hay solapamiento con otra reserva
-            if (reservedStartLocal.isBefore(endLocalTime) && reservedEndLocal.isAfter(startLocalTime)) {
+            // Verificar solapamientos (overlaps)
+            if (reservedStartDateTime.isBefore(endDateTime) && reservedEndDateTime.isAfter(startDateTime)) {
                 throw new ConflictException(String.format(
                         "El espacio '%s' ya está reservado en ese horario. Próxima disponibilidad después de %s.",
-                        space.getName(), reservedEndLocal
+                        space.getName(), reservedEndDateTime
                 ));
             }
         }
