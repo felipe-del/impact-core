@@ -217,4 +217,28 @@ public class SpaceRndRService {
         return spaceRndRMapper.toDTO(saved, spaceReservations.getFirst());
     }
 
+    public SpaceRndRResponse rejectRequest(Integer spaceRequestId) {
+        SpaceRequest spaceRequest = findById(spaceRequestId);
+        List<SpaceReservation> spaceReservations = spaceReservationRepository.findAllBySpace(spaceRequest.getSpace());
+        if(spaceRequest.getStatus().getName() == EResourceRequestStatus.RESOURCE_REQUEST_STATUS_ACCEPTED){
+            throw new ConflictException("La solicitud de espacio con el id: " + spaceRequestId + " ya fué aceptada.");
+        }
+        if(spaceRequest.getStatus().getName() == EResourceRequestStatus.RESOURCE_REQUEST_STATUS_CANCELED){
+            throw new ConflictException("La solicitud de espacio con el id: " + spaceRequestId + " ya fué cancelado.");
+        }
+        spaceRequest.setStatus(
+                resourceRequestStatusService.findByName(EResourceRequestStatus.RESOURCE_REQUEST_STATUS_CANCELED)
+        );
+        Space space = spaceRequest.getSpace();
+        space.setStatus(
+                spaceStatusService.findByName(ESpaceStatus.SPACE_STATUS_AVAILABLE)
+        );
+        SpaceRequest saved = spaceRequestRepository.save(spaceRequest);
+
+        ComposedMail composedMailToUser = MailFactory.createSpaceRequestRejectEmail(spaceRequest);
+        mailService.sendComposedEmail(composedMailToUser);
+
+        return spaceRndRMapper.toDTO(saved, spaceReservations.getFirst());
+    }
+
 }
