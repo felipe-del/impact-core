@@ -1,5 +1,6 @@
 package com.impact.core.module.productRequest.controller;
 
+import com.impact.core.module.assetRequest.payload.response.AssetRequestDTOResponse;
 import com.impact.core.module.product.service.ProductService;
 import com.impact.core.module.productRequest.payload.request.ProductRequestDTORequest;
 import com.impact.core.module.productRequest.payload.response.ProductRequestDTOResponse;
@@ -133,4 +134,15 @@ public class ProductRequestController {
                 .build());
     }
 
+    @PostMapping("/reject/{productRequestId}")
+    @PreAuthorize("hasRole('ADMINISTRATOR') or hasRole('MANAGER') or hasRole('TEACHER')")
+    public ResponseEntity<ResponseWrapper<ProductRequestDTOResponse>> rejectProductRequest(@PathVariable Integer productRequestId){
+        ProductRequestDTOResponse response = productRequestService.rejectRequest(productRequestId);
+
+
+        return ResponseEntity.ok(ResponseWrapper.<ProductRequestDTOResponse>builder()
+                .message("Solicitud de producto rechazada.")
+                .data(response)
+                .build());
+    }
 }
