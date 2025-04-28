@@ -115,5 +115,16 @@ public class SpaceRndRController {
                 .build());
     }
 
+    @PostMapping("/reject/{spaceRequestId}")
+    @PreAuthorize("hasRole('ADMINISTRATOR') or hasRole('MANAGER') ")
+    public ResponseEntity<ResponseWrapper<SpaceRndRResponse>> rejectSpaceRequest(@PathVariable Integer spaceRequestId){
+        SpaceRndRResponse response = spaceRndRService.rejectRequest(spaceRequestId);
+
+        return ResponseEntity.ok(ResponseWrapper.<SpaceRndRResponse>builder()
+                .message("Solicitud de espacio rechazada.")
+                .data(response)
+                .build());
+    }
+
 }
 
