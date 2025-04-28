@@ -207,4 +207,14 @@ public class AssetRequestController {
                 .build());
     }
 
+    @PostMapping("/reject/{assetRequestId}")
+    @PreAuthorize("hasRole('ADMINISTRATOR') or hasRole('MANAGER') or hasRole('TEACHER')")
+    public ResponseEntity<ResponseWrapper<AssetRequestDTOResponse>> rejectAssetRequest(@PathVariable Integer assetRequestId){
+        AssetRequestDTOResponse response = assetRequestService.rejectRequest(assetRequestId);
+
+        return ResponseEntity.ok(ResponseWrapper.<AssetRequestDTOResponse>builder()
+                .message("Solicitud de activo rechazada.")
+                .data(response)
+                .build());
+    }
 }

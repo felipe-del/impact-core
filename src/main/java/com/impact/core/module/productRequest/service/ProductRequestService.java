@@ -171,4 +171,26 @@ public class ProductRequestService {
         return productRequestMapper.toDTO(saved);
     }
 
+    public ProductRequestDTOResponse rejectRequest(Integer productRequestId) {
+        ProductRequest productRequest = findById(productRequestId);
+        if(productRequest.getStatus().getName() == EResourceRequestStatus.RESOURCE_REQUEST_STATUS_ACCEPTED){
+            throw new ConflictException("La solicitud de producto con el id: " + productRequestId + " ya fué aceptada.");
+        }
+        if(productRequest.getStatus().getName() == EResourceRequestStatus.RESOURCE_REQUEST_STATUS_CANCELED){
+            throw new ConflictException("La solicitud de producto con el id: " + productRequestId + " ya fué cancelado.");
+        }
+        productRequest.setStatus(
+                resourceRequestStatusService.findByName(EResourceRequestStatus.RESOURCE_REQUEST_STATUS_CANCELED)
+        );
+        Product product = productRequest.getProduct();
+        product.setStatus(
+                productStatusService.findByName(EProductStatus.PRODUCT_STATUS_AVAILABLE)
+        );
+        ProductRequest saved = productRequestRepository.save(productRequest);
+
+        ComposedMail composedMailToUser = MailFactory.createProductRequestRejectEmail(productRequest);
+        mailService.sendComposedEmail(composedMailToUser);
+
+        return productRequestMapper.toDTO(saved);
+    }
 }
