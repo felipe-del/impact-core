@@ -53,8 +53,8 @@ public class SpaceMapper {
     private SpaceStatus getStatus(String name) {
         return switch (name.toLowerCase()) {
             case "loaned" -> spaceStatusService.findByName(ESpaceStatus.SPACE_STATUS_LOANED);
-            case "in maintenance" -> spaceStatusService.findByName(ESpaceStatus.SPACE_STATUS_IN_MAINTENANCE);
-            case "out of service" -> spaceStatusService.findByName(ESpaceStatus.SPACE_STATUS_OUT_OF_SERVICE);
+            case "in_maintenance" -> spaceStatusService.findByName(ESpaceStatus.SPACE_STATUS_IN_MAINTENANCE);
+            case "out_of_service" -> spaceStatusService.findByName(ESpaceStatus.SPACE_STATUS_OUT_OF_SERVICE);
             case "earring" -> spaceStatusService.findByName(ESpaceStatus.SPACE_STATUS_EARRING);
             default -> spaceStatusService.findByName(ESpaceStatus.SPACE_STATUS_AVAILABLE);
         };
