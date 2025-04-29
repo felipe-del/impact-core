@@ -26,7 +26,7 @@ public class ProductMapper {
                 .purchaseDate(productRequestDTO.getPurchaseDate())
                 .expiryDate(productRequestDTO.getExpiryDate() != null ? productRequestDTO.getExpiryDate() : null)
                 .category(productCategoryService.findById(productRequestDTO.getCategoryId()))
-                .status(productStatusService.findByName(EProductStatus.PRODUCT_STATUS_AVAILABLE))
+                .status(this.getProductStatusByName(productRequestDTO.getStatusName()))
                 .build();
     }
 
@@ -38,6 +38,14 @@ public class ProductMapper {
                 .category(productCategoryMapper.toDTO(productCategoryService.findById(product.getCategory().getId())))
                 .status(productStatusMapper.toDTO(product.getStatus()))
                 .build();
+    }
+
+    private ProductStatus getProductStatusByName(String name) {
+        return switch (name.toLowerCase()) {
+            case "loaned" -> productStatusService.findByName(EProductStatus.PRODUCT_STATUS_LOANED);
+            case "earring" -> productStatusService.findByName(EProductStatus.PRODUCT_STATUS_EARRING);
+            default -> productStatusService.findByName(EProductStatus.PRODUCT_STATUS_AVAILABLE);
+        };
     }
 
 }
