@@ -93,9 +93,9 @@ public class AssetMapper {
 
     private AssetStatus getAssetStatusByName(String name) {
         return switch (name.toLowerCase()) {
-            case "in maintenance" -> assetStatusService.findByName(EAssetStatus.ASSET_STATUS_IN_MAINTENANCE);
+            case "in_maintenance" -> assetStatusService.findByName(EAssetStatus.ASSET_STATUS_IN_MAINTENANCE);
             case "loaned" -> assetStatusService.findByName(EAssetStatus.ASSET_STATUS_LOANED);
-            case "out of service" -> assetStatusService.findByName(EAssetStatus.ASSET_STATUS_OUT_OF_SERVICE);
+            case "out_of_service" -> assetStatusService.findByName(EAssetStatus.ASSET_STATUS_OUT_OF_SERVICE);
             case "earring" -> assetStatusService.findByName(EAssetStatus.ASSET_STATUS_EARRING);
             default -> assetStatusService.findByName(EAssetStatus.ASSET_STATUS_AVAILABLE);
 
