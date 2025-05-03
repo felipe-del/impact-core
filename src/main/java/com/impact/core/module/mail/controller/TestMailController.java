@@ -64,4 +64,12 @@ public class TestMailController {
                 .data("Receptor del correo: " + user.getEmail())
                 .build());
     }
+    @PostMapping("/scheduleNotification")
+    public ResponseEntity<ResponseWrapper<String>> scheduleNotification(@RequestBody AssetRequest assetRequest) {
+        schedulerService.scheduleNotification(assetRequest);
+        return ResponseEntity.ok(ResponseWrapper.<String>builder()
+                .message("Notificación programada exitosamente")
+                .data("AssetRequest ID: " + assetRequest.getId() +" Se debe de enviar antes de la fecha: "+ assetRequest.getExpirationDate())
+                .build());
+    }
 }
