@@ -15,6 +15,13 @@ import java.time.ZoneId;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ScheduledFuture;
 
+/**
+ * Service responsible for scheduling notifications related to asset requests.
+ * <p>
+ * This service allows scheduling notifications for asset request expiration dates. It utilizes
+ * a thread pool task scheduler to schedule the notifications and ensures that notifications are sent
+ * in a timely manner based on the expiration date.
+ */
 @Service
 @RequiredArgsConstructor
 public class DynamicSchedulerService {
@@ -26,10 +33,15 @@ public class DynamicSchedulerService {
     private final ConcurrentHashMap<Long, ScheduledFuture<?>> scheduledTasks = new ConcurrentHashMap<>();
 
     /**
-     * Programa una notificación para 2 días antes de la fecha de vencimiento de un AssetRequest.
+     * Schedules a notification for an asset request based on its expiration date.
+     * The notification is scheduled for one month before the expiration date, or immediately sent if the date has passed.
+     * <p>
+     * If a notification is already scheduled for the given asset request, it will be cancelled before scheduling a new one.
+     *
+     * @param assetRequest the {@link AssetRequest} for which the notification should be scheduled.
      */
     public void scheduleNotification(AssetRequest assetRequest) {
-        cancelNotification(Long.valueOf(assetRequest.getId())); // Cancela la anterior si existe
+        cancelNotification(Long.valueOf(assetRequest.getId()));
 
         try {
             LocalDate expirationDate = assetRequest.getExpirationDate();
@@ -38,7 +50,6 @@ public class DynamicSchedulerService {
             Instant now = Instant.now();
 
             if (now.isBefore(notificationInstant)) {
-                // Programar la notificación normalmente
                 ScheduledFuture<?> future = taskScheduler.schedule(
                         () -> sendNotification(assetRequest),
                         notificationInstant
@@ -46,7 +57,6 @@ public class DynamicSchedulerService {
                 scheduledTasks.put(Long.valueOf(assetRequest.getId()), future);
                 log.info("Notificación programada para AssetRequest ID {} el día {}", assetRequest.getId(), notificationDate);
             } else {
-                // La fecha de notificación ya pasó, enviar inmediatamente
                 log.info("La fecha de notificación ya pasó para AssetRequest ID {}, enviando notificación inmediatamente.", assetRequest.getId());
                 sendNotification(assetRequest);
             }
@@ -54,8 +64,12 @@ public class DynamicSchedulerService {
             log.error("Error al programar notificación para AssetRequest ID {}: {}", assetRequest.getId(), e.getMessage(), e);
         }
     }
+
     /**
-     * Cancela la notificación programada para un AssetRequest.
+     * Cancels a previously scheduled notification for an asset request.
+     * If no notification was scheduled for the given asset request, no action is taken.
+     *
+     * @param requestId the {@link Long} identifier of the asset request for which the notification should be cancelled.
      */
     public void cancelNotification(Long requestId) {
         ScheduledFuture<?> future = scheduledTasks.remove(requestId);
@@ -64,8 +78,14 @@ public class DynamicSchedulerService {
             log.info("Notificación cancelada para AssetRequest ID {}", requestId);
         }
     }
+
     /**
-     * Envía la notificación cuando se ejecuta la tarea programada.
+     * Sends a notification email when the scheduled task is executed.
+     * The email is composed using the {@link MailFactory} and sent via the {@link MailService}.
+     * <p>
+     * The notification informs the user of an approaching expiration date for the asset request.
+     *
+     * @param req the {@link AssetRequest} for which the notification should be sent.
      */
     private void sendNotification(AssetRequest req) {
         if (req != null) {

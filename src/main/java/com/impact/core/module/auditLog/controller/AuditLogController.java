@@ -12,12 +12,22 @@ import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
 
+/**
+ * Controller responsible for handling requests related to audit logs.
+ * It provides endpoints for retrieving audit log data.
+ */
 @RestController
 @RequestMapping("/api/auditLog")
 @RequiredArgsConstructor
 public class AuditLogController {
     public final AuditLogService auditLogService;
 
+    /**
+     * Endpoint to get all audit logs.
+     * Accessible only by users with the 'ADMINISTRATOR' or 'MANAGER' roles.
+     *
+     * @return ResponseEntity containing the list of audit log responses and a message
+     */
     @GetMapping
     @PreAuthorize("hasRole('ADMINISTRATOR') or hasRole('MANAGER')")
     public ResponseEntity<ResponseWrapper<List<AuditLogResponse>>> getAllAuditLogs() {

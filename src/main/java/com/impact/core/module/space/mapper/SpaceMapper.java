@@ -14,6 +14,12 @@ import org.springframework.stereotype.Component;
 
 import java.time.LocalTime;
 
+/**
+ * Mapper class for converting between {@link Space} entities and their corresponding
+ * request and response Data Transfer Objects (DTOs), such as {@link SpaceRequest} and {@link SpaceResponse}.
+ * <p>
+ * This class is responsible for handling transformations during space-related operations.
+ */
 @Component
 @RequiredArgsConstructor
 public class SpaceMapper {
@@ -23,6 +29,12 @@ public class SpaceMapper {
     public final BuildingLocationMapper buildingLocationMapper;
     public final SpaceStatusMapper spaceStatusMapper;
 
+    /**
+     * Converts a {@link SpaceRequest} Data Transfer Object (DTO) into a {@link Space} entity.
+     *
+     * @param request the {@link SpaceRequest} containing input data
+     * @return a populated {@link Space} entity
+     */
     public Space toEntity(SpaceRequest request) {
         return Space.builder()
                 .name(request.getName())
@@ -36,6 +48,12 @@ public class SpaceMapper {
                 .build();
     }
 
+    /**
+     * Converts a {@link Space} entity into a {@link SpaceResponse} Data Transfer Object (DTO).
+     *
+     * @param space the {@link Space} entity to convert
+     * @return the resulting {@link SpaceResponse}
+     */
     public SpaceResponse toDTO(Space space) {
         return SpaceResponse.builder()
                 .id(space.getId())
@@ -49,7 +67,13 @@ public class SpaceMapper {
                 .build();
     }
 
-
+    /**
+     * Retrieves a {@link SpaceStatus} entity based on the provided status name.
+     * The name is mapped to a corresponding enumeration value from {@link ESpaceStatus}.
+     *
+     * @param name the name of the space status
+     * @return the corresponding {@link SpaceStatus} entity
+     */
     private SpaceStatus getStatus(String name) {
         return switch (name.toLowerCase()) {
             case "loaned" -> spaceStatusService.findByName(ESpaceStatus.SPACE_STATUS_LOANED);

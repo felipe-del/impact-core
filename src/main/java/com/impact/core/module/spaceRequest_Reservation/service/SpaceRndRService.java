@@ -2,18 +2,12 @@ package com.impact.core.module.spaceRequest_Reservation.service;
 
 import com.impact.core.expection.customException.ConflictException;
 import com.impact.core.expection.customException.ResourceNotFoundException;
-import com.impact.core.module.asset.entity.Asset;
-import com.impact.core.module.assetRequest.entity.AssetRequest;
-import com.impact.core.module.assetRequest.payload.response.AssetRequestDTOResponse;
-import com.impact.core.module.assetStatus.enun.EAssetStatus;
 import com.impact.core.module.mail.factory.MailFactory;
 import com.impact.core.module.mail.payload.ComposedMail;
 import com.impact.core.module.mail.service.MailService;
 import com.impact.core.module.resource_request_status.enun.EResourceRequestStatus;
 import com.impact.core.module.resource_request_status.service.ResourceRequestStatusService;
 import com.impact.core.module.space.entity.Space;
-import com.impact.core.module.space.respository.SpaceRepository;
-import com.impact.core.module.space.service.SpaceService;
 import com.impact.core.module.spaceRequest_Reservation.entity.SpaceRequest;
 import com.impact.core.module.spaceRequest_Reservation.entity.SpaceReservation;
 import com.impact.core.module.spaceRequest_Reservation.mapper.SpaceRndRMapper;
@@ -38,6 +32,10 @@ import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
+/**
+ * Service class responsible for managing space requests and reservations.
+ * Handles creating, updating, and canceling space requests and reservations, as well as sending notifications.
+ */
 @Service("spaceRndRService")
 @RequiredArgsConstructor
 public class SpaceRndRService {
@@ -48,11 +46,19 @@ public class SpaceRndRService {
     public final UserService userService;
     public final MailService mailService;
     private final SpaceStatusService spaceStatusService;
-    private final SpaceRepository spaceRepository;
     private final ResourceRequestStatusService resourceRequestStatusService;
 
+    /**
+     * Saves a new space request and reservation, including validation, conflict checking,
+     * and sending confirmation emails.
+     *
+     * @param userDetails     The current user details.
+     * @param spaceRndRRequest The request data for the space and reservation.
+     * @return The saved {@link SpaceRndRResponse} object with the space request and reservation details.
+     * @throws ConflictException if there is a conflict with the request (e.g., the requested time is outside operating hours or conflicts with existing reservations).
+     */
     public SpaceRndRResponse save(UserDetailsImpl userDetails, SpaceRndRRequest spaceRndRRequest) {
-        // Because of how pair works, (a = SpaceRequest, b = SpaceReservation)
+        // Pairing the space request and reservation entities
         Pair<SpaceRequest, SpaceReservation> requestAndReservation = spaceRndRMapper.toEntity(spaceRndRRequest);
         User user = userService.findById(userDetails.getId());
         Space space = requestAndReservation.a.getSpace();
@@ -62,11 +68,11 @@ public class SpaceRndRService {
         Instant startTime = requestAndReservation.b.getStartTime();
         Instant endTime = requestAndReservation.b.getEndTime();
 
-        // Convertir Instant a LocalDateTime (incluye fecha y hora)
+        // Convert Instant to LocalDateTime
         LocalDateTime startDateTime = LocalDateTime.ofInstant(startTime, ZoneOffset.UTC);
         LocalDateTime endDateTime = LocalDateTime.ofInstant(endTime, ZoneOffset.UTC);
 
-        // Validar que la hora de inicio y fin estén dentro del horario permitido
+        // Check if the reservation is within the space's allowed hours
         LocalTime startLocalTime = startDateTime.toLocalTime();
         LocalTime endLocalTime = endDateTime.toLocalTime();
 
@@ -77,14 +83,12 @@ public class SpaceRndRService {
             ));
         }
 
-        // Validar conflictos de reserva usando fecha y hora completa
+        // Check for conflicting reservations
         List<SpaceReservation> reservations = spaceReservationRepository.findAllBySpace(space);
-
         for (SpaceReservation reservation : reservations) {
             LocalDateTime reservedStartDateTime = LocalDateTime.ofInstant(reservation.getStartTime(), ZoneOffset.UTC);
             LocalDateTime reservedEndDateTime = LocalDateTime.ofInstant(reservation.getEndTime(), ZoneOffset.UTC);
 
-            // Verificar solapamientos (overlaps)
             if (reservedStartDateTime.isBefore(endDateTime) && reservedEndDateTime.isAfter(startDateTime)) {
                 throw new ConflictException(String.format(
                         "El espacio '%s' ya está reservado en ese horario. Próxima disponibilidad después de %s.",
@@ -93,14 +97,10 @@ public class SpaceRndRService {
             }
         }
 
-        //space.setStatus(spaceStatusService.findByName(ESpaceStatus.SPACE_STATUS_EARRING));
-        //spaceRepository.save(space); // Update space status
+        // Set user for space request and reservation
+        requestAndReservation.a.setUser(user);
+        requestAndReservation.b.setUser(user);
 
-        // Setting the user since it is only attribute not set by the SpaceRndRMapper
-        requestAndReservation.a.setUser(user); // SpaceRequest.setUser
-        requestAndReservation.b.setUser(user); // SpaceReservation.setUser
-
-        // We now save the modified SpaceRequest and SpaceReservation with their respective repos
         SpaceRequest spaceRequestSaved = spaceRequestRepository.save(requestAndReservation.a);
         SpaceReservation spaceReservationSaved = spaceReservationRepository.save(requestAndReservation.b);
 
@@ -112,13 +112,25 @@ public class SpaceRndRService {
         return spaceRndRMapper.toDTO(spaceRequestSaved, spaceReservationSaved);
     }
 
-
+    /**
+     * Retrieves all space requests and reservations and returns them as a list of SpaceRndRResponse objects.
+     *
+     * @return A list of {@link SpaceRndRResponse} objects representing all space requests and reservations.
+     */
     public List<SpaceRndRResponse> getAll() {
         List<SpaceRequest>  requests = spaceRequestRepository.findAll();
         List<SpaceReservation> reservations = spaceReservationRepository.findAll();
 
         return joinSpaceRandResponse(requests,reservations);
     }
+
+    /**
+     * Joins the space requests and reservations and converts them to {@link SpaceRndRResponse} objects.
+     *
+     * @param requests     A list of space requests.
+     * @param reservations A list of space reservations.
+     * @return A list of {@link SpaceRndRResponse} objects representing the joined data.
+     */
     public List<SpaceRndRResponse> joinSpaceRandResponse(List<SpaceRequest> requests, List<SpaceReservation> reservations){
         List<SpaceRndRResponse> responses = new ArrayList<>();
 
@@ -135,6 +147,12 @@ public class SpaceRndRService {
         return responses;
     }
 
+    /**
+     * Retrieves space requests and reservations for a specific user.
+     *
+     * @param id The user ID.
+     * @return A list of {@link SpaceRndRResponse} objects representing the user's space requests and reservations.
+     */
     public List<SpaceRndRResponse> getByUser(Integer id){
         List<SpaceRequest>  requests = spaceRequestRepository.spaceRequestByUser(id);
         List<SpaceReservation> reservations = spaceReservationRepository.spaceReservationByUser(id);
@@ -142,16 +160,35 @@ public class SpaceRndRService {
         return joinSpaceRandResponse(requests,reservations);
     }
 
+    /**
+     * Cancels a space reservation by its ID.
+     *
+     * @param resId The reservation ID.
+     */
     public void cancelReservation(Integer resId){
         Optional<SpaceReservation> sr= spaceReservationRepository.findById(resId);
         sr.ifPresent(spaceReservationRepository::delete);
     }
 
+    /**
+     * Finds a space request by its ID.
+     *
+     * @param id The space request ID.
+     * @return The {@link SpaceRequest} object.
+     * @throws ResourceNotFoundException If the space request is not found.
+     */
     public SpaceRequest findById(int id) {
         return spaceRequestRepository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("La solicitud de espacio con el id: " + id + " no existe en la base de datos."));
     }
 
+    /**
+     * Cancels a space request and reservation by changing the status and sending email notifications.
+     *
+     * @param status      The new status for the space request.
+     * @param reqId       The space request ID.
+     * @param cancelReason The reason for cancellation.
+     */
     @Transactional
     public void cancelRequest(Integer status,Integer reqId, String cancelReason){
         SpaceRequest spaceRequest = findById(reqId);
@@ -164,16 +201,31 @@ public class SpaceRndRService {
         cancelReservation(reqId);
     }
 
+    /**
+     * Accepts a space request by changing the status and sending email notifications.
+     *
+     * @param status  The new status for the space request.
+     * @param reqId   The space request ID.
+     */
     @Transactional
     public void acceptRequest(Integer status,Integer reqId){
-
         spaceRequestRepository.updateSpaceRequest(status,reqId);
     }
 
+    /**
+     * Finds all pending space requests.
+     *
+     * @return A list of pending space requests.
+     */
     public List<SpaceRequest> findByPending(){
         return spaceRequestRepository.spaceRequestByStatus(1); //status 1-> RESOURCE_REQUEST_STATUS_EARRING
     }
 
+    /**
+     * Finds all space requests excluding those with "Earring" and "Renewal" status.
+     *
+     * @return A list of space requests excluding "Earring" and "Renewal" statuses.
+     */
     public List<SpaceRndRResponse> findAllExcludingEarringAndRenewal() {
         List<SpaceRequest> allRequests = spaceRequestRepository.findAll();
 
@@ -187,6 +239,11 @@ public class SpaceRndRService {
                 .toList();
     }
 
+    /**
+     * Finds all space requests with the "Earring" status.
+     *
+     * @return A list of space requests with the "Earring" status.
+     */
     public List<SpaceRndRResponse> findAllWithEarring() {
         List<SpaceRequest> allRequests = spaceRequestRepository.findAll();
 
@@ -196,6 +253,14 @@ public class SpaceRndRService {
                 .collect(Collectors.toList());
     }
 
+    /**
+     * Accepts a space request by changing its status to accepted and updating the space status.
+     * Sends email notifications to the user and admins.
+     *
+     * @param spaceRequestId The space request ID.
+     * @return The {@link SpaceRndRResponse} object with updated space request and reservation details.
+     * @throws ConflictException if the space request is not in "Earring" status.
+     */
     public SpaceRndRResponse acceptRequest(Integer spaceRequestId) {
         SpaceRequest spaceRequest = findById(spaceRequestId);
         List<SpaceReservation> spaceReservations = spaceReservationRepository.findAllBySpace(spaceRequest.getSpace());
@@ -217,6 +282,14 @@ public class SpaceRndRService {
         return spaceRndRMapper.toDTO(saved, spaceReservations.getFirst());
     }
 
+    /**
+     * Rejects a space request by changing its status to canceled and updating the space status.
+     * Sends email notifications to the user and admins.
+     *
+     * @param spaceRequestId The space request ID.
+     * @return The {@link SpaceRndRResponse} object with updated space request and reservation details.
+     * @throws ConflictException if the space request has already been accepted or canceled.
+     */
     public SpaceRndRResponse rejectRequest(Integer spaceRequestId) {
         SpaceRequest spaceRequest = findById(spaceRequestId);
         List<SpaceReservation> spaceReservations = spaceReservationRepository.findAllBySpace(spaceRequest.getSpace());

@@ -24,6 +24,14 @@ import org.thymeleaf.exceptions.TemplateInputException;
 import java.util.List;
 import java.util.regex.Pattern;
 
+/**
+ * Service class for sending emails, including basic and composed emails with dynamic templates.
+ * <p>
+ * This service is responsible for sending various types of emails, such as simple text emails and
+ * dynamic emails generated from templates. It uses Spring's {@link JavaMailSender} for sending
+ * emails and Thymeleaf for processing email templates.
+ * </p>
+ */
 @Slf4j
 @Service("mailService")
 @RequiredArgsConstructor
@@ -40,6 +48,15 @@ public class MailService {
 
     // SENDING EMAILS METHODS
 
+    /**
+     * Sends a simple email to a single recipient.
+     * <p>
+     * This method uses Spring's {@link SimpleMailMessage} to send a basic email with a subject
+     * and message. The email is sent asynchronously to avoid blocking the main application flow.
+     * </p>
+     *
+     * @param mailDetails The {@link BasicMailRequest} containing the email details (recipient, subject, and message).
+     */
     @Async
     public void sendBasicEmail(BasicMailRequest mailDetails) {
         if (!validated(mailDetails.getTo())) {
@@ -55,6 +72,15 @@ public class MailService {
         logEmailSent(mailDetails.getTo());
     }
 
+    /**
+     * Sends a composed email with dynamic content to a single recipient.
+     * <p>
+     * This method constructs a dynamic email message based on a template using Thymeleaf.
+     * It also supports adding inline images to the email.
+     * </p>
+     *
+     * @param composedMail The {@link ComposedMail} containing the recipient, subject, template, metadata, and images.
+     */
     @Async
     public void sendComposedEmail(ComposedMail composedMail) {
         String emailRecipient = composedMail.getTo();
@@ -75,6 +101,15 @@ public class MailService {
         logEmailSent(emailRecipient);
     }
 
+    /**
+     * Sends a composed email to all users with the "ADMIN" role.
+     * <p>
+     * This method retrieves all users with the "ADMIN" role and sends them the composed email.
+     * It constructs the email based on the provided {@link ComposedMail} template.
+     * </p>
+     *
+     * @param composedMail The {@link ComposedMail} containing the email details to be sent to all admins.
+     */
     @Async
     public void sendComposedEmailToAllAdmins(ComposedMail composedMail) {
         List<User> admins = userService.getAllAdmins();
@@ -97,12 +132,31 @@ public class MailService {
         }
     }
 
-    // PRIVATE METHODS
+    // ==============================
+    // PRIVATE HELPER METHODS
+    // ==============================
 
+    /**
+     * Validates the given email address using a regular expression pattern.
+     *
+     * @param email The email address to validate.
+     * @return {@code true} if the email address matches the pattern, {@code false} otherwise.
+     */
     private Boolean validated(String email) {
         return EMAIL_PATTERN.matcher(email).matches();
     }
 
+    /**
+     * Builds the message content for a composed email by processing the given template with metadata.
+     * <p>
+     * This method uses Thymeleaf to process the email template and inject dynamic content from the
+     * metadata into the template.
+     * </p>
+     *
+     * @param composedMail The {@link ComposedMail} containing template and metadata.
+     * @return The processed email message as a {@link String}.
+     * @throws NotAcceptableStatusException If there's an error in processing the template.
+     */
     private String buildMessage(ComposedMail composedMail) throws NotAcceptableStatusException {
         try {
             Context context = new Context();
@@ -116,6 +170,15 @@ public class MailService {
         }
     }
 
+    /**
+     * Adds inline images to the email message.
+     * <p>
+     * This method attaches images to the email, which can be referenced within the email template.
+     * </p>
+     *
+     * @param helper The {@link MimeMessageHelper} used to attach images.
+     * @param imageNames A list of image filenames to attach to the email.
+     */
     private void addImagesToEmail(MimeMessageHelper helper, List<String> imageNames) {
         if (imageNames == null || imageNames.isEmpty()) {
             return;
@@ -129,24 +192,27 @@ public class MailService {
         });
     }
 
+    /**
+     * Logs a successful email send event.
+     * <p>
+     * This method logs the details of the email recipient for monitoring purposes.
+     * </p>
+     *
+     * @param emailRecipient The email address of the recipient.
+     */
     private void logEmailSent(String emailRecipient) {
         log.info("The IMPACT email module just sent one to {}", emailRecipient);
     }
 
+    /**
+     * Logs an invalid email address event.
+     * <p>
+     * This method logs when an invalid email address is encountered.
+     * </p>
+     *
+     * @param email The invalid email address.
+     */
     private void logInvalidEmail(String email) {
         log.error("The email {} is not valid", email);
     }
-
-    // If you want to print the mail properties
-    /*
-    private final JavaMailSenderImpl mailSenderImpl;
-    public void printMailProperties() {
-        System.out.println("Host: " + mailSenderImpl.getHost());
-        System.out.println("Port: " + mailSenderImpl.getPort());
-        System.out.println("Username: " + mailSenderImpl.getUsername());
-        System.out.println("Password: " + mailSenderImpl.getPassword());
-        System.out.println("Mail Properties: " + mailSenderImpl.getJavaMailProperties());
-    }
-    */
-
 }

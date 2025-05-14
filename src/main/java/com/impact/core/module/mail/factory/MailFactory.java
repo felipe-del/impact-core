@@ -12,6 +12,14 @@ import com.impact.core.module.user.entity.UserToken;
 
 import java.util.List;
 
+/**
+ * Factory class for creating different types of composed emails.
+ * <p>
+ * This class provides methods to construct {@link ComposedMail} objects for sending emails with specific templates
+ * and dynamic metadata. It handles various predefined templates, images, and metadata required for constructing the
+ * email content.
+ * </p>
+ */
 public class MailFactory {
 
     private static final String IMPACT_LOGO_IMAGE = "IMPACT_BLACK_LOGO.png";
