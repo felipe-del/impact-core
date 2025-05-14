@@ -19,9 +19,23 @@ import java.sql.SQLIntegrityConstraintViolationException;
 import java.util.HashMap;
 import java.util.Map;
 
+/**
+ * Global exception handler for mapping specific exceptions to standardized API responses.
+ * <p>
+ *     This class uses {@link ControllerAdvice} to intercept and process exceptions
+ *     thrown during the execution of controller methods, returning meaningful HTTP responses.
+ * </p>
+ */
 @ControllerAdvice
 public class GlobalExceptionHandler {
 
+    /**
+     * Handles validation errors triggered by {@code valid} annotations
+     * @param ex
+     * The validation exception containing binding result details
+     * @return
+     * A response with all the field-specific validation errors
+     */
     @ExceptionHandler(MethodArgumentNotValidException.class)
     public ResponseEntity<ResponseWrapper<Map<String, String>>> handleValidationExceptions(MethodArgumentNotValidException ex) {
         BindingResult bindingResult = ex.getBindingResult();
@@ -39,34 +53,41 @@ public class GlobalExceptionHandler {
         return new ResponseEntity<>(response, HttpStatus.BAD_REQUEST);
     }
 
-    // BAD REQUEST
-
+    /**
+     * Handles custom conflict exceptions (e.g., duplicate records).
+     */
     @ExceptionHandler(ConflictException.class)
     public ResponseEntity<ResponseWrapper<ErrorDataResponse>> handleConflict(ConflictException ex, WebRequest request) {
         return handleException(HttpStatus.CONFLICT, ex.getMessage(), "Conflicto", request);
     }
 
-    // INTERNAL SERVER ERROR
-
+    /**
+     * Handles resource not found exceptions.
+     */
     @ExceptionHandler(ResourceNotFoundException.class)
     public ResponseEntity<ResponseWrapper<ErrorDataResponse>> handleResourceNotFound(ResourceNotFoundException ex, WebRequest request) {
         return handleException(HttpStatus.NOT_FOUND, ex.getMessage(), "Recurso no encontrado", request);
     }
 
-    // SERVICE UNAVAILABLE
-
+    /**
+     * Handles unauthorized access attempts.
+     */
     @ExceptionHandler(UnauthorizedException.class)
     public ResponseEntity<ResponseWrapper<ErrorDataResponse>> handleUnauthorized(UnauthorizedException ex, WebRequest request) {
         return handleException(HttpStatus.UNAUTHORIZED, ex.getMessage(), "No autorizado", request);
     }
 
+    /**
+     * Handles illegal arguments passed to controller methods.
+     */
     @ExceptionHandler(IllegalArgumentException.class)
     public ResponseEntity<ResponseWrapper<ErrorDataResponse>> handleIllegalArgument(IllegalArgumentException ex, WebRequest request) {
         return handleException(HttpStatus.BAD_REQUEST, ex.getMessage(), "Argumento no válido", request);
     }
 
-    // JPQL EXCEPTION
-
+    /**
+     * Handles data integrity violations (e.g., foreign key or unique constraint failures).
+     */
     @ExceptionHandler({DataIntegrityViolationException.class, SQLIntegrityConstraintViolationException.class})
     public ResponseEntity<ResponseWrapper<ErrorDataResponse>> handleDataIntegrityViolation(DataIntegrityViolationException ex, WebRequest request) {
         Throwable rootCause = ex.getRootCause();
@@ -76,8 +97,15 @@ public class GlobalExceptionHandler {
         return handleException(HttpStatus.CONFLICT, detailedMessage, userMessage, request);
     }
 
-    ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-
+    /**
+     * Generic method to construct a consistent error response.
+     *
+     * @param httpStatus  The HTTP status to be returned.
+     * @param message     The detailed technical error message.
+     * @param userMessage A user-friendly description of the error.
+     * @param request     The original web request.
+     * @return A standardized {@code ResponseWrapper} containing {@code ErrorDataResponse}.
+     */
     private ResponseEntity<ResponseWrapper<ErrorDataResponse>> handleException(HttpStatus httpStatus, String message, String userMessage, WebRequest request) {
         String path = getPath(request);
 
@@ -99,6 +127,9 @@ public class GlobalExceptionHandler {
         return new ResponseEntity<>(response, httpStatus);
     }
 
+    /**
+     * Extracts the request path from the {@link WebRequest}.
+     */
     private String getPath(WebRequest request) {
         return request.getDescription(false);
     }

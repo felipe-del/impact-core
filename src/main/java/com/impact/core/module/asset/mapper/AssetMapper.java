@@ -27,6 +27,10 @@ import com.impact.core.module.user.service.UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 
+/**
+ * Mapper responsible for converting between {@link Asset} entities and their corresponding DTOs.
+ * It also provides helper methods to resolve relationships using service layers.
+ */
 @Component
 @RequiredArgsConstructor
 public class AssetMapper {
@@ -52,6 +56,12 @@ public class AssetMapper {
     public final MyUserMapper myUserMapper;
 
 
+    /**
+     * Converts a request DTO into an {@link Asset} entity, resolving all related entities.
+     *
+     * @param assetRequest the incoming request DTO
+     * @return a fully built {@link Asset} entity
+     */
     public Asset toEntity(AssetRequest assetRequest) {
         return Asset.builder()
                 .purchaseDate(assetRequest.getPurchaseDate())
@@ -70,6 +80,12 @@ public class AssetMapper {
                 .build();
     }
 
+    /**
+     * Converts an {@link Asset} entity into a response DTO for output purposes.
+     *
+     * @param asset the entity to convert
+     * @return a fully populated {@link AssetResponse}
+     */
     public AssetResponse toDTO (Asset asset) {
         return AssetResponse.builder()
                 .id(asset.getId())
@@ -89,8 +105,16 @@ public class AssetMapper {
                 .build();
     }
 
-    // PRIVATE METHODS
+    // ==============================
+    // PRIVATE HELPER METHODS
+    // ==============================
 
+    /**
+     * Resolves an {@link AssetStatus} based on its string name using {@link AssetStatusService}.
+     *
+     * @param name the name of the status
+     * @return the resolved {@link AssetStatus} entity
+     */
     private AssetStatus getAssetStatusByName(String name) {
         return switch (name.toLowerCase()) {
             case "in_maintenance" -> assetStatusService.findByName(EAssetStatus.ASSET_STATUS_IN_MAINTENANCE);
@@ -102,6 +126,12 @@ public class AssetMapper {
         };
     }
 
+    /**
+     * Resolves a {@link Currency} entity based on a currency string using {@link CurrencyService}.
+     *
+     * @param name the currency name or code (e.g., "usd", "colon")
+     * @return the corresponding {@link Currency} entity
+     */
     private Currency getCurrencyByName(String name) {
         return switch (name.toLowerCase()) {
             case "usd", "dollar" -> currencyService.findByCurrencyName(ECurrency.CURRENCY_DOLLAR);

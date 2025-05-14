@@ -14,12 +14,21 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
+/**
+ * REST controller for managing user-related operations, such as retrieving, updating, and saving users.
+ * The {@link UserController} provides endpoints for administrators and managers to access and manage users.
+ */
 @RestController
 @RequestMapping("/api/user")
 @RequiredArgsConstructor
 public class UserController {
     public final UserService userService;
 
+    /**
+     * Retrieves all users in the system. Accessible by users with the role of 'ADMINISTRATOR' or 'MANAGER'.
+     *
+     * @return A {@link ResponseEntity} containing a {@link ResponseWrapper} with a list of {@link UserResponse} objects
+     */
     @GetMapping
     @PreAuthorize("hasRole('ADMINISTRATOR') or hasRole('MANAGER')")
     public ResponseEntity<ResponseWrapper<List<UserResponse>>> getAllUsers() {
@@ -31,8 +40,13 @@ public class UserController {
                 .build());
     }
 
-    // SAVE IS IMPLEMENTED^IN AUTHENTICATION CONTROLLER
-
+    /**
+     * Updates an existing user by their ID. Accessible by users with the role of 'ADMINISTRATOR' or 'MANAGER'.
+     *
+     * @param id The ID of the user to be updated
+     * @param userRequest The user data to update, wrapped in a {@link UserRequest} object
+     * @return A {@link ResponseEntity} containing a {@link ResponseWrapper} with the updated {@link UserResponse} object
+     */
     @PutMapping("/{id}")
     @PreAuthorize("hasRole('ADMINISTRATOR') or hasRole('MANAGER')")
     public ResponseEntity<ResponseWrapper<UserResponse>> updateUser(@PathVariable int id, @Valid @RequestBody UserRequest userRequest) {
@@ -43,6 +57,4 @@ public class UserController {
                 .data(userResponse)
                 .build());
     }
-
-    // DELETE... ITS NECESSARY?
 }

@@ -7,16 +7,27 @@ import io.swagger.v3.oas.annotations.info.License;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 
+/**
+ * @author IMPACT - development team
+ * Members:
+ * Dilan Hernandez Ulate,
+ * Isaac Felipe Brenes Calderon,
+ * Joel Ramírez Vargas,
+ * Marco Leandro Chacon,
+ * Maria Gonzales Benavides,
+ * Raquel Alfaro Barrantes
+ * @since 01 / 09 / 2024
+ */
 @SpringBootApplication
 @OpenAPIDefinition(
         info = @Info(
                 title = "IMPACT API Documentation",
-                version = "1.0",
-                description = "The IMPACT API provides endpoints for managing inventory, assets, and users in the IMPACT project. This API enables users to interact with the system programmatically and perform various operations on the core entities of the project.",  // Descripción más detallada y profesional
+                version = "2.0.0",
+                description = "The IMPACT API provides endpoints for managing inventory, assets, common spaces, and users in the IMPACT project. " +
+                        "This API enables users to interact with the system programmatically and perform various operations on the core entities of the project.",
                 contact = @Contact(
-                        name = "Isaac Felipe Brenes Calderón",
-                        email = "isaacfelibrenes1904@gmail.com",
-                        url = "https://www.linkedin.com"
+                        name = "IMPACT development team",
+                        email = "impact.cimpa@ucr.ac.cr"
                 ),
                 license = @License(
                         name = "Apache 2.0",

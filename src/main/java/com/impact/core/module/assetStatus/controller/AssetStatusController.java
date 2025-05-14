@@ -12,12 +12,23 @@ import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
 
+/**
+ * Controller for handling requests related to asset statuses.
+ * Provides endpoints for retrieving all available asset statuses.
+ */
 @RestController
 @RequestMapping("/api/asset-status")
 @RequiredArgsConstructor
 public class AssetStatusController {
     public final AssetStatusService assetStatusService;
 
+    /**
+     * Endpoint to retrieve a list of all asset statuses.
+     * Accessible only to users with the 'ADMINISTRATOR' or 'MANAGER' roles.
+     *
+     * @return A {@link ResponseEntity} containing a wrapped list of {@link AssetStatusResponse}
+     *         objects with a success message.
+     */
     @GetMapping
     @PreAuthorize("hasRole('ADMINISTRATOR') or hasRole('MANAGER')")
     public ResponseEntity<ResponseWrapper<List<AssetStatusResponse>>> getAllAssetStatus() {

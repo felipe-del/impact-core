@@ -12,12 +12,24 @@ import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
 
+/**
+ * REST controller for managing user states within the system.
+ * <p>
+ * The {@link UserStateController} provides endpoints to retrieve all available user states.
+ */
 @RestController
 @RequestMapping("/api/user-state")
 @RequiredArgsConstructor
 public class UserStateController {
     public final UserStateService userStateService;
 
+    /**
+     * Retrieves all user states available in the system.
+     * <p>
+     * This endpoint is secured and requires the user to have the role of 'ADMINISTRATOR' or 'MANAGER'.
+     *
+     * @return a {@link ResponseEntity} containing a {@link ResponseWrapper} with a list of {@link UserStateResponse}
+     */
     @GetMapping
     @PreAuthorize("hasRole('ADMINISTRATOR') or hasRole('MANAGER')")
     public ResponseEntity<ResponseWrapper<List<UserStateResponse>>> getAllUserStates() {

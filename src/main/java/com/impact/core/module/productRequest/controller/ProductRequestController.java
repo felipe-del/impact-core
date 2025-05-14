@@ -1,11 +1,8 @@
 package com.impact.core.module.productRequest.controller;
 
-import com.impact.core.module.assetRequest.payload.response.AssetRequestDTOResponse;
-import com.impact.core.module.product.service.ProductService;
 import com.impact.core.module.productRequest.payload.request.ProductRequestDTORequest;
 import com.impact.core.module.productRequest.payload.response.ProductRequestDTOResponse;
 import com.impact.core.module.productRequest.service.ProductRequestService;
-import com.impact.core.module.resource_request_status.enun.EResourceRequestStatus;
 import com.impact.core.module.resource_request_status.payload.request.CancelRequestDTO;
 import com.impact.core.security.service.UserDetailsImpl;
 import com.impact.core.util.ResponseWrapper;

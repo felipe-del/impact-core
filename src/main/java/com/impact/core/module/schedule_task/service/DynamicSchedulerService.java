@@ -17,6 +17,13 @@ import java.util.List;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ScheduledFuture;
 
+/**
+ * Service responsible for scheduling notifications related to asset requests.
+ * <p>
+ * This service allows scheduling notifications for asset request expiration dates. It utilizes
+ * a thread pool task scheduler to schedule the notifications and ensures that notifications are sent
+ * in a timely manner based on the expiration date.
+ */
 @Service
 @RequiredArgsConstructor
 public class DynamicSchedulerService {
@@ -29,24 +36,30 @@ public class DynamicSchedulerService {
     private final ConcurrentHashMap<Long, List<ScheduledFuture<?>>> scheduledTasks = new ConcurrentHashMap<>();
 
     /**
-     * Programa notificaciones para 2 meses, 1 mes y 2 días antes de la fecha de vencimiento.
+     * Schedules notifications for the specified {@link AssetRequest}.
+     * <p>
+     * Notifications are scheduled for 2 months, 1 month, and 2 days before the asset's expiration date.
+     * If any of the calculated dates are in the past, the notification is sent immediately.
+     * Any previously scheduled tasks for the same request ID will be canceled before new ones are scheduled.
+     * </p>
+     *
+     * @param assetRequest The {@link AssetRequest} for which notifications should be scheduled.
      */
     public void scheduleNotification(AssetRequest assetRequest) {
-        cancelNotification(Long.valueOf(assetRequest.getId())); // Cancela todas las previas
+        cancelNotification(Long.valueOf(assetRequest.getId())); // Cancel previously scheduled tasks
 
         try {
             LocalDate expirationDate = assetRequest.getExpirationDate();
             Instant now = Instant.now();
-
             List<ScheduledFuture<?>> futures = new ArrayList<>();
 
-            futures.add(scheduleSingleNotification(assetRequest, expirationDate.minusMonths(2), now, "2 meses antes"));
-            futures.add(scheduleSingleNotification(assetRequest, expirationDate.minusMonths(1), now, "1 mes antes"));
-            futures.add(scheduleSingleNotification(assetRequest, expirationDate.minusDays(2), now, "2 días antes"));
+            futures.add(scheduleSingleNotification(assetRequest, expirationDate.minusMonths(2), now, "2 months before"));
+            futures.add(scheduleSingleNotification(assetRequest, expirationDate.minusMonths(1), now, "1 month before"));
+            futures.add(scheduleSingleNotification(assetRequest, expirationDate.minusDays(2), now, "2 days before"));
 
             scheduledTasks.put(Long.valueOf(assetRequest.getId()), futures);
         } catch (Exception e) {
-            log.error("Error al programar notificaciones para AssetRequest ID {}: {}", assetRequest.getId(), e.getMessage(), e);
+            log.error("Error scheduling notifications for AssetRequest ID {}: {}", assetRequest.getId(), e.getMessage(), e);
         }
     }
 
@@ -68,7 +81,10 @@ public class DynamicSchedulerService {
     }
 
     /**
-     * Cancela todas las notificaciones programadas para un AssetRequest.
+     * Cancels a previously scheduled notification for an asset request.
+     * If no notification was scheduled for the given asset request, no action is taken.
+     *
+     * @param requestId the {@link Long} identifier of the asset request for which the notification should be cancelled.
      */
     public void cancelNotification(Long requestId) {
         List<ScheduledFuture<?>> futures = scheduledTasks.remove(requestId);
@@ -81,7 +97,12 @@ public class DynamicSchedulerService {
     }
 
     /**
-     * Envía la notificación cuando se ejecuta la tarea programada.
+     * Sends a notification email when the scheduled task is executed.
+     * The email is composed using the {@link MailFactory} and sent via the {@link MailService}.
+     * <p>
+     * The notification informs the user of an approaching expiration date for the asset request.
+     *
+     * @param req the {@link AssetRequest} for which the notification should be sent.
      */
     private void sendNotification(AssetRequest req) {
         if (req != null) {

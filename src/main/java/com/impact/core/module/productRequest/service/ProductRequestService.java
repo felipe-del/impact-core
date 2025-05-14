@@ -2,8 +2,7 @@ package com.impact.core.module.productRequest.service;
 
 import com.impact.core.expection.customException.ConflictException;
 import com.impact.core.expection.customException.ResourceNotFoundException;
-import com.impact.core.module.product.payload.request.ProductRequestDTO;
-import com.impact.core.module.productsOfRequest.Service.ProductsOfRequestServive;
+import com.impact.core.module.productsOfRequest.Service.ProductsOfRequestService;
 import com.impact.core.module.productsOfRequest.entity.ProductsOfRequest;
 import com.impact.core.module.mail.factory.MailFactory;
 import com.impact.core.module.mail.payload.ComposedMail;
@@ -18,7 +17,6 @@ import com.impact.core.module.productRequest.payload.response.ProductRequestDTOR
 import com.impact.core.module.productRequest.repository.ProductRequestRepository;
 import com.impact.core.module.productStatus.enun.EProductStatus;
 import com.impact.core.module.productStatus.service.ProductStatusService;
-import com.impact.core.module.resource_request_status.entity.ResourceRequestStatus;
 import com.impact.core.module.resource_request_status.enun.EResourceRequestStatus;
 import com.impact.core.module.resource_request_status.service.ResourceRequestStatusService;
 import com.impact.core.module.user.entity.User;
@@ -36,7 +34,7 @@ import java.util.stream.Collectors;
 public class ProductRequestService {
     public final ProductRequestRepository productRequestRepository;
     public final ProductService productService;
-    public final ProductsOfRequestServive productsOfRequestServive;
+    public final ProductsOfRequestService productsOfRequestService;
     public final ProductRepository productRepository;
     public final ProductStatusService productStatusService;
     public final ProductRequestMapper productRequestMapper;
@@ -70,7 +68,7 @@ public class ProductRequestService {
             ProductsOfRequest productsOfRequest = new ProductsOfRequest();
             productsOfRequest.setProduct(product);
             productsOfRequest.setProductRequest(productRequestSaved);
-            productsOfRequestServive.save(productsOfRequest);
+            productsOfRequestService.save(productsOfRequest);
         });
 
 
@@ -122,7 +120,7 @@ public class ProductRequestService {
         mailService.sendComposedEmailToAllAdmins(composedMailToAdmin);
 
         //productRequestRepository.updateProductRequestStatus(status,productRequestId);
-        productsOfRequestServive.cancelRequest(productRequestId,productStatus);
+        productsOfRequestService.cancelRequest(productRequestId,productStatus);
     }
 
     public List<ProductRequest> findByPending(){

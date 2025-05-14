@@ -16,7 +16,11 @@ import lombok.RequiredArgsConstructor;
 import org.antlr.v4.runtime.misc.Pair;
 import org.springframework.stereotype.Component;
 
-
+/**
+ * Mapper class responsible for converting between Space Request and Space Reservation entities and their respective DTOs.
+ * This class also converts incoming request data (SpaceRndRRequest) into entities and prepares response data (SpaceRndRResponse)
+ * for outgoing responses.
+ */
 @Component
 @RequiredArgsConstructor
 public class SpaceRndRMapper {
@@ -25,10 +29,18 @@ public class SpaceRndRMapper {
     public final SpaceMapper spaceMapper;
     public final ResourceRequestStatusMapper resourceRequestStatusMapper;
     public final ResourceRequestStatusService resourceRequestStatusService;
-
     public final MyUserMapper myUserMapper;
 
-        public Pair<SpaceRequest, SpaceReservation> toEntity(SpaceRndRRequest spaceRndR_Request) {
+   /**
+    * Converts a {SpaceRndRRequest} object into SpaceRequest and SpaceReservation entities.
+    * <p>
+    * This method retrieves the relevant space and resource request status for the request and creates a new
+    * SpaceRequest and SpaceReservation.
+    *
+    * @param spaceRndR_Request The {@link SpaceRndRRequest} object containing the request data.
+    * @return A {@link Pair} containing the {@link SpaceRequest} and {@link SpaceReservation} entities.
+    */
+    public Pair<SpaceRequest, SpaceReservation> toEntity(SpaceRndRRequest spaceRndR_Request) {
         SpaceRequest sReq = SpaceRequest.builder()
                 .id(0)
                 .space(spaceService.findById(spaceRndR_Request.getSpaceId()))
@@ -49,6 +61,15 @@ public class SpaceRndRMapper {
         return new Pair<>(sReq, sRes);
     }
 
+    /**
+     * Converts SpaceRequest and SpaceReservation entities into a SpaceRndRResponse DTO.
+     * <p>
+     * This method prepares the response data, converting entities into their respective DTOs for returning to the client.
+     *
+     * @param sReq The {@link SpaceRequest} entity.
+     * @param sRes The {@link SpaceReservation} entity.
+     * @return The corresponding {@link SpaceRndRResponse} DTO.
+     */
     public SpaceRndRResponse toDTO(SpaceRequest sReq, SpaceReservation sRes) {
         return SpaceRndRResponse.builder()
                 .id(sReq.getId())

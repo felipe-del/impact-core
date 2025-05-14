@@ -15,12 +15,22 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
+/**
+ * Controller class for handling authentication-related routes.
+ * Provides endpoints for user login, registration, password management, and role/state changes.
+ */
 @RestController
 @RequestMapping("/api/auth")
 @RequiredArgsConstructor
 public class AuthController {
     private final AuthService authService;
 
+    /**
+     * Endpoint for logging in a user.
+     *
+     * @param loginRequest The login request containing user credentials.
+     * @return A response entity containing the JWT token and a success message.
+     */
     @PostMapping("/login")
     public ResponseEntity<ResponseWrapper<JwtResponse>> login(@Valid @RequestBody LoginRequest loginRequest) {
         JwtResponse jwtResponse = authService.login(loginRequest);
@@ -31,6 +41,12 @@ public class AuthController {
                 .build());
     }
 
+    /**
+     * Endpoint for registering a new user.
+     *
+     * @param registerRequest The registration request containing user information.
+     * @return A response entity containing the created user information and a success message.
+     */
     @PostMapping("/register")
     public ResponseEntity<ResponseWrapper<UserResponse>> register(@Valid @RequestBody RegisterRequest registerRequest) {
         UserResponse userResponse = authService.register(registerRequest);
@@ -41,6 +57,13 @@ public class AuthController {
                 .build());
     }
 
+    /**
+     * Endpoint for saving a new user with a random password. Restricted to ADMINISTRATOR and MANAGER roles.
+     *
+     * @param newUserRequest The request containing new user information.
+     * @param userDetailsSession The session details of the authenticated user making the request.
+     * @return A response entity containing the saved user information and a success message.
+     */
     @PostMapping("/save-user")
     @PreAuthorize("hasRole('ADMINISTRATOR') or hasRole('MANAGER')")
     public ResponseEntity<ResponseWrapper<UserResponse>> saveUser(
@@ -54,6 +77,11 @@ public class AuthController {
                 .build());
     }
 
+    /**
+     * Endpoint for fetching the current user session. Only accessible if authenticated.
+     *
+     * @return A response entity containing the current user's information.
+     */
     @GetMapping("/user-session")
     @PreAuthorize("isAuthenticated()")
     public ResponseEntity<ResponseWrapper<UserResponse>> getUserSession() {
@@ -65,6 +93,12 @@ public class AuthController {
                 .build());
     }
 
+    /**
+     * Endpoint for logging out a user.
+     *
+     * @param logoutRequest The request containing the JWT token to be invalidated.
+     * @return A response entity with a success message indicating the user has been logged out.
+     */
     @PostMapping("/logout")
     @PreAuthorize("isAuthenticated()")
     public ResponseEntity<ResponseWrapper<Void>> logout(@Valid @RequestBody LogoutRequest logoutRequest) {
@@ -75,6 +109,12 @@ public class AuthController {
                 .build());
     }
 
+    /**
+     * Endpoint for initiating a password reset. Sends a recovery token to the user's email.
+     *
+     * @param forgotPasswordRequest The request containing the user's email for password recovery.
+     * @return A response entity with a success message indicating the recovery email has been sent.
+     */
     @PostMapping("/forgot-password")
     public ResponseEntity<ResponseWrapper<Void>> forgotPassword(@Valid @RequestBody ForgotPasswordRequest forgotPasswordRequest) {
         authService.forgotPassword(forgotPasswordRequest);
@@ -84,6 +124,12 @@ public class AuthController {
                 .build());
     }
 
+    /**
+     * Endpoint for resetting the user's password using a recovery token.
+     *
+     * @param resetPasswordRequest The request containing the recovery token and new password.
+     * @return A response entity with a success message indicating the password has been reset.
+     */
     @PostMapping("/reset-password")
     public ResponseEntity<ResponseWrapper<Void>> resetPassword(@Valid @RequestBody ResetPasswordRequest resetPasswordRequest) {
         authService.resetPassword(resetPasswordRequest);
@@ -93,6 +139,12 @@ public class AuthController {
                 .build());
     }
 
+    /**
+     * Endpoint for changing the user's password. Only accessible if authenticated.
+     *
+     * @param changePasswordRequest The request containing the current and new passwords.
+     * @return A response entity with a success message indicating the password has been changed.
+     */
     @PostMapping("/change-password")
     @PreAuthorize("isAuthenticated()")
     public ResponseEntity<ResponseWrapper<Void>> changePassword(@Valid @RequestBody ChangePasswordRequest changePasswordRequest) {
@@ -103,6 +155,14 @@ public class AuthController {
                 .build());
     }
 
+    /**
+     * Endpoint for changing the state of a user. Only accessible to ADMINISTRATOR roles.
+     *
+     * @param id The ID of the user whose state is to be changed.
+     * @param changeUserStateRequest The request containing the new state for the user.
+     * @param userDetails The session details of the authenticated user performing the action.
+     * @return A response entity containing the updated user information and a success message.
+     */
     @PostMapping("/change-user-state/{id}")
     @PreAuthorize("hasRole('ADMINISTRATOR')")
     public ResponseEntity<ResponseWrapper<UserResponse>> changeUserState(
@@ -117,6 +177,14 @@ public class AuthController {
                 .build());
     }
 
+    /**
+     * Endpoint for changing the role of a user. Only accessible to ADMINISTRATOR roles.
+     *
+     * @param id The ID of the user whose role is to be changed.
+     * @param changeUserRoleRequest The request containing the new role for the user.
+     * @param userDetails The session details of the authenticated user performing the action.
+     * @return A response entity containing the updated user information and a success message.
+     */
     @PostMapping("/change-user-role/{id}")
     @PreAuthorize("hasRole('ADMINISTRATOR')")
     public ResponseEntity<ResponseWrapper<UserResponse>> changeUserRole(

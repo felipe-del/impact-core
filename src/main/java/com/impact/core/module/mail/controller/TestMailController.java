@@ -20,6 +20,13 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.Map;
 
+/**
+ * Controller class for testing email sending functionality.
+ * <p>
+ * This controller provides endpoints for sending simple and composed emails for testing purposes.
+ * It also includes a method for sending a composed welcome email to users with specific roles.
+ * </p>
+ */
 @RestController
 @RequestMapping("/api/test/mail")
 @RequiredArgsConstructor
@@ -28,6 +35,16 @@ public class TestMailController {
     private final UserService userService;
     private final DynamicSchedulerService schedulerService;
 
+    /**
+     * Sends a simple email message.
+     * <p>
+     * This endpoint sends a basic email to the recipient specified in the {@link BasicMailRequest}.
+     * The email is sent using the {@link MailService#sendBasicEmail} method.
+     * </p>
+     *
+     * @param loginRequest The {@link BasicMailRequest} containing the email details (recipient, subject, and message).
+     * @return A {@link ResponseEntity} with a message indicating the success of the operation, and the recipient's email.
+     */
     @GetMapping
     public ResponseEntity<ResponseWrapper<Map<String, String>>> sendSimpleMessage(
             @Valid @RequestBody BasicMailRequest loginRequest) {
@@ -41,6 +58,15 @@ public class TestMailController {
                 .build());
     }
 
+    /**
+     * Sends a composed email to a test recipient.
+     * <p>
+     * This endpoint sends a composed welcome email to a test user using the {@link MailFactory#createWelcomeEmail}.
+     * The email is sent using the {@link MailService#sendComposedEmail} method.
+     * </p>
+     *
+     * @return A {@link ResponseEntity} with a success message and the recipient's name.
+     */
     @PostMapping("/sendMail")
     public ResponseEntity<ResponseWrapper<String>> sendMail() {
         mailService.sendComposedEmail(MailFactory.createWelcomeEmail(
@@ -55,6 +81,17 @@ public class TestMailController {
                 .build());
     }
 
+    /**
+     * Sends a composed email to a user with specific roles.
+     * <p>
+     * This endpoint sends a composed welcome email to the authenticated user with a role of either "ADMINISTRATOR"
+     * or "MANAGER". It uses the {@link MailFactory#createWelcomeEmail} to generate the email.
+     * The email is sent using the {@link MailService#sendComposedEmail} method.
+     * </p>
+     *
+     * @param userDetails The authenticated user details obtained from the security context.
+     * @return A {@link ResponseEntity} with a success message and the recipient's email.
+     */
     @PostMapping("/sendComposedMail")
     @PreAuthorize("hasRole('ADMINISTRATOR') or hasRole('MANAGER')")
     public ResponseEntity<ResponseWrapper<String>> sendComposedMail(@AuthenticationPrincipal UserDetailsImpl userDetails) {
@@ -67,6 +104,18 @@ public class TestMailController {
                 .data("Receptor del correo: " + user.getEmail())
                 .build());
     }
+      
+    /**
+     * Schedules a notification for an asset request.
+     * <p>
+     * This endpoint schedules a future notification based on the expiration date of the provided
+     * {@link AssetRequest}. The scheduling is handled by the
+     * {@link DynamicSchedulerService#scheduleNotification} method.
+     * </p>
+     *
+     * @param assetRequest The {@link AssetRequest} containing details of the asset and its expiration.
+     * @return A {@link ResponseEntity} containing a success message and details of the scheduled asset request.
+     */
     @PostMapping("/scheduleNotification")
     public ResponseEntity<ResponseWrapper<String>> scheduleNotification(@RequestBody AssetRequest assetRequest) {
         schedulerService.scheduleNotification(assetRequest);
