@@ -1,10 +1,13 @@
 package com.impact.core.module.mail.controller;
 
+import ch.qos.logback.core.model.ComponentModel;
+import com.impact.core.module.assetRequest.entity.AssetRequest;
 import com.impact.core.module.mail.payload.ComposedMail;
 import com.impact.core.module.mail.payload.request.BasicMailRequest;
 import com.impact.core.module.mail.factory.MailFactory;
 import com.impact.core.module.mail.service.MailService;
 import com.impact.core.module.user.entity.User;
+import com.impact.core.module.schedule_task.service.DynamicSchedulerService;
 import com.impact.core.module.user.service.UserService;
 import com.impact.core.security.service.UserDetailsImpl;
 import com.impact.core.util.ResponseWrapper;
@@ -30,6 +33,7 @@ import java.util.Map;
 public class TestMailController {
     private final MailService mailService;
     private final UserService userService;
+    private final DynamicSchedulerService schedulerService;
 
     /**
      * Sends a simple email message.
@@ -98,6 +102,26 @@ public class TestMailController {
         return ResponseEntity.ok(ResponseWrapper.<String>builder()
                 .message("Correo enviado exitosamente")
                 .data("Receptor del correo: " + user.getEmail())
+                .build());
+    }
+      
+    /**
+     * Schedules a notification for an asset request.
+     * <p>
+     * This endpoint schedules a future notification based on the expiration date of the provided
+     * {@link AssetRequest}. The scheduling is handled by the
+     * {@link DynamicSchedulerService#scheduleNotification} method.
+     * </p>
+     *
+     * @param assetRequest The {@link AssetRequest} containing details of the asset and its expiration.
+     * @return A {@link ResponseEntity} containing a success message and details of the scheduled asset request.
+     */
+    @PostMapping("/scheduleNotification")
+    public ResponseEntity<ResponseWrapper<String>> scheduleNotification(@RequestBody AssetRequest assetRequest) {
+        schedulerService.scheduleNotification(assetRequest);
+        return ResponseEntity.ok(ResponseWrapper.<String>builder()
+                .message("Notificación programada exitosamente")
+                .data("AssetRequest ID: " + assetRequest.getId() +" Se debe de enviar antes de la fecha: "+ assetRequest.getExpirationDate())
                 .build());
     }
 }
