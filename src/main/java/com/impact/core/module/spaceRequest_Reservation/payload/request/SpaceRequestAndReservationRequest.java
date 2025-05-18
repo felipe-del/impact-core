@@ -18,14 +18,14 @@ import java.time.Instant;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class SpaceRndRRequest {
+public class SpaceRequestAndReservationRequest {
 
     /**
      * The ID of the space being requested or reserved.
      * Must be a positive integer.
      */
     @Positive(message = "El id debe de tener un valor positivo.")
-    private Integer spaceId;      // Information needed for both
+    private Integer spaceId;
 
     /**
      * The number of people for the event.
@@ -33,40 +33,40 @@ public class SpaceRndRRequest {
      */
     @Positive(message = "El número de personas debe de ser un valor positivo.")
     @Max(value = 100 , message = "El número de personas no puede exceder 100.")
-    private Integer numPeople;    // Information needed for SpaceRequest
+    private Integer numPeople;
 
     /**
      * The description of the event for which the space is being requested.
      * Cannot be blank.
      */
     @NotBlank(message = "La descripción del evento es obligatoria.")
-    private String eventDesc;     // Information needed for SpaceRequest
+    private String eventDesc;
 
     /**
      * The observation or additional notes for the event.
      * Cannot be null.
      */
     @NotNull(message = "La observación del evento es obligatoria.")
-    private String eventObs;      // Information needed for SpaceRequest
+    private String eventObs;
 
     /**
      * Flag indicating whether equipment is required for the event.
      * Cannot be null.
      */
     @NotNull(message = "El flag de uso de equipo es obligatorio.")
-    private Boolean useEquipment; // Information needed for SpaceRequest
+    private Boolean useEquipment;
 
     /**
      * The start time for the space reservation.
      * Must be a future date.
      */
     @Future(message = "La fecha de inicio debe ser en el futuro.")
-    private Instant startTime;  // Information needed for SpaceReservation
+    private Instant startTime;
 
     /**
      * The end time for the space reservation.
      * Must be a future date.
      */
-    @Future(message = "La fecha de inicio debe ser en el futuro.")
-    private Instant endTime;    // Information needed for SpaceReservation
+    @Future(message = "La fecha de finalización debe ser en el futuro.")
+    private Instant endTime;
 }

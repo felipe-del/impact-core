@@ -2,7 +2,6 @@ package com.impact.core.module.spaceRequest_Reservation.payload.response;
 
 import com.impact.core.module.resource_request_status.payload.response.ResourceRequestStatusResponse;
 import com.impact.core.module.space.payload.response.SpaceResponse;
-import com.impact.core.module.spaceStatus.payload.response.SpaceStatusResponse;
 import com.impact.core.module.user.payload.response.UserResponse;
 import lombok.*;
 
@@ -19,7 +18,7 @@ import java.time.Instant;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class SpaceRndRResponse {
+public class SpaceRequestAndReservationResponse {
 
     /**
      * The unique identifier of the space request or reservation.
@@ -34,7 +33,7 @@ public class SpaceRndRResponse {
     /**
      * The request and reservation ID.
      */
-    private int reqAndResId;
+    private int requestId;
 
     /**
      * The number of people attending the event.

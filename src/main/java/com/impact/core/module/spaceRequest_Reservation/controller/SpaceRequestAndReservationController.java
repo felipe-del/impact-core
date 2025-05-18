@@ -1,8 +1,8 @@
 package com.impact.core.module.spaceRequest_Reservation.controller;
 import com.impact.core.module.resource_request_status.payload.request.CancelRequestDTO;
-import com.impact.core.module.spaceRequest_Reservation.payload.request.SpaceRndRRequest;
-import com.impact.core.module.spaceRequest_Reservation.payload.response.SpaceRndRResponse;
-import com.impact.core.module.spaceRequest_Reservation.service.SpaceRndRService;
+import com.impact.core.module.spaceRequest_Reservation.payload.request.SpaceRequestAndReservationRequest;
+import com.impact.core.module.spaceRequest_Reservation.payload.response.SpaceRequestAndReservationResponse;
+import com.impact.core.module.spaceRequest_Reservation.service.SpaceRequestAndReservationService;
 import com.impact.core.security.service.UserDetailsImpl;
 import com.impact.core.util.ResponseWrapper;
 import jakarta.validation.Valid;
@@ -24,9 +24,9 @@ import java.util.List;
 @RestController
 @RequestMapping("/api/space-request&reservation")
 @RequiredArgsConstructor
-public class SpaceRndRController {
+public class SpaceRequestAndReservationController {
 
-    public final SpaceRndRService spaceRndRService;
+    public final SpaceRequestAndReservationService spaceRndRService;
 
     /**
      * Creates a new space request and reservation.
@@ -35,21 +35,21 @@ public class SpaceRndRController {
      * The request body must contain valid space reservation details.
      *
      * @param userDetails The authenticated user's details.
-     * @param spaceRndRRequest The space request and reservation details.
+     * @param spaceRequestAndReservationRequest The space request and reservation details.
      * @return A {@link ResponseEntity} containing a {@link ResponseWrapper} with the created space request and reservation data.
      */
     @PostMapping
     @PreAuthorize("hasRole('ADMINISTRATOR') or hasRole('MANAGER') or hasRole('TEACHER')")
-    public ResponseEntity<ResponseWrapper<SpaceRndRResponse>> createSpaceRndR(
+    public ResponseEntity<ResponseWrapper<SpaceRequestAndReservationResponse>> createSpaceRndR(
             @AuthenticationPrincipal UserDetailsImpl userDetails,
-            @Valid @RequestBody SpaceRndRRequest spaceRndRRequest) {
+            @Valid @RequestBody SpaceRequestAndReservationRequest spaceRequestAndReservationRequest) {
 
-        SpaceRndRResponse spaceRndRResponse = spaceRndRService.save(userDetails, spaceRndRRequest);
+        SpaceRequestAndReservationResponse spaceRequestAndReservationResponse = spaceRndRService.save(userDetails, spaceRequestAndReservationRequest);
 
         return ResponseEntity.status(HttpStatus.CREATED).body(
-                ResponseWrapper.<SpaceRndRResponse>builder()
+                ResponseWrapper.<SpaceRequestAndReservationResponse>builder()
                         .message("Solicitud y reservación de espacio creadas correctamente")
-                        .data(spaceRndRResponse)
+                        .data(spaceRequestAndReservationResponse)
                         .build()
         );
     }
@@ -63,11 +63,11 @@ public class SpaceRndRController {
      */
     @GetMapping("/all")
     @PreAuthorize("hasRole('ADMINISTRATOR') or hasRole('MANAGER') or hasRole('TEACHER')")
-    public ResponseEntity<ResponseWrapper<List<SpaceRndRResponse>>> getAllSpaceRndR() {
-        List<SpaceRndRResponse> responses =  spaceRndRService.getAll();
+    public ResponseEntity<ResponseWrapper<List<SpaceRequestAndReservationResponse>>> getAllSpaceRndR() {
+        List<SpaceRequestAndReservationResponse> responses =  spaceRndRService.getAll();
 
         return ResponseEntity.status(HttpStatus.OK).body(
-                ResponseWrapper.<List<SpaceRndRResponse>>builder()
+                ResponseWrapper.<List<SpaceRequestAndReservationResponse>>builder()
                         .message("Lista de todas las solicitudes y reservaciones")
                         .data(responses)
                         .build()
@@ -84,10 +84,10 @@ public class SpaceRndRController {
      */
     @GetMapping("/user/{id}")
     @PreAuthorize("hasRole('ADMINISTRATOR') or hasRole('MANAGER') or hasRole('TEACHER')")
-    public ResponseEntity<ResponseWrapper<List<SpaceRndRResponse>>> getMyRequests(@PathVariable Integer id){
-        List<SpaceRndRResponse> spaceRndRRequest = spaceRndRService.getByUser(id);
+    public ResponseEntity<ResponseWrapper<List<SpaceRequestAndReservationResponse>>> getMyRequests(@PathVariable Integer id){
+        List<SpaceRequestAndReservationResponse> spaceRndRRequest = spaceRndRService.getByUser(id);
 
-        return ResponseEntity.ok(ResponseWrapper.<List<SpaceRndRResponse>>builder()
+        return ResponseEntity.ok(ResponseWrapper.<List<SpaceRequestAndReservationResponse>>builder()
                 .message("Lista de solicitudes de espacios por usuario.")
                 .data(spaceRndRRequest)
                 .build());
@@ -123,10 +123,10 @@ public class SpaceRndRController {
      */
     @GetMapping("/filter/excluding-earring-renewal")
     @PreAuthorize("hasRole('ADMINISTRATOR') or hasRole('MANAGER') or hasRole('TEACHER')")
-    public ResponseEntity<ResponseWrapper<List<SpaceRndRResponse>>> getSpaceRequestsExcludingEarringAndRenewal() {
-        List<SpaceRndRResponse> filteredRequests = spaceRndRService.findAllExcludingEarringAndRenewal();
+    public ResponseEntity<ResponseWrapper<List<SpaceRequestAndReservationResponse>>> getSpaceRequestsExcludingEarringAndRenewal() {
+        List<SpaceRequestAndReservationResponse> filteredRequests = spaceRndRService.findAllExcludingEarringAndRenewal();
 
-        return ResponseEntity.ok(ResponseWrapper.<List<SpaceRndRResponse>>builder()
+        return ResponseEntity.ok(ResponseWrapper.<List<SpaceRequestAndReservationResponse>>builder()
                 .message("Lista de solicitudes de espacios excluyendo estados EARRING y RENEWAL.")
                 .data(filteredRequests)
                 .build());
@@ -142,10 +142,10 @@ public class SpaceRndRController {
      */
     @GetMapping("/filter/earring")
     @PreAuthorize("hasRole('ADMINISTRATOR') or hasRole('MANAGER') or hasRole('TEACHER')")
-    public ResponseEntity<ResponseWrapper<List<SpaceRndRResponse>>> getSpaceRequestsWithEarring() {
-        List<SpaceRndRResponse> filteredRequests = spaceRndRService.findAllWithEarring();
+    public ResponseEntity<ResponseWrapper<List<SpaceRequestAndReservationResponse>>> getSpaceRequestsWithEarring() {
+        List<SpaceRequestAndReservationResponse> filteredRequests = spaceRndRService.findAllWithEarring();
 
-        return ResponseEntity.ok(ResponseWrapper.<List<SpaceRndRResponse>>builder()
+        return ResponseEntity.ok(ResponseWrapper.<List<SpaceRequestAndReservationResponse>>builder()
                 .message("Lista de solicitudes de espacios con estado EARRING.")
                 .data(filteredRequests)
                 .build());
@@ -161,10 +161,10 @@ public class SpaceRndRController {
      */
     @PutMapping("/accept/{spaceRequestId}")
     @PreAuthorize("hasRole('ADMINISTRATOR') or hasRole('MANAGER') ")
-    public ResponseEntity<ResponseWrapper<SpaceRndRResponse>> acceptSpaceRequest(@PathVariable Integer spaceRequestId){
-        SpaceRndRResponse response = spaceRndRService.acceptRequest(spaceRequestId);
+    public ResponseEntity<ResponseWrapper<SpaceRequestAndReservationResponse>> acceptSpaceRequest(@PathVariable Integer spaceRequestId){
+        SpaceRequestAndReservationResponse response = spaceRndRService.acceptRequest(spaceRequestId);
 
-        return ResponseEntity.ok(ResponseWrapper.<SpaceRndRResponse>builder()
+        return ResponseEntity.ok(ResponseWrapper.<SpaceRequestAndReservationResponse>builder()
                 .message("Solicitud de espacio aceptada.")
                 .data(response)
                 .build());
@@ -180,10 +180,10 @@ public class SpaceRndRController {
      */
     @PostMapping("/reject/{spaceRequestId}")
     @PreAuthorize("hasRole('ADMINISTRATOR') or hasRole('MANAGER') ")
-    public ResponseEntity<ResponseWrapper<SpaceRndRResponse>> rejectSpaceRequest(@PathVariable Integer spaceRequestId){
-        SpaceRndRResponse response = spaceRndRService.rejectRequest(spaceRequestId);
+    public ResponseEntity<ResponseWrapper<SpaceRequestAndReservationResponse>> rejectSpaceRequest(@PathVariable Integer spaceRequestId){
+        SpaceRequestAndReservationResponse response = spaceRndRService.rejectRequest(spaceRequestId);
 
-        return ResponseEntity.ok(ResponseWrapper.<SpaceRndRResponse>builder()
+        return ResponseEntity.ok(ResponseWrapper.<SpaceRequestAndReservationResponse>builder()
                 .message("Solicitud de espacio rechazada.")
                 .data(response)
                 .build());

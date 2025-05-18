@@ -7,10 +7,8 @@ import com.impact.core.module.space.mapper.SpaceMapper;
 import com.impact.core.module.space.service.SpaceService;
 import com.impact.core.module.spaceRequest_Reservation.entity.SpaceRequest;
 import com.impact.core.module.spaceRequest_Reservation.entity.SpaceReservation;
-import com.impact.core.module.spaceRequest_Reservation.payload.request.SpaceRndRRequest;
-import com.impact.core.module.spaceRequest_Reservation.payload.response.SpaceRndRResponse;
-import com.impact.core.module.spaceStatus.mapper.SpaceStatusMapper;
-import com.impact.core.module.spaceStatus.service.SpaceStatusService;
+import com.impact.core.module.spaceRequest_Reservation.payload.request.SpaceRequestAndReservationRequest;
+import com.impact.core.module.spaceRequest_Reservation.payload.response.SpaceRequestAndReservationResponse;
 import com.impact.core.module.user.mapper.MyUserMapper;
 import lombok.RequiredArgsConstructor;
 import org.antlr.v4.runtime.misc.Pair;
@@ -23,7 +21,7 @@ import org.springframework.stereotype.Component;
  */
 @Component
 @RequiredArgsConstructor
-public class SpaceRndRMapper {
+public class SpaceRequestAndReservationMapper {
 
     public final SpaceService spaceService;
     public final SpaceMapper spaceMapper;
@@ -37,10 +35,10 @@ public class SpaceRndRMapper {
     * This method retrieves the relevant space and resource request status for the request and creates a new
     * SpaceRequest and SpaceReservation.
     *
-    * @param spaceRndR_Request The {@link SpaceRndRRequest} object containing the request data.
+    * @param spaceRndR_Request The {@link SpaceRequestAndReservationRequest} object containing the request data.
     * @return A {@link Pair} containing the {@link SpaceRequest} and {@link SpaceReservation} entities.
     */
-    public Pair<SpaceRequest, SpaceReservation> toEntity(SpaceRndRRequest spaceRndR_Request) {
+    public Pair<SpaceRequest, SpaceReservation> toEntity(SpaceRequestAndReservationRequest spaceRndR_Request) {
         SpaceRequest sReq = SpaceRequest.builder()
                 .id(0)
                 .space(spaceService.findById(spaceRndR_Request.getSpaceId()))
@@ -68,13 +66,13 @@ public class SpaceRndRMapper {
      *
      * @param sReq The {@link SpaceRequest} entity.
      * @param sRes The {@link SpaceReservation} entity.
-     * @return The corresponding {@link SpaceRndRResponse} DTO.
+     * @return The corresponding {@link SpaceRequestAndReservationResponse} DTO.
      */
-    public SpaceRndRResponse toDTO(SpaceRequest sReq, SpaceReservation sRes) {
-        return SpaceRndRResponse.builder()
+    public SpaceRequestAndReservationResponse toDTO(SpaceRequest sReq, SpaceReservation sRes) {
+        return SpaceRequestAndReservationResponse.builder()
                 .id(sReq.getId())
                 .space(spaceMapper.toDTO(sReq.getSpace()))
-                .reqAndResId(sReq.getId())
+                .requestId(sReq.getId())
                 .numPeople(sReq.getNumPeople())
                 .eventDesc(sReq.getEventDesc())
                 .eventObs(sReq.getEventObs())
@@ -86,5 +84,4 @@ public class SpaceRndRMapper {
                 .createdAt(sReq.getCreatedAt().toString())
                 .build();
     }
-
 }

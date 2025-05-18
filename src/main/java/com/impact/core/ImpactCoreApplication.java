@@ -22,7 +22,7 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 @OpenAPIDefinition(
         info = @Info(
                 title = "IMPACT API Documentation",
-                version = "2.0.0",
+                version = "2.1.0",
                 description = "The IMPACT API provides endpoints for managing inventory, assets, common spaces, and users in the IMPACT project. " +
                         "This API enables users to interact with the system programmatically and perform various operations on the core entities of the project.",
                 contact = @Contact(
