@@ -34,6 +34,7 @@ CREATE TABLE asset_category
 (
     id   INT AUTO_INCREMENT PRIMARY KEY,
     name VARCHAR(100) NOT NULL,
+
     CONSTRAINT unique_asset_category_name UNIQUE (name)
 );
 
@@ -41,6 +42,7 @@ CREATE TABLE brand
 (
     id   INT AUTO_INCREMENT PRIMARY KEY,
     name VARCHAR(100) NOT NULL,
+
     CONSTRAINT unique_brand_name UNIQUE (name)
 );
 
@@ -61,6 +63,7 @@ CREATE TABLE location_type
 (
     id        INT AUTO_INCREMENT PRIMARY KEY,
     type_name VARCHAR(100) NOT NULL,
+
     CONSTRAINT unique_location_type_name UNIQUE (type_name)
 );
 
@@ -75,6 +78,7 @@ CREATE TABLE asset_model
 (
     id         INT AUTO_INCREMENT PRIMARY KEY,
     model_name VARCHAR(100) NOT NULL,
+
     CONSTRAINT uc_model_name UNIQUE (model_name)
 );
 
@@ -83,6 +87,7 @@ CREATE TABLE asset_status
     id          INT AUTO_INCREMENT,
     name        VARCHAR(50) NOT NULL UNIQUE,
     description TEXT,
+
     CONSTRAINT PRIMARY KEY (id)
 );
 
@@ -105,6 +110,7 @@ CREATE TABLE product_status
     id          INT AUTO_INCREMENT,
     name        VARCHAR(50) NOT NULL UNIQUE,
     description TEXT,
+
     CONSTRAINT PRIMARY KEY (id)
 );
 
@@ -116,8 +122,9 @@ CREATE TABLE user
     password VARCHAR(100) NOT NULL,
     role_id  INT,
     state_id INT,
-    FOREIGN KEY (role_id) REFERENCES user_role (id),
-    FOREIGN KEY (state_id) REFERENCES user_state (id)
+
+    FOREIGN KEY (role_id)   REFERENCES user_role (id),
+    FOREIGN KEY (state_id)  REFERENCES user_state (id)
 );
 
 CREATE TABLE supplier
@@ -130,6 +137,7 @@ CREATE TABLE supplier
     entity_type_id INT,
     client_contact VARCHAR(100),
     id_number      VARCHAR(50) UNIQUE NOT NULL,
+
     FOREIGN KEY (entity_type_id) REFERENCES entity_type (id)
 );
 
@@ -139,6 +147,7 @@ CREATE TABLE asset_subcategory
     name        VARCHAR(100),
     description VARCHAR(255) NOT NULL UNIQUE,
     category_id INT,
+
     FOREIGN KEY (category_id) REFERENCES asset_category (id),
     CONSTRAINT uc_subcategory_name UNIQUE (name)
 );
@@ -148,6 +157,7 @@ CREATE TABLE building_location
     id          INT AUTO_INCREMENT PRIMARY KEY,
     building_id INT         NOT NULL,
     floor       VARCHAR(50) NOT NULL,
+
     FOREIGN KEY (building_id) REFERENCES building (id),
     CONSTRAINT unique_building_floor UNIQUE (building_id, floor)
 );
@@ -157,6 +167,7 @@ CREATE TABLE location_number
     id               INT AUTO_INCREMENT PRIMARY KEY,
     location_type_id INT,
     location_number  INT,
+
     FOREIGN KEY (location_type_id) REFERENCES location_type (id),
     CONSTRAINT unique_location_number UNIQUE (location_type_id, location_number)
 );
@@ -168,8 +179,9 @@ CREATE TABLE product_category
     minimum_quantity    INT          NOT NULL,
     category_type       INT,
     unit_of_measurement INT,
-    FOREIGN KEY (category_type) REFERENCES category_type (id),
-    FOREIGN KEY (unit_of_measurement) REFERENCES unit_of_measurement (id)
+
+    FOREIGN KEY (category_type)         REFERENCES category_type (id),
+    FOREIGN KEY (unit_of_measurement)   REFERENCES unit_of_measurement (id)
 );
 
 CREATE TABLE space
@@ -183,8 +195,9 @@ CREATE TABLE space
     close_time  TIME         NOT NULL,
     status_id   INT,
     is_deleted  BOOLEAN DEFAULT FALSE,
-    FOREIGN KEY (location_id) REFERENCES building_location (id),
-    FOREIGN KEY (status_id) REFERENCES space_status (id)
+
+    FOREIGN KEY (status_id)     REFERENCES space_status (id),
+    FOREIGN KEY (location_id)   REFERENCES building_location (id)
 );
 
 CREATE TABLE space_equipment
@@ -194,6 +207,7 @@ CREATE TABLE space_equipment
     brand_id INT          NOT NULL,
     space_id INT          NOT NULL,
     quantity INT          NOT NULL,
+
     FOREIGN KEY (brand_id) REFERENCES brand (id),
     FOREIGN KEY (space_id) REFERENCES space (id)
 );
@@ -205,6 +219,7 @@ CREATE TABLE space_reservation
     start_time DATETIME,
     end_time   DATETIME,
     user_id    INT NOT NULL,
+
     FOREIGN KEY (space_id) REFERENCES space (id),
     CONSTRAINT fk_space_reservation_user FOREIGN KEY (user_id) REFERENCES user (id)
 );
@@ -219,10 +234,13 @@ CREATE TABLE space_request
     user_id       INT NOT NULL,
     use_equipment TINYINT(1) DEFAULT 0,
     status_id     INT,
+    reservation_id INT NOT NULL UNIQUE,
     created_at    TIMESTAMP  DEFAULT CURRENT_TIMESTAMP,
-    FOREIGN KEY (status_id) REFERENCES resource_request_status (id),
-    FOREIGN KEY (space_id) REFERENCES space (id),
-    FOREIGN KEY (user_id) REFERENCES user (id)
+
+    FOREIGN KEY (user_id)           REFERENCES user (id),
+    FOREIGN KEY (space_id)          REFERENCES space (id),
+    FOREIGN KEY (status_id)         REFERENCES resource_request_status (id),
+    FOREIGN KEY (reservation_id)    REFERENCES space_reservation (id)
 );
 
 CREATE TABLE supplier_account
@@ -230,6 +248,7 @@ CREATE TABLE supplier_account
     id             INT AUTO_INCREMENT PRIMARY KEY,
     supplier_id    INT,
     account_number VARCHAR(50) NOT NULL,
+
     FOREIGN KEY (supplier_id) REFERENCES supplier (id)
 );
 
@@ -249,14 +268,15 @@ CREATE TABLE asset
     asset_model_id     INT,
     currency_id        INT,
     location_number_id INT,
-    FOREIGN KEY (responsible_id) REFERENCES user (id),
-    FOREIGN KEY (supplier_id) REFERENCES supplier (id),
-    FOREIGN KEY (subcategory_id) REFERENCES asset_subcategory (id),
-    FOREIGN KEY (brand_id) REFERENCES brand (id),
-    FOREIGN KEY (status_id) REFERENCES asset_status (id),
-    FOREIGN KEY (currency_id) REFERENCES currency (id),
-    FOREIGN KEY (asset_model_id) REFERENCES asset_model (id),
-    FOREIGN KEY (location_number_id) REFERENCES location_number (id),
+
+    FOREIGN KEY (responsible_id)        REFERENCES user (id),
+    FOREIGN KEY (supplier_id)           REFERENCES supplier (id),
+    FOREIGN KEY (subcategory_id)        REFERENCES asset_subcategory (id),
+    FOREIGN KEY (brand_id)              REFERENCES brand (id),
+    FOREIGN KEY (status_id)             REFERENCES asset_status (id),
+    FOREIGN KEY (currency_id)           REFERENCES currency (id),
+    FOREIGN KEY (asset_model_id)        REFERENCES asset_model (id),
+    FOREIGN KEY (location_number_id)    REFERENCES location_number (id),
     UNIQUE (plate_number)
 );
 
@@ -267,8 +287,9 @@ CREATE TABLE product
     expiry_date   DATE,
     category_id   INT,
     status        INT,
-    CONSTRAINT FOREIGN KEY (status) REFERENCES product_status (id),
-    CONSTRAINT FOREIGN KEY (category_id) REFERENCES product_category (id)
+
+    CONSTRAINT FOREIGN KEY (status)         REFERENCES product_status (id),
+    CONSTRAINT FOREIGN KEY (category_id)    REFERENCES product_category (id)
 );
 
 CREATE TABLE invoices
@@ -278,7 +299,8 @@ CREATE TABLE invoices
     image_path               VARCHAR(50),
     purchase_date            DATE,
     warranty_expiration_date DATE,
-    FOREIGN KEY (asset_id) REFERENCES asset (id)
+
+    FOREIGN KEY (asset_id)  REFERENCES asset (id)
 );
 
 CREATE TABLE product_request
@@ -287,8 +309,9 @@ CREATE TABLE product_request
     product_id INT,
     status_id  INT,
     reason     TEXT,
-    user_id    INT                                NOT NULL,
+    user_id    INT NOT NULL,
     created_at DATETIME DEFAULT CURRENT_TIMESTAMP NULL,
+
     FOREIGN KEY (product_id) REFERENCES product (id),
     FOREIGN KEY (status_id) REFERENCES resource_request_status (id),
     FOREIGN KEY (user_id) REFERENCES user (id),
@@ -300,8 +323,9 @@ CREATE TABLE products_of_request
     id                 INT AUTO_INCREMENT PRIMARY KEY,
     product_id         INT,
     product_request_id INT,
-    FOREIGN KEY (product_id) REFERENCES product (id),
-    FOREIGN KEY (product_request_id) REFERENCES product_request (id)
+
+    FOREIGN KEY (product_id)            REFERENCES product (id),
+    FOREIGN KEY (product_request_id)    REFERENCES product_request (id)
 );
 
 CREATE TABLE asset_request
@@ -313,9 +337,10 @@ CREATE TABLE asset_request
     expiration_date DATE,
     user_id         INT                                NOT NULL,
     created_at      DATETIME DEFAULT CURRENT_TIMESTAMP NULL,
-    FOREIGN KEY (asset_id) REFERENCES asset (id),
-    FOREIGN KEY (status_id) REFERENCES resource_request_status (id),
-    FOREIGN KEY (user_id) REFERENCES user (id)
+
+    FOREIGN KEY (asset_id)  REFERENCES asset (id),
+    FOREIGN KEY (user_id)   REFERENCES user (id),
+    FOREIGN KEY (status_id) REFERENCES resource_request_status (id)
 );
 
 CREATE TABLE user_token
@@ -325,6 +350,7 @@ CREATE TABLE user_token
     token       VARCHAR(255) NOT NULL,
     expiry_date TIMESTAMP    NOT NULL,
     created_at  TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+
     FOREIGN KEY (user_id) REFERENCES user (id)
 );
 
@@ -336,10 +362,11 @@ CREATE TABLE audit_log
     details     TEXT,
     timestamp   TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     user_id     INT,
+
     FOREIGN KEY (user_id) REFERENCES user (id)
 );
 
--- CREATED VIEWS FOR STATISTICS STATISTICS
+-- CREATED VIEWS FOR ASSET STATISTICS
 CREATE VIEW asset_request_statistics_by_date AS
 SELECT a.status_id,
        ar.status_id        AS request_status_id,
