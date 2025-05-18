@@ -17,7 +17,7 @@ import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 public class WebConfig implements WebMvcConfigurer {
 
     @Value("${impact.cors.allowedOrigins}")
-    private String allowedOrigins;
+    private String allowedOriginsRaw;
 
     /**
      * Adds global CORS mappings to the application, allowing cross-origin requests to all endpoints.
@@ -30,9 +30,16 @@ public class WebConfig implements WebMvcConfigurer {
      */
     @Override
     public void addCorsMappings(CorsRegistry registry) {
+        String[] allowedOrigins = allowedOriginsRaw.split(",");
+
+        System.out.println("Allowed Origins:");
+        for (String origin : allowedOrigins) {
+            System.out.println(" - " + origin);
+        }
+
         registry.addMapping("/**")
                 .allowedOrigins(allowedOrigins)
-                .allowedMethods("GET", "POST", "PUT", "DELETE")
+                .allowedMethods("GET", "POST", "PUT", "DELETE", "OPTIONS")
                 .allowedHeaders("*")
                 .allowCredentials(true);
     }
