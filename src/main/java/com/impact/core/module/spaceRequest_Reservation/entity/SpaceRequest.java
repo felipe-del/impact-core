@@ -92,6 +92,15 @@ public class SpaceRequest {
     private LocalDateTime createdAt;
 
     /**
+     * A reference to the {@link SpaceReservation} linked
+     * to the request
+     */
+    @NotNull
+    @OneToOne(fetch = FetchType.LAZY, optional = false)
+    @JoinColumn(name = "reservation_id", nullable = false)
+    private SpaceReservation reservation;
+
+    /**
      * Method to set the createdAt field before persisting the entity.
      * Automatically sets the current time if the field is null.
      */
