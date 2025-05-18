@@ -59,4 +59,11 @@ public class SpaceReservation {
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
     @JoinColumn(name = "user_id", nullable = false)
     private User user;
+
+    /**
+     * The {@link SpaceRequest} to which the reservation is linked.
+     */
+    @OneToOne(mappedBy = "reservation")
+    private SpaceRequest spaceRequest;
+
 }
