@@ -10,9 +10,9 @@ import com.impact.core.module.resource_request_status.service.ResourceRequestSta
 import com.impact.core.module.space.entity.Space;
 import com.impact.core.module.spaceRequest_Reservation.entity.SpaceRequest;
 import com.impact.core.module.spaceRequest_Reservation.entity.SpaceReservation;
-import com.impact.core.module.spaceRequest_Reservation.mapper.SpaceRndRMapper;
-import com.impact.core.module.spaceRequest_Reservation.payload.request.SpaceRndRRequest;
-import com.impact.core.module.spaceRequest_Reservation.payload.response.SpaceRndRResponse;
+import com.impact.core.module.spaceRequest_Reservation.mapper.SpaceRequestAndReservationMapper;
+import com.impact.core.module.spaceRequest_Reservation.payload.request.SpaceRequestAndReservationRequest;
+import com.impact.core.module.spaceRequest_Reservation.payload.response.SpaceRequestAndReservationResponse;
 import com.impact.core.module.spaceRequest_Reservation.repository.SpaceRequestRepository;
 import com.impact.core.module.spaceRequest_Reservation.repository.SpaceReservationRepository;
 import com.impact.core.module.spaceStatus.enun.ESpaceStatus;
@@ -38,11 +38,11 @@ import java.util.stream.Collectors;
  */
 @Service("spaceRndRService")
 @RequiredArgsConstructor
-public class SpaceRndRService {
+public class SpaceRequestAndReservationService {
 
     public final SpaceRequestRepository spaceRequestRepository;
     public final SpaceReservationRepository spaceReservationRepository;
-    public final SpaceRndRMapper spaceRndRMapper;
+    public final SpaceRequestAndReservationMapper spaceRequestAndReservationMapper;
     public final UserService userService;
     public final MailService mailService;
     private final SpaceStatusService spaceStatusService;
@@ -53,13 +53,13 @@ public class SpaceRndRService {
      * and sending confirmation emails.
      *
      * @param userDetails     The current user details.
-     * @param spaceRndRRequest The request data for the space and reservation.
-     * @return The saved {@link SpaceRndRResponse} object with the space request and reservation details.
+     * @param spaceRequestAndReservationRequest The request data for the space and reservation.
+     * @return The saved {@link SpaceRequestAndReservationResponse} object with the space request and reservation details.
      * @throws ConflictException if there is a conflict with the request (e.g., the requested time is outside operating hours or conflicts with existing reservations).
      */
-    public SpaceRndRResponse save(UserDetailsImpl userDetails, SpaceRndRRequest spaceRndRRequest) {
+    public SpaceRequestAndReservationResponse save(UserDetailsImpl userDetails, SpaceRequestAndReservationRequest spaceRequestAndReservationRequest) {
         // Pairing the space request and reservation entities
-        Pair<SpaceRequest, SpaceReservation> requestAndReservation = spaceRndRMapper.toEntity(spaceRndRRequest);
+        Pair<SpaceRequest, SpaceReservation> requestAndReservation = spaceRequestAndReservationMapper.toEntity(spaceRequestAndReservationRequest);
         User user = userService.findById(userDetails.getId());
         Space space = requestAndReservation.a.getSpace();
         LocalTime openTime = space.getOpenTime();
@@ -101,23 +101,26 @@ public class SpaceRndRService {
         requestAndReservation.a.setUser(user);
         requestAndReservation.b.setUser(user);
 
-        SpaceRequest spaceRequestSaved = spaceRequestRepository.save(requestAndReservation.a);
         SpaceReservation spaceReservationSaved = spaceReservationRepository.save(requestAndReservation.b);
+
+        requestAndReservation.a.setReservation(spaceReservationSaved);
+
+        SpaceRequest spaceRequestSaved = spaceRequestRepository.save(requestAndReservation.a);
 
         ComposedMail composedMailToUser = MailFactory.createSpaceRequestEmail(spaceRequestSaved, spaceReservationSaved);
         mailService.sendComposedEmail(composedMailToUser);
         ComposedMail composedMailToAdmin = MailFactory.createAdminReviewSpaceRequest(spaceRequestSaved, spaceReservationSaved);
         mailService.sendComposedEmailToAllAdmins(composedMailToAdmin);
 
-        return spaceRndRMapper.toDTO(spaceRequestSaved, spaceReservationSaved);
+        return spaceRequestAndReservationMapper.toDTO(spaceRequestSaved, spaceReservationSaved);
     }
 
     /**
      * Retrieves all space requests and reservations and returns them as a list of SpaceRndRResponse objects.
      *
-     * @return A list of {@link SpaceRndRResponse} objects representing all space requests and reservations.
+     * @return A list of {@link SpaceRequestAndReservationResponse} objects representing all space requests and reservations.
      */
-    public List<SpaceRndRResponse> getAll() {
+    public List<SpaceRequestAndReservationResponse> getAll() {
         List<SpaceRequest>  requests = spaceRequestRepository.findAll();
         List<SpaceReservation> reservations = spaceReservationRepository.findAll();
 
@@ -125,14 +128,14 @@ public class SpaceRndRService {
     }
 
     /**
-     * Joins the space requests and reservations and converts them to {@link SpaceRndRResponse} objects.
+     * Joins the space requests and reservations and converts them to {@link SpaceRequestAndReservationResponse} objects.
      *
      * @param requests     A list of space requests.
      * @param reservations A list of space reservations.
-     * @return A list of {@link SpaceRndRResponse} objects representing the joined data.
+     * @return A list of {@link SpaceRequestAndReservationResponse} objects representing the joined data.
      */
-    public List<SpaceRndRResponse> joinSpaceRandResponse(List<SpaceRequest> requests, List<SpaceReservation> reservations){
-        List<SpaceRndRResponse> responses = new ArrayList<>();
+    public List<SpaceRequestAndReservationResponse> joinSpaceRandResponse(List<SpaceRequest> requests, List<SpaceReservation> reservations){
+        List<SpaceRequestAndReservationResponse> responses = new ArrayList<>();
 
         Iterator<SpaceRequest> reqIterator = requests.iterator();
         Iterator<SpaceReservation> resIterator = reservations.iterator();
@@ -141,7 +144,7 @@ public class SpaceRndRService {
             SpaceRequest req = reqIterator.next();
             SpaceReservation res = (resIterator.hasNext()) ? resIterator.next() : null;
 
-            responses.add(spaceRndRMapper.toDTO(req, res));
+            responses.add(spaceRequestAndReservationMapper.toDTO(req, res));
         }
 
         return responses;
@@ -151,9 +154,9 @@ public class SpaceRndRService {
      * Retrieves space requests and reservations for a specific user.
      *
      * @param id The user ID.
-     * @return A list of {@link SpaceRndRResponse} objects representing the user's space requests and reservations.
+     * @return A list of {@link SpaceRequestAndReservationResponse} objects representing the user's space requests and reservations.
      */
-    public List<SpaceRndRResponse> getByUser(Integer id){
+    public List<SpaceRequestAndReservationResponse> getByUser(Integer id){
         List<SpaceRequest>  requests = spaceRequestRepository.spaceRequestByUser(id);
         List<SpaceReservation> reservations = spaceReservationRepository.spaceReservationByUser(id);
 
@@ -182,6 +185,10 @@ public class SpaceRndRService {
                 .orElseThrow(() -> new ResourceNotFoundException("La solicitud de espacio con el id: " + id + " no existe en la base de datos."));
     }
 
+    public SpaceReservation findReservationById(int id) {
+        return spaceReservationRepository.findById(id)
+                .orElseThrow(() -> new ResourceNotFoundException("La reservacion de espacio con el id: " + id + " no existe en la base de datos."));
+    }
     /**
      * Cancels a space request and reservation by changing the status and sending email notifications.
      *
@@ -198,18 +205,8 @@ public class SpaceRndRService {
         mailService.sendComposedEmailToAllAdmins(composedMailToAdmin);
 
         spaceRequestRepository.updateSpaceRequest(status,reqId);
-        cancelReservation(reqId);
-    }
 
-    /**
-     * Accepts a space request by changing the status and sending email notifications.
-     *
-     * @param status  The new status for the space request.
-     * @param reqId   The space request ID.
-     */
-    @Transactional
-    public void acceptRequest(Integer status,Integer reqId){
-        spaceRequestRepository.updateSpaceRequest(status,reqId);
+        cancelReservation(spaceRequest.getReservation().getId());
     }
 
     /**
@@ -226,7 +223,7 @@ public class SpaceRndRService {
      *
      * @return A list of space requests excluding "Earring" and "Renewal" statuses.
      */
-    public List<SpaceRndRResponse> findAllExcludingEarringAndRenewal() {
+    public List<SpaceRequestAndReservationResponse> findAllExcludingEarringAndRenewal() {
         List<SpaceRequest> allRequests = spaceRequestRepository.findAll();
 
         return allRequests.stream()
@@ -235,7 +232,7 @@ public class SpaceRndRService {
                     return statusEnum != EResourceRequestStatus.RESOURCE_REQUEST_STATUS_EARRING &&
                             statusEnum != EResourceRequestStatus.RESOURCE_REQUEST_STATUS_RENEWAL;
                 })
-                .map(request -> spaceRndRMapper.toDTO(request, null))
+                .map(request -> spaceRequestAndReservationMapper.toDTO(request, null))
                 .toList();
     }
 
@@ -244,42 +241,47 @@ public class SpaceRndRService {
      *
      * @return A list of space requests with the "Earring" status.
      */
-    public List<SpaceRndRResponse> findAllWithEarring() {
+    public List<SpaceRequestAndReservationResponse> findAllWithEarring() {
         List<SpaceRequest> allRequests = spaceRequestRepository.findAll();
 
         return allRequests.stream()
                 .filter(request -> request.getStatus().getName() == EResourceRequestStatus.RESOURCE_REQUEST_STATUS_EARRING)
-                .map(request -> spaceRndRMapper.toDTO(request, null))
+                .map(request -> spaceRequestAndReservationMapper.toDTO(request, null))
                 .collect(Collectors.toList());
     }
 
     /**
-     * Accepts a space request by changing its status to accepted and updating the space status.
+     * Accepts a space request and its respective space reservation
+     * by changing its status to accepted and updating the space status.
      * Sends email notifications to the user and admins.
      *
      * @param spaceRequestId The space request ID.
-     * @return The {@link SpaceRndRResponse} object with updated space request and reservation details.
+     * @return The {@link SpaceRequestAndReservationResponse} object with updated space request and reservation details.
      * @throws ConflictException if the space request is not in "Earring" status.
      */
-    public SpaceRndRResponse acceptRequest(Integer spaceRequestId) {
+    public SpaceRequestAndReservationResponse acceptRequest(Integer spaceRequestId) {
         SpaceRequest spaceRequest = findById(spaceRequestId);
-        List<SpaceReservation> spaceReservations = spaceReservationRepository.findAllBySpace(spaceRequest.getSpace());
+        SpaceReservation spaceReservation = findReservationById(spaceRequest.getReservation().getId());
+
         if(spaceRequest.getStatus().getName() != EResourceRequestStatus.RESOURCE_REQUEST_STATUS_EARRING){
             throw new ConflictException("La solicitud de espacio con el id: " + spaceRequestId + " no está en espera.");
         }
+
         spaceRequest.setStatus(
                 resourceRequestStatusService.findByName(EResourceRequestStatus.RESOURCE_REQUEST_STATUS_ACCEPTED)
         );
+
         Space space = spaceRequest.getSpace();
         space.setStatus(
                 spaceStatusService.findByName(ESpaceStatus.SPACE_STATUS_LOANED)
         );
+
         SpaceRequest saved = spaceRequestRepository.save(spaceRequest);
 
         ComposedMail composedMailToUser = MailFactory.createSpaceRequestAcceptEmail(spaceRequest);
         mailService.sendComposedEmail(composedMailToUser);
 
-        return spaceRndRMapper.toDTO(saved, spaceReservations.getFirst());
+        return spaceRequestAndReservationMapper.toDTO(saved, spaceReservation);
     }
 
     /**
@@ -287,31 +289,35 @@ public class SpaceRndRService {
      * Sends email notifications to the user and admins.
      *
      * @param spaceRequestId The space request ID.
-     * @return The {@link SpaceRndRResponse} object with updated space request and reservation details.
+     * @return The {@link SpaceRequestAndReservationResponse} object with updated space request and reservation details.
      * @throws ConflictException if the space request has already been accepted or canceled.
      */
-    public SpaceRndRResponse rejectRequest(Integer spaceRequestId) {
+    public SpaceRequestAndReservationResponse rejectRequest(Integer spaceRequestId) {
         SpaceRequest spaceRequest = findById(spaceRequestId);
-        List<SpaceReservation> spaceReservations = spaceReservationRepository.findAllBySpace(spaceRequest.getSpace());
+        SpaceReservation spaceReservation = findReservationById(spaceRequest.getReservation().getId());
+
         if(spaceRequest.getStatus().getName() == EResourceRequestStatus.RESOURCE_REQUEST_STATUS_ACCEPTED){
             throw new ConflictException("La solicitud de espacio con el id: " + spaceRequestId + " ya fué aceptada.");
         }
         if(spaceRequest.getStatus().getName() == EResourceRequestStatus.RESOURCE_REQUEST_STATUS_CANCELED){
             throw new ConflictException("La solicitud de espacio con el id: " + spaceRequestId + " ya fué cancelado.");
         }
+
         spaceRequest.setStatus(
                 resourceRequestStatusService.findByName(EResourceRequestStatus.RESOURCE_REQUEST_STATUS_CANCELED)
         );
+
         Space space = spaceRequest.getSpace();
         space.setStatus(
                 spaceStatusService.findByName(ESpaceStatus.SPACE_STATUS_AVAILABLE)
         );
+
         SpaceRequest saved = spaceRequestRepository.save(spaceRequest);
 
         ComposedMail composedMailToUser = MailFactory.createSpaceRequestRejectEmail(spaceRequest);
         mailService.sendComposedEmail(composedMailToUser);
 
-        return spaceRndRMapper.toDTO(saved, spaceReservations.getFirst());
+        return spaceRequestAndReservationMapper.toDTO(saved, spaceReservation);
     }
 
 }
