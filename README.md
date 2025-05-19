@@ -97,7 +97,7 @@ La documentación técnica detallada se encuentra disponible en:
 | Isaac Brenes | Full Stack Dev | [isaacfelibrenes1904@gmail.com](mailto:isaacfelibrenes1904@gmail.com) |
 | Raquel Alfaro | Full Stack Dev | [raquealfaba@gmail.com](mailto:raquealfaba@gmail.com) |
 | Maria González | Full Stack Dev | [maria.gonzalez.benavides@est.una.ac.cr](mailto:maria.gonzalez.benavides@est.una.ac.cr) |
-| Dilan Hernández | Full Stack Dev | [dilan.hernandez.ulate@est.una.ac.cr](mailto:dilan.hernandez.ulate@est.una.ac.cr) |
+| Dilan Hernández | Full Stack Dev | [dilanhernandez.dhu@gmail.com](mailto:dilanhernandez.dhu@gmail.com) |
 | Marco Leandro | Full Stack Dev | [marcoleandro2808@gmail.com](mailto:marcoleandro2808@gmail.com) |
 | Joel Ramírez | Full Stack Dev | [joelramva07@gmail.com](mailto:joelramva07@gmail.com) |
 
