@@ -14,7 +14,7 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
  * Isaac Felipe Brenes Calderon,
  * Joel Ramírez Vargas,
  * Marco Leandro Chacon,
- * Maria Gonzales Benavides,
+ * Maria Gonzalez Benavides,
  * Raquel Alfaro Barrantes
  * @since 01 / 09 / 2024
  */
