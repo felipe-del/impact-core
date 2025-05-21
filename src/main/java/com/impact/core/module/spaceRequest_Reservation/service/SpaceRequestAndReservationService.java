@@ -230,7 +230,8 @@ public class SpaceRequestAndReservationService {
                 .filter(request -> {
                     EResourceRequestStatus statusEnum = request.getStatus().getName();
                     return statusEnum != EResourceRequestStatus.RESOURCE_REQUEST_STATUS_EARRING &&
-                            statusEnum != EResourceRequestStatus.RESOURCE_REQUEST_STATUS_RENEWAL;
+                            statusEnum != EResourceRequestStatus.RESOURCE_REQUEST_STATUS_RENEWAL &&
+                            statusEnum != EResourceRequestStatus.RESOURCE_REQUEST_STATUS_WAITING_ON_RENEWAL;
                 })
                 .map(request -> spaceRequestAndReservationMapper.toDTO(request, null))
                 .toList();
